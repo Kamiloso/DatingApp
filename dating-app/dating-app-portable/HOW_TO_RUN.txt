@@ -1,0 +1,18 @@
+Prerequisites:
+  - Windows
+  - Docker (running)
+
+To run production:
+  --> run.bat
+
+To run development (localhost, no backend):
+  --> run-dev.bat
+
+To open MySQL console:
+  --> sql-console.bat
+
+To stop container:
+  --> stop.bat
+
+To stop container and delete volume:
+  --> nuke.bat
