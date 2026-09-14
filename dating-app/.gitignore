@@ -38,3 +38,5 @@ out/
 
 ### Additional ###
 /portable/backend/*.jar
+/portable/backend/application.yml
+*.log

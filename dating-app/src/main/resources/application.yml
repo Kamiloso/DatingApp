@@ -17,24 +17,3 @@ spring:
 logging:
   pattern:
     dateformat: "dd.MM.yyyy HH:mm:ss.SSS"
-
-app:
-  start-message: "Backend has started successfully and is listening for requests..."
-  auth:
-    url: "https://accounts.google.com"
-    client-id: not-configured-yet
-    allowed-email-regex: "@polsl\\.pl$"
-  limits:
-    max-list-return-size: 50
-  matching:
-    max-matches-per-user: 3
-    max-age-difference: 3
-    cycle:
-      cron: "0 0 20 * * MON,THU"
-      cleanup-cron: "0 10,25,40,55 * * * *"
-      timezone: "Europe/Warsaw"
-    retry:
-      max-retries: 15
-      cooldown-milliseconds: 2000
-  quiz:
-    ready-index: 1

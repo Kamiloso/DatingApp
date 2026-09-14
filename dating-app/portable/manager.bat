@@ -1,0 +1,1 @@
+python ./manager/main.py

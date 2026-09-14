@@ -1,13 +1,25 @@
 @echo off
 
-set "GRADLEW=.\gradlew.bat"
-set "JAR_PATH_SRC=.\build\libs"
-set "ENV_PATH=.\dating-app-portable"
-set "JAR_PATH_TRG=.\dating-app-portable\backend"
+set "JAR_SOURCE_DIR=.\build\libs"
+set "CONFIG_SOURCE_DIR=.\config"
+set "BACKEND_DIR=.\portable\backend"
 
-:: Build backend
-call "%GRADLEW%" clean bootJar
+call .\gradlew.bat clean bootJar
 
-:: Copy backend jar
-del "%JAR_PATH_TRG%\*.jar"
-copy "%JAR_PATH_SRC%\*.jar" "%JAR_PATH_TRG%"
+call :copy_to_backend "%JAR_SOURCE_DIR%" "*.jar"
+call :copy_to_backend "%CONFIG_SOURCE_DIR%" "application.yml"
+
+exit /b 0
+
+:copy_to_backend
+setlocal
+set "source=%~1\%~2"
+set "target=%BACKEND_DIR%\%~2"
+
+if not exist "%BACKEND_DIR%" mkdir "%BACKEND_DIR%"
+
+if exist "%target%" del "%target%"
+copy "%source%" "%BACKEND_DIR%"
+
+endlocal
+exit /b 0

@@ -1,0 +1,8 @@
+Prerequisites:
+  - Windows / Linux
+  - Python 3.12+
+  - Docker
+
+Information:
+  - To start environment, run manager.bat / manager.sh and follow the instructions in the console.
+  - Development mode exposes all containers to localhost and disables backend.

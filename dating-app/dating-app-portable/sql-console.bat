@@ -1,1 +1,0 @@
-docker exec -it dating-app-portable-db-1 mysql -u root dating_app
