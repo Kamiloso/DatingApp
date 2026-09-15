@@ -6,13 +6,13 @@ services:
     container_name: dating-app-db
     environment:
       MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+    networks:
+      - app-network
     volumes:
       - ./my-sql/init.sql:/docker-entrypoint-initdb.d/init.sql:ro
       - mysql_data:/var/lib/mysql
-    networks:
-      - app-network
     healthcheck:
-      test: ["CMD", "mysql", "-u", "root", "-e", "DESCRIBE internal.db_ready;"]
+      test: ["CMD", "mysql", "-u", "root", "-e", "DESC internal.db_ready;"]
       interval: 3s
       timeout: 5s
       retries: 8
@@ -37,8 +37,12 @@ services:
       - "8080:8080"
     environment:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dating_app?useSSL=false
-      REDIS_HOST: redis
-      REDIS_PORT: 6379
+      REDIS_HOST: 'redis'
+      REDIS_PORT: '6379'
+      SPRINGDOC_SWAGGER_UI_ENABLED: 'false'
+      SPRINGDOC_API_DOCS_ENABLED: 'false'
+    networks:
+      - app-network
     volumes:
       - ./backend/application.yml:/app/config/application.yml:ro
     depends_on:
@@ -46,8 +50,6 @@ services:
         condition: service_healthy
       redis:
         condition: service_healthy
-    networks:
-      - app-network
 
 networks:
   app-network:
