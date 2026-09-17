@@ -1,9 +1,11 @@
 package page.se3.datingapp.model.struct.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.util.Objects;
 
+@Schema(description = "Represents a complete chat entry")
 public record Chat(
         @NotNull
         Long id,

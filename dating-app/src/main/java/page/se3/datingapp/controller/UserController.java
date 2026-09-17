@@ -1,35 +1,48 @@
 package page.se3.datingapp.controller;
 
-import jakarta.validation.constraints.NotNull;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import page.se3.datingapp.infrastructure.abort.reason.UserNotFound;
-import page.se3.datingapp.model.struct.dto.User;
-import page.se3.datingapp.service.AuthService;
-import page.se3.datingapp.service.table.UserService;
+import page.se3.datingapp.infrastructure.abort.reason.AccountNotFound;
+import page.se3.datingapp.infrastructure.struct.AuthKey;
+import page.se3.datingapp.model.struct.dto.UserHigher;
+import page.se3.datingapp.model.struct.dto.UserLower;
+import page.se3.datingapp.service.AccountService;
+import page.se3.datingapp.service.UserService;
+
+import java.util.List;
 
 @RestController
 @Validated
+@Tag(name = "Users")
+@RequestMapping("/api/users")
 @RequiredArgsConstructor
 public class UserController {
 
-    private final AuthService authService;
+    private final AccountService accountService;
     private final UserService userService;
 
-    @PatchMapping("api/user/is-participating")
-    public void isParticipating(
+    @GetMapping("/lower")
+    @Operation(summary = "Gets all permitted lower user information")
+    public List<UserLower> getUserLowerList(
             @AuthenticationPrincipal
-            @NotNull
-            Jwt jwt,
+            Jwt jwt
+    ) throws AccountNotFound {
+        AuthKey authKey = accountService.getAuthKey(jwt);
+        return userService.getLowerList(authKey);
+    }
 
-            @RequestParam
-            Boolean value
-
-    ) throws UserNotFound {
-        User user = authService.login(jwt);
-        userService.updateIsParticipatingById(user.id(), value);
+    @GetMapping("/higher")
+    @Operation(summary = "Gets all permitted higher user information")
+    public List<UserHigher> getUserHigherList(
+            @AuthenticationPrincipal
+            Jwt jwt
+    ) throws AccountNotFound {
+        AuthKey authKey = accountService.getAuthKey(jwt);
+        return userService.getHigherList(authKey);
     }
 }

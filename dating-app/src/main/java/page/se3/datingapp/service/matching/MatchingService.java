@@ -4,25 +4,29 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import page.se3.datingapp.core.type.Weight;
+import page.se3.datingapp.core.struct.Weight;
+import page.se3.datingapp.core.util.StreamMap;
 import page.se3.datingapp.infrastructure.abort.reason.ReferencedResourceGone;
 import page.se3.datingapp.infrastructure.config.AppConfig;
+import page.se3.datingapp.infrastructure.exception.UnreachableException;
 import page.se3.datingapp.model.struct.dto.MatchGroup;
 import page.se3.datingapp.model.struct.dto.User;
+import page.se3.datingapp.model.struct.post.MatchGroupPost;
 import page.se3.datingapp.model.struct.post.MatchPost;
 import page.se3.datingapp.service.matching.tool.BlockMap;
-import page.se3.datingapp.service.table.BlockService;
-import page.se3.datingapp.service.table.MatchGroupService;
-import page.se3.datingapp.service.table.MatchService;
-import page.se3.datingapp.service.table.UserService;
+import page.se3.datingapp.service.table.BlockTableService;
+import page.se3.datingapp.service.table.MatchGroupTableService;
+import page.se3.datingapp.service.table.MatchTableService;
+import page.se3.datingapp.service.table.UserTableService;
 
+import java.time.Instant;
 import java.util.List;
 import java.util.ArrayList;
 import java.util.Objects;
 import java.util.PriorityQueue;
 
 public interface MatchingService {
-    void runMatchingSchedule() throws ReferencedResourceGone;
+    void runMatchingSchedule();
 }
 
 @Service
@@ -30,32 +34,42 @@ public interface MatchingService {
 class MatchingServiceImpl implements MatchingService {
 
     private final AppConfig appConfig;
-    private final BlockService blockService;
+    private final BlockTableService blockTableService;
+    private final MatchGroupTableService matchGroupTableService;
+    private final MatchTableService matchTableService;
+    private final UserTableService userTableService;
     private final FilteringService filteringService;
-    private final MatchGroupService matchGroupService;
-    private final MatchService matchService;
     private final ScoringService scoringService;
-    private final UserService userService;
 
     @Override
     @Transactional(isolation = Isolation.READ_COMMITTED)
-    public void runMatchingSchedule() throws ReferencedResourceGone {
-        MatchGroup matchGroup = matchGroupService.prepareAndPost();
+    public void runMatchingSchedule() {
+        MatchGroup matchGroup = matchGroupTableService.post(createMatchGroupPost());
 
-        List<User> userList = userService.getWhereReadyToParticipate();
-        BlockMap blockMap = new BlockMap(blockService.getAll());
+        List<User> userReadyList = userTableService.getForUpdateWhereReady();
+        BlockMap blockMap = new BlockMap(blockTableService.getAll());
 
-        List<MatchPost> matchPostList = createMatchAddRequestList(matchGroup, userList, blockMap);
+        List<MatchPost> matchPostList = createMatchPostList(matchGroup, userReadyList, blockMap);
+        List<Long> idUserReadyList = StreamMap.fromList(userReadyList, User::id);
 
-        var ignored = matchService.tryPostList(matchPostList);
-        userService.resetIsParticipating();
+        try {
+            var ignored = matchTableService.tryPostList(matchPostList);
+        } catch (ReferencedResourceGone e) {
+            throw new UnreachableException(e);
+        }
+
+        userTableService.setNotReadyByIdList(idUserReadyList);
     }
 
-    private List<MatchPost> createMatchAddRequestList(
-            MatchGroup matchGroup,
-            List<User> userList,
-            BlockMap blockMap
-    ) {
+    private MatchGroupPost createMatchGroupPost() {
+        Instant matchTime = Instant.now();
+        Integer maxMatchesPerUser = appConfig.matching().maxMatchesPerUser();
+        Integer readyIndex = appConfig.quiz().readyIndex();
+
+        return new MatchGroupPost(matchTime, maxMatchesPerUser, readyIndex);
+    }
+
+    private List<MatchPost> createMatchPostList(MatchGroup matchGroup, List<User> userList, BlockMap blockMap) {
         List<MatchPost> matchPostList = new ArrayList<>();
 
         for (User userMain : userList) {

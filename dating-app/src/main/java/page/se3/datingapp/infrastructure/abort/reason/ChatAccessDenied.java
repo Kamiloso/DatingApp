@@ -6,6 +6,6 @@ import page.se3.datingapp.infrastructure.abort.AbortException;
 public final class ChatAccessDenied extends AbortException {
 
     public ChatAccessDenied() {
-        super(HttpStatus.FORBIDDEN, "Chat access denied");
+        super(HttpStatus.FORBIDDEN);
     }
 }

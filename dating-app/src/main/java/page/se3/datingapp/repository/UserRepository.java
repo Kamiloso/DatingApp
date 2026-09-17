@@ -18,21 +18,15 @@ public interface UserRepository extends ListCrudRepository<@NonNull UserEntity, 
                 WHERE
                     is_participating = 1 AND
                     ready_index = :readyIndex
+                FOR UPDATE
             """)
-    List<UserEntity> findWhereIsParticipatingAndMatchesReadyIndex(Integer readyIndex);
+    List<UserEntity> findForUpdateByReadyIndexWhereIsParticipating(Integer readyIndex);
 
     @Modifying
     @Query("""
             UPDATE users
-                SET is_participating = :isParticipating
-                WHERE id = :id
+                SET is_participating = 0
+                WHERE id IN (:idList)
             """)
-    void updateIsParticipatingById(Long id, Boolean isParticipating);
-
-    @Modifying
-    @Query("""
-            UPDATE users
-                SET is_participating = :isParticipating
-            """)
-    void updateIsParticipating(Boolean isParticipating);
+    void resetIsParticipatingByIdList(List<Long> idList);
 }

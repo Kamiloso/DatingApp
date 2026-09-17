@@ -1,19 +1,21 @@
 package page.se3.datingapp.model.struct.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
-import page.se3.datingapp.model.Scheme;
+import page.se3.datingapp.model.DataScheme;
 import page.se3.datingapp.model.enums.Gender;
 
+@Schema(description = "Represents a higher user entry")
 public record UserHigher(
         @NotNull
         Long id,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String name,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String surname,
 
         @NotNull
@@ -24,10 +26,10 @@ public record UserHigher(
         Integer age,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String fieldOfStudy,
 
         @NotNull
-        @Size(max = Scheme.LEN_2047)
+        @Size(max = DataScheme.LEN_2047)
         String description
 ) {}

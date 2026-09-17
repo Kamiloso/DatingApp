@@ -6,6 +6,6 @@ import page.se3.datingapp.infrastructure.abort.AbortException;
 public final class UserAlreadyExists extends AbortException {
 
     public UserAlreadyExists() {
-        super(HttpStatus.CONFLICT, "User already exists");
+        super(HttpStatus.CONFLICT);
     }
 }

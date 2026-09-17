@@ -6,6 +6,6 @@ import page.se3.datingapp.infrastructure.abort.AbortException;
 public final class UserNotFound extends AbortException {
 
     public UserNotFound() {
-        super(HttpStatus.NOT_FOUND, "User not found");
+        super(HttpStatus.NOT_FOUND);
     }
 }

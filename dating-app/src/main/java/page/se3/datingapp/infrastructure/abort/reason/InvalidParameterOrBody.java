@@ -6,6 +6,6 @@ import page.se3.datingapp.infrastructure.abort.AbortException;
 public final class InvalidParameterOrBody extends AbortException {
 
     public InvalidParameterOrBody() {
-        super(HttpStatus.BAD_REQUEST, "Invalid parameter or body");
+        super(HttpStatus.BAD_REQUEST);
     }
 }

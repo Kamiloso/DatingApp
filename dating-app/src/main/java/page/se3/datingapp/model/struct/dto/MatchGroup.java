@@ -1,9 +1,11 @@
 package page.se3.datingapp.model.struct.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 
 import java.time.Instant;
 
+@Schema(description = "Represents a complete match group entry")
 public record MatchGroup(
         @NotNull
         Long id,

@@ -1,24 +1,26 @@
 package page.se3.datingapp.model.struct.dto;
 
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
-import page.se3.datingapp.model.Scheme;
+import page.se3.datingapp.model.DataScheme;
 import page.se3.datingapp.model.enums.Gender;
 import page.se3.datingapp.model.enums.Relationship;
 
+@Schema(description = "Represents a complete user account entry")
 public record User(
         @NotNull
         Long id,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String email,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String name,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String surname,
 
         @NotNull
@@ -29,11 +31,11 @@ public record User(
         Integer age,
 
         @NotNull
-        @Size(max = Scheme.LEN_255)
+        @Size(max = DataScheme.LEN_255)
         String fieldOfStudy,
 
         @NotNull
-        @Size(max = Scheme.LEN_2047)
+        @Size(max = DataScheme.LEN_2047)
         String description,
 
         @NotNull
@@ -43,7 +45,7 @@ public record User(
         Relationship targetRelationship,
 
         @NotNull
-        @Size(max = Scheme.LEN_2047)
+        @Size(max = DataScheme.LEN_2047)
         String quizAnswers,
 
         @NotNull

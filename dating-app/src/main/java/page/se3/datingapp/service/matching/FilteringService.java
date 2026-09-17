@@ -19,9 +19,9 @@ class FilteringServiceImpl implements FilteringService {
 
     @Override
     public boolean meetsMatchRequirements(User userMain, User userMatch) {
-        AppConfig.Matching matchingConfig = appConfig.matching();
+        int maxAgeDifference = appConfig.matching().maxAgeDifference();
 
-        boolean isAgeMatch = Math.abs(userMain.age() - userMatch.age()) <= matchingConfig.maxAgeDifference();
+        boolean isAgeMatch = Math.abs(userMain.age() - userMatch.age()) <= maxAgeDifference;
 
         boolean isGenderMatch = Gender.isMatch(
                 userMain.gender(),

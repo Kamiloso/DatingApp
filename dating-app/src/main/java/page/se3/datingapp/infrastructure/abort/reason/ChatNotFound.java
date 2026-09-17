@@ -6,6 +6,6 @@ import page.se3.datingapp.infrastructure.abort.AbortException;
 public final class ChatNotFound extends AbortException {
 
     public ChatNotFound() {
-        super(HttpStatus.NOT_FOUND, "Chat not found");
+        super(HttpStatus.NOT_FOUND);
     }
 }

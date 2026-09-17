@@ -2,18 +2,23 @@ package page.se3.datingapp.infrastructure.abort;
 
 import lombok.Getter;
 import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import page.se3.datingapp.core.util.StringUtils;
+import page.se3.datingapp.model.response.Problem;
 
 @Getter
-@RequiredArgsConstructor
 public abstract class AbortException extends Exception {
 
     private final HttpStatus httpStatus;
-    private final String message;
+    private final String errorType;
 
-    public ResponseEntity<@NonNull String> responseEntity() {
-        return ResponseEntity.status(httpStatus).body(message);
+    public AbortException(HttpStatus httpStatus) {
+        this.httpStatus = httpStatus;
+        this.errorType = StringUtils.pascalToSnakeCase(this.getClass().getSimpleName());
+    }
+
+    public ResponseEntity<@NonNull Problem> responseEntity() {
+        return ResponseEntity.status(httpStatus).body(new Problem(httpStatus.value(), errorType));
     }
 }

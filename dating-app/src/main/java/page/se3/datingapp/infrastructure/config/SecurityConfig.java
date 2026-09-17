@@ -4,7 +4,6 @@ import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -19,7 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import page.se3.datingapp.model.Scheme;
+import page.se3.datingapp.model.DataScheme;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -33,21 +32,13 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) {
-        http
+        return http
                 .authorizeHttpRequests(authz -> authz
-                        .requestMatchers("/api-public/**").permitAll()
-                        .requestMatchers("/api/**").authenticated()
-                        .requestMatchers(request -> {
-                            String ip = request.getRemoteAddr();
-                            return "127.0.0.1".equals(ip) || "::1".equals(ip) || "0:0:0:0:0:0:0:1".equals(ip);
-                        }).permitAll()
-                        .anyRequest().denyAll()
+                        .anyRequest().permitAll()
                 )
-                .oauth2ResourceServer(oauth2 -> oauth2.jwt(Customizer.withDefaults()))
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-                .csrf(AbstractHttpConfigurer::disable);
-
-        return http.build();
+                .csrf(AbstractHttpConfigurer::disable)
+                .build();
     }
 
     @Bean
@@ -84,7 +75,7 @@ public class SecurityConfig {
         return jwt -> {
             String email = jwt.getClaimAsString("email");
 
-            return email != null && email.length() <= Scheme.LEN_255 && emailPattern.matcher(email).matches()
+            return email != null && email.length() <= DataScheme.LEN_255 && emailPattern.matcher(email).matches()
                     ? OAuth2TokenValidatorResult.success()
                     : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_email"));
         };

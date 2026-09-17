@@ -6,6 +6,6 @@ import page.se3.datingapp.infrastructure.abort.AbortException;
 public final class ReferencedResourceGone extends AbortException {
 
     public ReferencedResourceGone() {
-        super(HttpStatus.GONE, "Referenced resource gone");
+        super(HttpStatus.GONE);
     }
 }

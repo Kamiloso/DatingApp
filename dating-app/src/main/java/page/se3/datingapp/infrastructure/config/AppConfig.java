@@ -41,7 +41,7 @@ public record AppConfig(
     public record Limits(
             @NotNull
             @Positive
-            Integer maxListReturnSize
+            Integer batchSize
     ) {}
 
     public record Matching(
@@ -55,31 +55,22 @@ public record AppConfig(
 
             @Valid
             @NotNull
-            Cycle cycle,
-
-            @Valid
-            @NotNull
-            Retry retry
+            Cycle cycle
     ) {
         public record Cycle(
                 @NotBlank
                 String cron,
 
                 @NotBlank
-                String cleanupCron,
-
-                @NotBlank
-                String timezone
-        ) {}
-
-        public record Retry(
-                @NotNull
-                @PositiveOrZero
-                Integer maxRetries,
+                String timezone,
 
                 @NotNull
-                @PositiveOrZero
-                Integer cooldownMilliseconds
+                @Positive
+                Integer lockAtLeastForMinutes,
+
+                @NotNull
+                @Positive
+                Integer lockAtMostForMinutes
         ) {}
     }
 
