@@ -10,21 +10,15 @@ import page.se3.datingapp.infrastructure.struct.PubSubInfo;
 
 import java.util.function.Consumer;
 
-public interface TransferService {
-    <T> void send(String channelName, T obj);
-    <T> void subscribe(String channelName, Consumer<T> consumer, Class<T> clazz);
-}
-
 @Service
 @RequiredArgsConstructor
-class TransferServiceImpl implements TransferService {
+public class TransferService {
 
     private final PubSubInfo pubSubInfo;
     private final StringRedisTemplate redisTemplate;
     private final RedisMessageListenerContainer messageListenerContainer;
     private final JsonSerializer jsonSerializer;
 
-    @Override
     public <T> void send(String channelName, T obj) {
         String channel = pubSubInfo.stringKey().with(channelName).get();
         String payload = jsonSerializer.serialize(obj);
@@ -32,7 +26,6 @@ class TransferServiceImpl implements TransferService {
         redisTemplate.convertAndSend(channel, payload);
     }
 
-    @Override
     public <T> void subscribe(String channelName, Consumer<T> consumer, Class<T> clazz) {
         String channel = pubSubInfo.stringKey().with(channelName).get();
 

@@ -14,23 +14,12 @@ import page.se3.datingapp.onion.accessor.UserAccessor;
 
 import java.util.Objects;
 
-public interface AccountService {
-    User getUserAccount(Jwt jwt) throws AccountNotFound;
-    User registerUserAccount(Jwt jwt, UserAccountRegisterRequest userAccountRegisterRequest) throws AccountAlreadyExists;
-
-    default AuthKey getAuthKey(Jwt jwt) throws AccountNotFound {
-        User userAccount = getUserAccount(jwt);
-        return new AuthKey(userAccount.id(), userAccount.email());
-    }
-}
-
 @Service
 @RequiredArgsConstructor
-class AccountServiceImpl implements AccountService {
+public class AccountService {
 
     private final UserAccessor userAccessor;
 
-    @Override
     public User getUserAccount(Jwt jwt) throws AccountNotFound {
         String email = Objects.requireNonNull(jwt.getClaimAsString("email"));
 
@@ -38,8 +27,10 @@ class AccountServiceImpl implements AccountService {
                 .orElseThrow(AccountNotFound::new);
     }
 
-    @Override
-    public User registerUserAccount(Jwt jwt, UserAccountRegisterRequest userAccountRegisterRequest) throws AccountAlreadyExists {
+    public User registerUserAccount(
+            Jwt jwt,
+            UserAccountRegisterRequest userAccountRegisterRequest
+    ) throws AccountAlreadyExists {
         String email = Objects.requireNonNull(jwt.getClaimAsString("email"));
         UserPost userPost = userAccountRegisterRequest.upgrade(email);
 
@@ -48,5 +39,10 @@ class AccountServiceImpl implements AccountService {
         } catch (DataIntegrityViolation e) {
             throw new AccountAlreadyExists();
         }
+    }
+
+    public AuthKey getAuthKey(Jwt jwt) throws AccountNotFound {
+        User userAccount = getUserAccount(jwt);
+        return new AuthKey(userAccount.id(), userAccount.email());
     }
 }

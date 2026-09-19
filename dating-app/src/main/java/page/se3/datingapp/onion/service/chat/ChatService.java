@@ -8,17 +8,12 @@ import page.se3.datingapp.onion.accessor.ChatAccessor;
 
 import java.util.List;
 
-public interface ChatService {
-    List<Chat> getList(AuthKey authKey);
-}
-
 @Service
 @RequiredArgsConstructor
-class ChatServiceImpl implements ChatService {
+public class ChatService {
 
     private final ChatAccessor chatAccessor;
 
-    @Override
     public List<Chat> getList(AuthKey authKey) {
         return chatAccessor.getByIdUser(authKey.id());
     }

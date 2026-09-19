@@ -8,13 +8,9 @@ import page.se3.datingapp.model.struct.entity.MatchGroupEntity;
 import page.se3.datingapp.model.struct.post.MatchGroupPost;
 import page.se3.datingapp.onion.repository.MatchGroupRepository;
 
-public interface MatchGroupAccessor {
-    MatchGroup post(MatchGroupPost matchGroupPost);
-}
-
 @Service
 @RequiredArgsConstructor
-class MatchGroupAccessorImpl implements MatchGroupAccessor {
+public class MatchGroupAccessor {
 
     private final MatchGroupRepository matchGroupRepository;
     private final MatchGroupMapper matchGroupMapper;

@@ -14,19 +14,13 @@ import page.se3.datingapp.onion.repository.MessageRepository;
 import java.time.Instant;
 import java.util.List;
 
-public interface MessageAccessor {
-    List<Message> getNextMessageListById(Long idChat, Instant lastFetchTime, Integer maxListSize);
-    Message tryPost(MessagePost messagePost) throws DataIntegrityViolation;
-}
-
 @Service
 @RequiredArgsConstructor
-class MessageAccessorImpl implements MessageAccessor {
+public class MessageAccessor {
 
     private final MessageRepository messageRepository;
     private final MessageMapper messageMapper;
 
-    @Override
     public List<Message> getNextMessageListById(Long idChat, Instant lastFetchTime, Integer maxListSize) {
         return StreamMap.fromList(
                 messageRepository.findByIdChatAfterSendTimeWithLimit(idChat, lastFetchTime, maxListSize),
@@ -34,7 +28,6 @@ class MessageAccessorImpl implements MessageAccessor {
         );
     }
 
-    @Override
     public Message tryPost(MessagePost messagePost) throws DataIntegrityViolation {
         MessageEntity messageEntity = messageMapper.toEntity(messagePost);
 

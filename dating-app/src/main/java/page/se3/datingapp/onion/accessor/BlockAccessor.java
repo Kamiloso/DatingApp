@@ -9,14 +9,9 @@ import page.se3.datingapp.onion.repository.BlockRepository;
 
 import java.util.List;
 
-public interface BlockAccessor {
-    List<Block> getByIdUserOwner(Long idUserOwner);
-    List<Block> getAll();
-}
-
 @Service
 @RequiredArgsConstructor
-class BlockAccessorImpl implements BlockAccessor {
+public class BlockAccessor {
 
     private final BlockRepository blockRepository;
     private final BlockMapper blockMapper;

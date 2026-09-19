@@ -17,27 +17,13 @@ import page.se3.datingapp.onion.accessor.ChatAccessor;
 import java.time.Instant;
 import java.util.List;
 
-public interface MsgService {
-    Message send(AuthKey authKey, Long idChat, MsgSendRequest msgSendRequest)
-            throws ChatNotFound, ChatAccessDenied;
-
-    DeferredResult<@NonNull List<Message>> fetchMessageList(
-            AuthKey authKey,
-            Long idChat,
-            Instant lastFetchTime,
-            Integer maxListSize,
-            Long waitTimeout
-    ) throws ChatNotFound, ChatAccessDenied;
-}
-
 @Service
 @RequiredArgsConstructor
-class MsgServiceImpl implements MsgService {
+public class MsgService {
 
     private final ChatAccessor chatAccessor;
     private final MsgRealTimeService msgRealTimeService;
 
-    @Override
     public Message send(AuthKey authKey, Long idChat, MsgSendRequest msgSendRequest)
             throws ChatNotFound, ChatAccessDenied {
         checkExistenceAndPrivileges(authKey, idChat);

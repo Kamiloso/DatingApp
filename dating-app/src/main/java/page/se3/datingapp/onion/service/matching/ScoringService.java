@@ -7,13 +7,9 @@ import page.se3.datingapp.model.struct.dto.User;
 import java.util.List;
 import java.util.regex.Pattern;
 
-public interface ScoringService {
-    int computeMatchScore(User userMain, User userMatch);
-}
-
 @Service
 @RequiredArgsConstructor
-class ScoringServiceImpl implements ScoringService {
+public class ScoringService {
 
     // TODO: move quiz objects into some sort of config
 
@@ -30,7 +26,6 @@ class ScoringServiceImpl implements ScoringService {
             new QuizSegment(5, false)
     );
 
-    @Override
     public int computeMatchScore(User userMain, User userMatch) {
         String[] quizArray1 = userMain.quizAnswers().split(Pattern.quote(QUIZ_SEPARATOR));
         String[] quizArray2 = userMatch.quizAnswers().split(Pattern.quote(QUIZ_SEPARATOR));

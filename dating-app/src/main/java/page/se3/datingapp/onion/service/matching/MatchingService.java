@@ -2,10 +2,9 @@ package page.se3.datingapp.onion.service.matching;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Isolation;
-import org.springframework.transaction.annotation.Transactional;
 import page.se3.datingapp.core.struct.Weight;
 import page.se3.datingapp.core.util.StreamMap;
+import page.se3.datingapp.infrastructure.Transaction;
 import page.se3.datingapp.infrastructure.abort.reason.DataIntegrityViolation;
 import page.se3.datingapp.infrastructure.config.AppConfig;
 import page.se3.datingapp.infrastructure.exception.UnreachableCodeException;
@@ -25,13 +24,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 import java.util.PriorityQueue;
 
-public interface MatchingService {
-    void runMatchingSchedule();
-}
-
 @Service
 @RequiredArgsConstructor
-class MatchingServiceImpl implements MatchingService {
+public class MatchingService {
 
     private final AppConfig appConfig;
     private final BlockAccessor blockAccessor;
@@ -41,8 +36,7 @@ class MatchingServiceImpl implements MatchingService {
     private final FilteringService filteringService;
     private final ScoringService scoringService;
 
-    @Override
-    @Transactional(isolation = Isolation.READ_COMMITTED)
+    @Transaction.ReadCommitted
     public void runMatchingSchedule() {
         MatchGroup matchGroup = matchGroupAccessor.post(createMatchGroupPost());
 

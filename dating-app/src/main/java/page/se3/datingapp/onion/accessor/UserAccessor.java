@@ -3,10 +3,9 @@ package page.se3.datingapp.onion.accessor;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Propagation;
-import org.springframework.transaction.annotation.Transactional;
 import page.se3.datingapp.core.util.DivisionUtils;
 import page.se3.datingapp.core.util.StreamMap;
+import page.se3.datingapp.infrastructure.Transaction;
 import page.se3.datingapp.infrastructure.abort.reason.DataIntegrityViolation;
 import page.se3.datingapp.infrastructure.config.AppConfig;
 import page.se3.datingapp.model.struct.dto.User;
@@ -20,30 +19,19 @@ import java.util.Optional;
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface UserAccessor {
-    Optional<User> getByEmail(String email);
-    List<User> getWhereReadyForUpdate();
-    List<User> getByIdList(List<Long> idList);
-
-    User tryPost(UserPost userPost) throws DataIntegrityViolation;
-    void setNotReadyByIdList(List<Long> idList);
-}
-
 @Service
 @RequiredArgsConstructor
-class UserAccessorImpl implements UserAccessor {
+public class UserAccessor {
 
     private final AppConfig appConfig;
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    @Override
     public Optional<User> getByEmail(String email) {
         return userRepository.findByEmail(email)
                 .map(userMapper::toDto);
     }
 
-    @Override
     public List<User> getWhereReadyForUpdate() {
         Integer readyIndex = appConfig.quiz().readyIndex();
 
@@ -53,7 +41,6 @@ class UserAccessorImpl implements UserAccessor {
         );
     }
 
-    @Override
     public List<User> getByIdList(List<Long> idList) {
         Integer batchSize = appConfig.limits().batchSize();
         Function<List<Long>, List<UserEntity>> converter = userRepository::findAllById;
@@ -64,7 +51,6 @@ class UserAccessorImpl implements UserAccessor {
         );
     }
 
-    @Override
     public User tryPost(UserPost userPost) throws DataIntegrityViolation {
         UserEntity userEntity = userMapper.toEntity(userPost);
 
@@ -77,8 +63,7 @@ class UserAccessorImpl implements UserAccessor {
         return userMapper.toDto(userEntity);
     }
 
-    @Override
-    @Transactional(propagation = Propagation.MANDATORY)
+    @Transaction.Mandatory
     public void setNotReadyByIdList(List<Long> idList) {
         Integer batchSize = appConfig.limits().batchSize();
         Consumer<List<Long>> processor = userRepository::resetIsParticipatingByIdList;

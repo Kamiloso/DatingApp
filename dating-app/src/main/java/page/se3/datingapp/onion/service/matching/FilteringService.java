@@ -7,17 +7,12 @@ import page.se3.datingapp.model.struct.dto.User;
 import page.se3.datingapp.model.enums.Gender;
 import page.se3.datingapp.model.enums.Relationship;
 
-public interface FilteringService {
-    boolean meetsMatchRequirements(User userMain, User userMatch);
-}
-
 @Service
 @RequiredArgsConstructor
-class FilteringServiceImpl implements FilteringService {
+public class FilteringService {
 
     private final AppConfig appConfig;
 
-    @Override
     public boolean meetsMatchRequirements(User userMain, User userMatch) {
         int maxAgeDifference = appConfig.matching().maxAgeDifference();
 

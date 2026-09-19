@@ -10,6 +10,7 @@ import java.util.Map;
 import java.util.Set;
 
 public class BlockMap {
+
     private final Map<Long, Set<Long>> map = new HashMap<>();
 
     public BlockMap(List<Block> blockList) {

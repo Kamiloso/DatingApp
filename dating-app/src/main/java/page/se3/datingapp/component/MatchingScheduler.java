@@ -21,7 +21,7 @@ import java.util.TimeZone;
 @RequiredArgsConstructor
 public class MatchingScheduler implements SchedulingConfigurer {
 
-    private static final StringKey LOCK_KEY = StringKey.create("matching-lock");
+    private static final StringKey SCHEDULE_LOCK = StringKey.create("matching-lock");
 
     private final AppConfig appConfig;
     private final MatchingService matchingService;
@@ -46,7 +46,7 @@ public class MatchingScheduler implements SchedulingConfigurer {
                 (Runnable) this::executeMatching,
                 new LockConfiguration(
                         Instant.now(),
-                        LOCK_KEY.get(),
+                        SCHEDULE_LOCK.get(),
                         Duration.ofMinutes(cycleConfig.lockAtMostForMinutes()),
                         Duration.ofMinutes(cycleConfig.lockAtLeastForMinutes())
                 )

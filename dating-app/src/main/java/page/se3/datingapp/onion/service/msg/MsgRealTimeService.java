@@ -20,22 +20,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentLinkedQueue;
 import java.util.concurrent.ConcurrentMap;
 
-public interface MsgRealTimeService {
-    Message sendMessage(MessagePost messagePost) throws DataIntegrityViolation;
-
-    DeferredResult<@NonNull List<Message>> fetchMessageListByIdChat(
-            Long idChat,
-            Instant lastFetchTime,
-            Integer maxListSize,
-            Long waitTimeout
-    );
-}
-
 @Service
 @RequiredArgsConstructor
-class MsgRealTimeServiceImpl implements MsgRealTimeService {
+public class MsgRealTimeService {
 
-    private static final StringKey CHANNEL_KEY = StringKey.create(MsgRealTimeServiceImpl.class);
+    private static final StringKey CHANNEL_NAME = StringKey.create("msg-real-time");
 
     private final MessageAccessor messageAccessor;
     private final TransferService transferService;
@@ -44,13 +33,12 @@ class MsgRealTimeServiceImpl implements MsgRealTimeService {
 
     @PostConstruct
     private void init() {
-        transferService.subscribe(CHANNEL_KEY.get(), this::onReceiveMessage, Message.class);
+        transferService.subscribe(CHANNEL_NAME.get(), this::onReceiveMessage, Message.class);
     }
 
-    @Override
     public Message sendMessage(MessagePost messagePost) throws DataIntegrityViolation {
         Message message = messageAccessor.tryPost(messagePost);
-        transferService.send(CHANNEL_KEY.get(), message);
+        transferService.send(CHANNEL_NAME.get(), message);
         return message;
     }
 
@@ -63,7 +51,6 @@ class MsgRealTimeServiceImpl implements MsgRealTimeService {
         }
     }
 
-    @Override
     public DeferredResult<@NonNull List<Message>> fetchMessageListByIdChat(
             Long idChat,
             Instant lastFetchTime,

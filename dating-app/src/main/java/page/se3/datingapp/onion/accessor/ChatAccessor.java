@@ -10,25 +10,18 @@ import page.se3.datingapp.onion.repository.ChatRepository;
 import java.util.List;
 import java.util.Optional;
 
-public interface ChatAccessor {
-    Optional<Chat> getById(Long id);
-    List<Chat> getByIdUser(Long idUser);
-}
-
 @Service
 @RequiredArgsConstructor
-class ChatAccessorImpl implements ChatAccessor {
+public class ChatAccessor {
 
     private final ChatRepository chatRepository;
     private final ChatMapper chatMapper;
 
-    @Override
     public Optional<Chat> getById(Long id) {
         return chatRepository.findById(id)
                 .map(chatMapper::toDto);
     }
 
-    @Override
     public List<Chat> getByIdUser(Long idUser) {
         return StreamMap.fromList(
                 chatRepository.findByIdUser(idUser),
