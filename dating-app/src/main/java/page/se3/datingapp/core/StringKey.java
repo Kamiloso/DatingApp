@@ -1,30 +1,37 @@
 package page.se3.datingapp.core;
 
-import lombok.EqualsAndHashCode;
-import lombok.NonNull;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
 
 @EqualsAndHashCode
-@RequiredArgsConstructor
+@RequiredArgsConstructor(access = AccessLevel.PRIVATE)
 public class StringKey {
 
     private final String contents;
 
-    public static StringKey derive(Class<?> clazz) {
-        return new StringKey(clazz.getTypeName());
+    public static StringKey create(Object obj) {
+        return new StringKey(normalize(obj));
     }
 
-    public StringKey add(Object obj) {
-        return new StringKey(contents + ":" + obj);
+    public StringKey with(Object obj) {
+        return new StringKey(contents + ":" + normalize(obj));
     }
 
     public String get() {
         return contents;
     }
 
+    private static String normalize(Object obj) {
+        String sourceString = obj instanceof Class<?> clazz
+                ? "CLASS=" + clazz.getTypeName()
+                : String.valueOf(obj);
+
+        return sourceString
+                .replace("%", "%A")
+                .replace(":", "%B");
+    }
+
     @Override
-    @NonNull
     public String toString() {
-        return String.valueOf(contents);
+        return contents;
     }
 }

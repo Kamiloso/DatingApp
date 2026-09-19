@@ -2,9 +2,7 @@ package page.se3.datingapp.component;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.javacrumbs.shedlock.core.DefaultLockingTaskExecutor;
 import net.javacrumbs.shedlock.core.LockConfiguration;
-import net.javacrumbs.shedlock.core.LockProvider;
 import net.javacrumbs.shedlock.core.LockingTaskExecutor;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -12,7 +10,7 @@ import org.springframework.scheduling.support.CronTrigger;
 import org.springframework.stereotype.Component;
 import page.se3.datingapp.infrastructure.config.AppConfig;
 import page.se3.datingapp.core.StringKey;
-import page.se3.datingapp.service.matching.MatchingService;
+import page.se3.datingapp.onion.service.matching.MatchingService;
 
 import java.time.Duration;
 import java.time.Instant;
@@ -23,11 +21,11 @@ import java.util.TimeZone;
 @RequiredArgsConstructor
 public class MatchingScheduler implements SchedulingConfigurer {
 
-    private static final StringKey STRING_KEY = StringKey.derive(MatchingScheduler.class);
+    private static final StringKey LOCK_KEY = StringKey.create("matching-lock");
 
     private final AppConfig appConfig;
     private final MatchingService matchingService;
-    private final LockProvider lockProvider;
+    private final LockingTaskExecutor lockingTaskExecutor;
 
     @Override
     public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
@@ -44,13 +42,11 @@ public class MatchingScheduler implements SchedulingConfigurer {
     private void tryExecuteMatching() {
         AppConfig.Matching.Cycle cycleConfig = appConfig.matching().cycle();
 
-        LockingTaskExecutor executor = new DefaultLockingTaskExecutor(lockProvider);
-
-        executor.executeWithLock(
+        lockingTaskExecutor.executeWithLock(
                 (Runnable) this::executeMatching,
                 new LockConfiguration(
                         Instant.now(),
-                        STRING_KEY.get(),
+                        LOCK_KEY.get(),
                         Duration.ofMinutes(cycleConfig.lockAtMostForMinutes()),
                         Duration.ofMinutes(cycleConfig.lockAtLeastForMinutes())
                 )

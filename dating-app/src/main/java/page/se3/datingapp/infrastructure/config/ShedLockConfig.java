@@ -12,11 +12,9 @@ import page.se3.datingapp.core.StringKey;
 @Configuration
 public class ShedLockConfig {
 
-    private static final StringKey STRING_KEY = StringKey.derive(ShedLockConfig.class);
-
     @Bean
     public LockProvider lockProvider(RedisConnectionFactory connectionFactory) {
-        return new RedisLockProvider(connectionFactory, STRING_KEY.get());
+        return new RedisLockProvider(connectionFactory, StringKey.create("shedlock").get());
     }
 
     @Bean

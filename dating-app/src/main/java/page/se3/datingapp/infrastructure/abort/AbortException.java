@@ -18,7 +18,7 @@ public abstract class AbortException extends Exception {
         this.errorType = StringUtils.pascalToSnakeCase(this.getClass().getSimpleName());
     }
 
-    public ResponseEntity<@NonNull Problem> responseEntity() {
+    public final ResponseEntity<@NonNull Problem> responseEntity() {
         return ResponseEntity.status(httpStatus).body(new Problem(httpStatus.value(), errorType));
     }
 }

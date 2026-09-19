@@ -3,7 +3,7 @@ package page.se3.datingapp.model.struct.dto;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
-import page.se3.datingapp.model.DataScheme;
+import page.se3.datingapp.infrastructure.util.Final;
 
 import java.time.Instant;
 
@@ -13,7 +13,7 @@ public record Message(
         Long id,
 
         @NotNull
-        @Size(max = DataScheme.LEN_2047)
+        @Size(max = Final.LEN_2047)
         String message,
 
         @NotNull

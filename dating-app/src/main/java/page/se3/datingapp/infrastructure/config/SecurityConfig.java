@@ -18,7 +18,7 @@ import org.springframework.security.oauth2.jwt.JwtDecoders;
 import org.springframework.security.oauth2.jwt.JwtValidators;
 import org.springframework.security.oauth2.jwt.NimbusJwtDecoder;
 import org.springframework.security.web.SecurityFilterChain;
-import page.se3.datingapp.model.DataScheme;
+import page.se3.datingapp.infrastructure.util.Final;
 
 import java.util.List;
 import java.util.regex.Pattern;
@@ -31,7 +31,7 @@ public class SecurityConfig {
     private final AppConfig appConfig;
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) {
+    public SecurityFilterChain securityFilterChain(HttpSecurity http) {
         return http
                 .authorizeHttpRequests(authz -> authz
                         .anyRequest().permitAll()
@@ -75,7 +75,7 @@ public class SecurityConfig {
         return jwt -> {
             String email = jwt.getClaimAsString("email");
 
-            return email != null && email.length() <= DataScheme.LEN_255 && emailPattern.matcher(email).matches()
+            return email != null && email.length() <= Final.LEN_255 && emailPattern.matcher(email).matches()
                     ? OAuth2TokenValidatorResult.success()
                     : OAuth2TokenValidatorResult.failure(new OAuth2Error("invalid_email"));
         };

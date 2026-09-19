@@ -1,0 +1,49 @@
+package page.se3.datingapp.onion.accessor;
+
+import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import page.se3.datingapp.core.util.StreamMap;
+import page.se3.datingapp.infrastructure.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.model.struct.dto.Message;
+import page.se3.datingapp.model.struct.entity.MessageEntity;
+import page.se3.datingapp.model.mapper.MessageMapper;
+import page.se3.datingapp.model.struct.post.MessagePost;
+import page.se3.datingapp.onion.repository.MessageRepository;
+
+import java.time.Instant;
+import java.util.List;
+
+public interface MessageAccessor {
+    List<Message> getNextMessageListById(Long idChat, Instant lastFetchTime, Integer maxListSize);
+    Message tryPost(MessagePost messagePost) throws DataIntegrityViolation;
+}
+
+@Service
+@RequiredArgsConstructor
+class MessageAccessorImpl implements MessageAccessor {
+
+    private final MessageRepository messageRepository;
+    private final MessageMapper messageMapper;
+
+    @Override
+    public List<Message> getNextMessageListById(Long idChat, Instant lastFetchTime, Integer maxListSize) {
+        return StreamMap.fromList(
+                messageRepository.findByIdChatAfterSendTimeWithLimit(idChat, lastFetchTime, maxListSize),
+                messageMapper::toDto
+        );
+    }
+
+    @Override
+    public Message tryPost(MessagePost messagePost) throws DataIntegrityViolation {
+        MessageEntity messageEntity = messageMapper.toEntity(messagePost);
+
+        try {
+            messageEntity = messageRepository.save(messageEntity);
+        } catch (DataIntegrityViolationException e) {
+            throw new DataIntegrityViolation();
+        }
+
+        return messageMapper.toDto(messageEntity);
+    }
+}

@@ -32,7 +32,7 @@ public class SwaggerConfig {
     private static final String SECURITY_SCHEME_NAME = "BearerAuth";
 
     @Bean
-    public OpenApiCustomizer customOpenApiCustomizer() {
+    public OpenApiCustomizer openApiCustomizer() {
         return openApi -> {
             if (openApi.getComponents() == null) {
                 openApi.setComponents(new Components());
@@ -56,7 +56,7 @@ public class SwaggerConfig {
     }
 
     @Bean
-    public OperationCustomizer customOperationCustomizer() {
+    public OperationCustomizer operationCustomizer() {
         return (Operation operation, HandlerMethod handlerMethod) -> {
             ApiResponses apiResponses = operation.getResponses();
 
