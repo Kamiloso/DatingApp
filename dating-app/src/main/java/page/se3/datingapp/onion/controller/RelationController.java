@@ -12,10 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 import page.se3.datingapp.infrastructure.abort.reason.AccountNotFound;
 import page.se3.datingapp.infrastructure.struct.AuthKey;
 import page.se3.datingapp.model.struct.dto.Chat;
-import page.se3.datingapp.model.struct.dto.Match;
-import page.se3.datingapp.model.struct.dto.User;
 import page.se3.datingapp.onion.service.user.AccountService;
-import page.se3.datingapp.onion.service.chat.ChatService;
+import page.se3.datingapp.onion.service.relation.RelationService;
 
 import java.util.List;
 
@@ -27,7 +25,7 @@ import java.util.List;
 public class RelationController {
 
     private final AccountService accountService;
-    private final ChatService chatService;
+    private final RelationService relationService;
 
     @GetMapping("/chats")
     @Operation(summary = "Gets all owned chats")
@@ -36,17 +34,14 @@ public class RelationController {
             Jwt jwt
     ) throws AccountNotFound {
         AuthKey authKey = accountService.getAuthKey(jwt);
-        return chatService.getList(authKey);
+        return relationService.getChatList(authKey);
     }
 
-    @GetMapping("/matches")
-    @Operation(summary = "Gets all active matches")
-    public List<Match> getActiveMatchList(
-            @AuthenticationPrincipal
-            Jwt jwt
-    ) throws AccountNotFound {
-        AuthKey authKey = accountService.getAuthKey(jwt);
+    // GET /matches
 
-        throw new RuntimeException("TODO"); // TODO: finish
-    }
+    // POST /chats (from match)
+
+    // GET /blocks
+    // POST /blocks
+    // DELETE /blocks
 }

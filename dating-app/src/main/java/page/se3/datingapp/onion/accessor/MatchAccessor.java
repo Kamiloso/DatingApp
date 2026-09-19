@@ -25,6 +25,10 @@ public class MatchAccessor {
     private final MatchRepository matchRepository;
     private final MatchMapper matchMapper;
 
+    public List<Match> getAll() {
+        return StreamMap.fromList(matchRepository.findAll(), matchMapper::toDto);
+    }
+
     @Transaction.Mandatory
     public List<Match> tryPostList(List<MatchPost> matchPostList) throws DataIntegrityViolation {
         List<MatchEntity> matchEntityList = StreamMap.fromList(matchPostList, matchMapper::toEntity);

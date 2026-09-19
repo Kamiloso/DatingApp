@@ -15,20 +15,14 @@ import java.util.List;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-public interface UserService {
-    List<UserLower> getLowerList(AuthKey authKey);
-    List<UserHigher> getHigherList(AuthKey authKey);
-}
-
 @Service
 @RequiredArgsConstructor
-class UserServiceImpl implements UserService {
+public class UserService {
 
     private final ChatAccessor chatAccessor;
     private final UserAccessor userAccessor;
     private final UserDowncastMapper userDowncastMapper;
 
-    @Override
     public List<UserLower> getLowerList(AuthKey authKey) {
         return StreamMap.fromList(
                 userAccessor.getByIdList(getPermittedIdUserList(authKey.id(), chat -> true)),
@@ -36,7 +30,6 @@ class UserServiceImpl implements UserService {
         );
     }
 
-    @Override
     public List<UserHigher> getHigherList(AuthKey authKey) {
         return StreamMap.fromList(
                 userAccessor.getByIdList(getPermittedIdUserList(authKey.id(), Chat::isUpgraded)),

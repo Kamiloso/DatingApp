@@ -17,16 +17,10 @@ public class BlockAccessor {
     private final BlockMapper blockMapper;
 
     public List<Block> getByIdUserOwner(Long idUserOwner) {
-        return StreamMap.fromList(
-                blockRepository.findByIdUserOwner(idUserOwner),
-                blockMapper::toDto
-        );
+        return StreamMap.fromList(blockRepository.findByIdUserOwner(idUserOwner), blockMapper::toDto);
     }
 
     public List<Block> getAll() {
-        return StreamMap.fromList(
-                blockRepository.findAll(),
-                blockMapper::toDto
-        );
+        return StreamMap.fromList(blockRepository.findAll(), blockMapper::toDto);
     }
 }
