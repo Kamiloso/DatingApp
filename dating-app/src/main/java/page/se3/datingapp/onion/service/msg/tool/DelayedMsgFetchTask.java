@@ -10,7 +10,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 
-public class DelayedMsgFetchRequest {
+public class DelayedMsgFetchTask {
 
     private enum State {STARTED, DB_FETCHED, FINALIZED}
 
@@ -23,7 +23,7 @@ public class DelayedMsgFetchRequest {
     private State state = State.STARTED;
     private final List<Message> bufferedMessages = new ArrayList<>();
 
-    public DelayedMsgFetchRequest(Long idChat, Integer maxListSize, Long waitTimeout) {
+    public DelayedMsgFetchTask(Long idChat, Integer maxListSize, Long waitTimeout) {
         this.idChat = idChat;
         this.maxListSize = maxListSize;
         this.deferredResult = new DeferredResult<>(waitTimeout, Collections.emptyList());

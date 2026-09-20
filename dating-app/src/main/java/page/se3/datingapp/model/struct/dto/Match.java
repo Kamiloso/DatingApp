@@ -9,13 +9,22 @@ public record Match(
         Long id,
 
         @NotNull
-        Long idUserMain,
+        Long idUserFirst,
 
         @NotNull
-        Long idUserMatch,
+        Long idUserSecond,
 
         @NotNull
         Integer score,
+
+        @NotNull
+        Boolean isDoubleMatch,
+
+        @NotNull
+        Boolean isAppliedByFirst,
+
+        @NotNull
+        Boolean isAppliedBySecond,
 
         @NotNull
         Long idMatchGroup

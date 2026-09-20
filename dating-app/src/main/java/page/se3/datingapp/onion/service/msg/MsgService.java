@@ -13,6 +13,7 @@ import page.se3.datingapp.model.struct.dto.Message;
 import page.se3.datingapp.model.request.MsgSendRequest;
 import page.se3.datingapp.model.struct.post.MessagePost;
 import page.se3.datingapp.onion.accessor.ChatAccessor;
+import page.se3.datingapp.onion.service.PostGetService;
 
 import java.time.Instant;
 import java.util.List;
@@ -23,12 +24,13 @@ public class MsgService {
 
     private final ChatAccessor chatAccessor;
     private final MsgRealTimeService msgRealTimeService;
+    private final PostGetService postGetService;
 
     public Message send(AuthKey authKey, Long idChat, MsgSendRequest msgSendRequest)
             throws ChatNotFound, ChatAccessDenied {
         checkExistenceAndPrivileges(authKey, idChat);
 
-        MessagePost messagePost = msgSendRequest.upgrade(Instant.now(), authKey.id(), idChat);
+        MessagePost messagePost = postGetService.getMessage(msgSendRequest, Instant.now(), authKey.id(), idChat);
 
         try {
             return msgRealTimeService.sendMessage(messagePost);

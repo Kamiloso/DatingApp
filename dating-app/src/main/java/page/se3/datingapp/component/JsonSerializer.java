@@ -1,12 +1,12 @@
-package page.se3.datingapp.onion.service;
+package page.se3.datingapp.component;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import tools.jackson.databind.ObjectMapper;
 
 import java.util.Optional;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class JsonSerializer {
 

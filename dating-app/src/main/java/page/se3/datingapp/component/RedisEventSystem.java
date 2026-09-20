@@ -1,4 +1,4 @@
-package page.se3.datingapp.onion.service;
+package page.se3.datingapp.component;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.redis.connection.MessageListener;
@@ -12,14 +12,14 @@ import java.util.function.Consumer;
 
 @Service
 @RequiredArgsConstructor
-public class TransferService {
+public class RedisEventSystem {
 
     private final PubSubInfo pubSubInfo;
     private final StringRedisTemplate redisTemplate;
     private final RedisMessageListenerContainer messageListenerContainer;
     private final JsonSerializer jsonSerializer;
 
-    public <T> void send(String channelName, T obj) {
+    public <T> void invoke(String channelName, T obj) {
         String channel = pubSubInfo.stringKey().with(channelName).get();
         String payload = jsonSerializer.serialize(obj);
 

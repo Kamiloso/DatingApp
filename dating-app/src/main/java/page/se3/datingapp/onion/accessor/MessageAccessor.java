@@ -22,7 +22,7 @@ public class MessageAccessor {
     private final MessageMapper messageMapper;
 
     public List<Message> getNextMessageListById(Long idChat, Instant lastFetchTime, Integer maxListSize) {
-        return StreamMap.fromList(
+        return StreamMap.toList(
                 messageRepository.findByIdChatAfterSendTimeWithLimit(idChat, lastFetchTime, maxListSize),
                 messageMapper::toDto
         );

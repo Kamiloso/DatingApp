@@ -26,12 +26,12 @@ public class MatchAccessor {
     private final MatchMapper matchMapper;
 
     public List<Match> getAll() {
-        return StreamMap.fromList(matchRepository.findAll(), matchMapper::toDto);
+        return StreamMap.toList(matchRepository.findAll(), matchMapper::toDto);
     }
 
     @Transaction.Mandatory
     public List<Match> tryPostList(List<MatchPost> matchPostList) throws DataIntegrityViolation {
-        List<MatchEntity> matchEntityList = StreamMap.fromList(matchPostList, matchMapper::toEntity);
+        List<MatchEntity> matchEntityList = StreamMap.toList(matchPostList, matchMapper::toEntity);
 
         Integer batchSize = appConfig.limits().batchSize();
         Function<List<MatchEntity>, List<MatchEntity>> converter = matchRepository::saveAll;
@@ -42,6 +42,6 @@ public class MatchAccessor {
             throw new DataIntegrityViolation();
         }
 
-        return StreamMap.fromList(matchEntityList, matchMapper::toDto);
+        return StreamMap.toList(matchEntityList, matchMapper::toDto);
     }
 }

@@ -23,7 +23,7 @@ public class ChatAccessor {
     }
 
     public List<Chat> getByIdUser(Long idUser) {
-        return StreamMap.fromList(
+        return StreamMap.toList(
                 chatRepository.findByIdUser(idUser),
                 chatMapper::toDto
         );

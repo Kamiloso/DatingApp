@@ -13,7 +13,7 @@ import page.se3.datingapp.infrastructure.abort.reason.AccountNotFound;
 import page.se3.datingapp.infrastructure.struct.AuthKey;
 import page.se3.datingapp.model.struct.dto.Chat;
 import page.se3.datingapp.onion.service.user.AccountService;
-import page.se3.datingapp.onion.service.relation.RelationService;
+import page.se3.datingapp.onion.service.relation.ChatService;
 
 import java.util.List;
 
@@ -22,10 +22,10 @@ import java.util.List;
 @Tag(name = "Relations")
 @RequestMapping("/api/relations")
 @RequiredArgsConstructor
-public class RelationController {
+public class ChatController {
 
     private final AccountService accountService;
-    private final RelationService relationService;
+    private final ChatService chatService;
 
     @GetMapping("/chats")
     @Operation(summary = "Gets all owned chats")
@@ -34,7 +34,7 @@ public class RelationController {
             Jwt jwt
     ) throws AccountNotFound {
         AuthKey authKey = accountService.getAuthKey(jwt);
-        return relationService.getChatList(authKey);
+        return chatService.getList(authKey);
     }
 
     // GET /matches

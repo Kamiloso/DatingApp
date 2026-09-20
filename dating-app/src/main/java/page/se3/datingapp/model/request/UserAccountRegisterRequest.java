@@ -28,9 +28,4 @@ public record UserAccountRegisterRequest(
         @NotNull
         @Size(max = Final.LEN_255)
         String fieldOfStudy
-) {
-
-    public UserPost upgrade(String email) {
-        return UserPost.createInitial(email, name, surname, gender, age, fieldOfStudy);
-    }
-}
+) {}

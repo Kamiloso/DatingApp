@@ -7,6 +7,8 @@ import page.se3.datingapp.model.struct.dto.Message;
 import page.se3.datingapp.model.struct.entity.MessageEntity;
 import page.se3.datingapp.model.struct.post.MessagePost;
 
+import java.time.Instant;
+
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface MessageMapper {
 

@@ -1,8 +1,11 @@
 package page.se3.datingapp.model.struct.post;
 
 public record MatchPost(
-        Long idUserMain,
-        Long idUserMatch,
+        Long idUserFirst,
+        Long idUserSecond,
         Integer score,
+        Boolean isDoubleMatch,
+        Boolean isAppliedByFirst,
+        Boolean isAppliedBySecond,
         Long idMatchGroup
 ) {}

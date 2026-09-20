@@ -3,8 +3,8 @@ package page.se3.datingapp.onion.service.user;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.core.util.StreamMap;
-import page.se3.datingapp.model.mapper.UserDowncastMapper;
 import page.se3.datingapp.infrastructure.struct.AuthKey;
+import page.se3.datingapp.model.mapper.UserMapper;
 import page.se3.datingapp.model.struct.dto.Chat;
 import page.se3.datingapp.model.struct.dto.UserHigher;
 import page.se3.datingapp.model.struct.dto.UserLower;
@@ -19,21 +19,21 @@ import java.util.stream.Stream;
 @RequiredArgsConstructor
 public class UserService {
 
-    private final ChatAccessor chatAccessor;
+    private final ChatAccessor chatAccessor; // TODO: change chat to match, add medium mode
     private final UserAccessor userAccessor;
-    private final UserDowncastMapper userDowncastMapper;
+    private final UserMapper userMapper;
 
     public List<UserLower> getLowerList(AuthKey authKey) {
-        return StreamMap.fromList(
+        return StreamMap.toList(
                 userAccessor.getByIdList(getPermittedIdUserList(authKey.id(), chat -> true)),
-                userDowncastMapper::toLower
+                userMapper::toLower
         );
     }
 
     public List<UserHigher> getHigherList(AuthKey authKey) {
-        return StreamMap.fromList(
+        return StreamMap.toList(
                 userAccessor.getByIdList(getPermittedIdUserList(authKey.id(), Chat::isUpgraded)),
-                userDowncastMapper::toHigher
+                userMapper::toHigher
         );
     }
 

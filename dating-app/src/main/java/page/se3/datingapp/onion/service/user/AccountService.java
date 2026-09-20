@@ -11,6 +11,7 @@ import page.se3.datingapp.model.struct.dto.User;
 import page.se3.datingapp.model.request.UserAccountRegisterRequest;
 import page.se3.datingapp.model.struct.post.UserPost;
 import page.se3.datingapp.onion.accessor.UserAccessor;
+import page.se3.datingapp.onion.service.PostGetService;
 
 import java.util.Objects;
 
@@ -19,6 +20,7 @@ import java.util.Objects;
 public class AccountService {
 
     private final UserAccessor userAccessor;
+    private final PostGetService postGetService;
 
     public User getUserAccount(Jwt jwt) throws AccountNotFound {
         String email = Objects.requireNonNull(jwt.getClaimAsString("email"));
@@ -32,7 +34,8 @@ public class AccountService {
             UserAccountRegisterRequest userAccountRegisterRequest
     ) throws AccountAlreadyExists {
         String email = Objects.requireNonNull(jwt.getClaimAsString("email"));
-        UserPost userPost = userAccountRegisterRequest.upgrade(email);
+
+        UserPost userPost = postGetService.getUser(userAccountRegisterRequest, email);
 
         try {
             return userAccessor.tryPost(userPost);

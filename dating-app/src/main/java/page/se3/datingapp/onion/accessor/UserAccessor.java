@@ -35,7 +35,7 @@ public class UserAccessor {
     public List<User> getWhereReadyForUpdate() {
         Integer readyIndex = appConfig.quiz().readyIndex();
 
-        return StreamMap.fromList(
+        return StreamMap.toList(
                 userRepository.findByReadyIndexWhereIsParticipatingForUpdate(readyIndex),
                 userMapper::toDto
         );
@@ -45,7 +45,7 @@ public class UserAccessor {
         Integer batchSize = appConfig.limits().batchSize();
         Function<List<Long>, List<UserEntity>> converter = userRepository::findAllById;
 
-        return StreamMap.fromList(
+        return StreamMap.toList(
                 DivisionUtils.batchConvert(idList, batchSize, converter),
                 userMapper::toDto
         );

@@ -18,7 +18,9 @@ CREATE TABLE users (
     target_relationship ENUM('FRIENDSHIP', 'ROMANTIC', 'BOTH') NOT NULL,
     quiz_answers VARCHAR(2047) NOT NULL,
     is_participating BOOLEAN NOT NULL,
-    ready_index INT NOT NULL
+    ready_index INT NOT NULL,
+
+    INDEX idx_user_ready_indicator (is_participating, ready_index)
 );
 
 CREATE TABLE chats (
@@ -56,17 +58,20 @@ CREATE TABLE match_groups (
 
 CREATE TABLE matches (
     id BIGINT PRIMARY KEY AUTO_INCREMENT NOT NULL,
-    id_user_main BIGINT NOT NULL,
-    id_user_match BIGINT NOT NULL,
+    id_user_first BIGINT NOT NULL,
+    id_user_second BIGINT NOT NULL,
     score INT NOT NULL,
+    is_double_match BOOLEAN NOT NULL,
+    is_applied_by_first BOOLEAN NOT NULL,
+    is_applied_by_second BOOLEAN NOT NULL,
     id_match_group BIGINT NOT NULL,
 
-    CONSTRAINT fk_match_user_main FOREIGN KEY (id_user_main) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_match_user_match FOREIGN KEY (id_user_match) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_match_user_first FOREIGN KEY (id_user_first) REFERENCES users(id) ON DELETE CASCADE,
+    CONSTRAINT fk_match_user_second FOREIGN KEY (id_user_second) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_match_match_group FOREIGN KEY (id_match_group) REFERENCES match_groups(id) ON DELETE CASCADE,
 
-    INDEX idx_match_user_pair (id_user_main, id_user_match),
-    INDEX idx_match_user_match (id_user_match),
+    INDEX idx_match_user_pair (id_user_first, id_user_second),
+    INDEX idx_match_user_second (id_user_second),
     INDEX idx_match_match_group (id_match_group)
 );
 
