@@ -1,0 +1,56 @@
+package page.se3.datingapp.old.model.struct.dto.table;
+
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.*;
+import page.se3.datingapp.old.infrastructure.util.Final;
+import page.se3.datingapp.old.model.enums.Gender;
+import page.se3.datingapp.old.model.enums.Relationship;
+
+@Schema(description = "Represents a complete user account entry")
+public record User(
+        @NotNull
+        Long id,
+
+        @NotNull
+        @Size(max = Final.LEN_255)
+        String email,
+
+        @NotNull
+        @Size(max = Final.LEN_255)
+        String name,
+
+        @NotNull
+        @Size(max = Final.LEN_255)
+        String surname,
+
+        @NotNull
+        Gender gender,
+
+        @NotNull
+        @PositiveOrZero
+        Integer age,
+
+        @NotNull
+        @Size(max = Final.LEN_255)
+        String fieldOfStudy,
+
+        @NotNull
+        @Size(max = Final.LEN_2047)
+        String description,
+
+        @NotNull
+        Gender targetGender,
+
+        @NotNull
+        Relationship targetRelationship,
+
+        @NotNull
+        @Size(max = Final.LEN_2047)
+        String quizAnswers,
+
+        @NotNull
+        Boolean isParticipating,
+
+        @NotNull
+        Integer readyIndex
+) {}
