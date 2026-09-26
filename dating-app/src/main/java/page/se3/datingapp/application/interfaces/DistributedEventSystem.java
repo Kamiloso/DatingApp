@@ -4,7 +4,7 @@ import java.util.function.Consumer;
 
 public interface DistributedEventSystem {
 
-    <T> void invoke(String channelKey, T obj);
+    <T> void invoke(String channel, T obj);
 
-    <T> void subscribe(String channelKey, Consumer<T> consumer, Class<T> clazz);
+    <T> void subscribe(String channel, Consumer<T> consumer, Class<T> clazz);
 }

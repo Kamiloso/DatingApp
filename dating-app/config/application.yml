@@ -6,10 +6,14 @@ app:
     allowed-email-regex: "@student\\.polsl\\.pl$"
   limits:
     batch-size: 512
+  retry:
+    max-retries: 6
+    initial-sleep-millis: 100
+    sleep-time-multiplier: 2.0
   matching:
     match-count-limit: 3
     max-age-difference: 3
-    cycle:
+    schedule:
       cron: "0 0 20 * * MON,THU"
       timezone: "Europe/Warsaw"
       lock-at-least-for-minutes: 5

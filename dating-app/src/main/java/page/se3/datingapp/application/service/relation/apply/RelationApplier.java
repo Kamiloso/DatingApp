@@ -1,8 +1,7 @@
 package page.se3.datingapp.application.service.relation.apply;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.SubService;
+import page.se3.datingapp.application.annotation.service.SubService;
 import page.se3.datingapp.application.repository.ChatRepository;
 import page.se3.datingapp.application.repository.MatchRepository;
 import page.se3.datingapp.domain.model.relation.chat.Chat;
@@ -10,7 +9,6 @@ import page.se3.datingapp.domain.model.relation.match.Match;
 
 import java.time.Instant;
 
-@Service
 @SubService
 @RequiredArgsConstructor
 public class RelationApplier {

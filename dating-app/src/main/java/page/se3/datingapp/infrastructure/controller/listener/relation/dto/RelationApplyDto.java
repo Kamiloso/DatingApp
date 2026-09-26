@@ -1,0 +1,14 @@
+package page.se3.datingapp.infrastructure.controller.listener.relation.dto;
+
+import jakarta.validation.constraints.NotNull;
+
+public record RelationApplyDto(
+        @NotNull
+        Boolean isAppliedByYou,
+
+        @NotNull
+        Boolean isAppliedByOther,
+
+        @NotNull
+        Boolean chatExists
+) {}

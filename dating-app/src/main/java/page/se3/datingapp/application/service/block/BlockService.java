@@ -1,18 +1,16 @@
 package page.se3.datingapp.application.service.block;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.RootService;
+import page.se3.datingapp.application.annotation.service.RootService;
+import page.se3.datingapp.application.service.block.struct.BlockAdd;
 import page.se3.datingapp.domain.exception.abort.reason.*;
 import page.se3.datingapp.application.repository.BlockRepository;
-import page.se3.datingapp.application.service.block.struct.BlockAddRequest;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.model.user.UserKey;
 
 import java.util.ArrayList;
 import java.util.List;
 
-@Service
 @RootService
 @RequiredArgsConstructor
 public class BlockService {
@@ -33,8 +31,8 @@ public class BlockService {
         return blockList;
     }
 
-    public Block add(UserKey userKey, BlockAddRequest blockAddRequest) throws SelfBlockConflict, BlockAlreadyExists {
-        Block block = blockAddRequest.deriveInitial(userKey.id());
+    public Block add(UserKey userKey, BlockAdd blockAdd) throws SelfBlockConflict, BlockAlreadyExists {
+        Block block = blockAdd.deriveInitial(userKey.id());
 
         if (block.isSelfBlocked()) {
             throw new SelfBlockConflict();

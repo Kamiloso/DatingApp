@@ -21,21 +21,21 @@ public class RedisEventSystem implements DistributedEventSystem {
     private final RedisMessageListenerContainer messageListenerContainer;
     private final JsonSerializer jsonSerializer;
 
-    public <T> void invoke(String channelName, T obj) {
-        String channel = REDIS_EVENT_KEY.get(channelName);
+    public <T> void invoke(String channel, T obj) {
+        String fullChannel = REDIS_EVENT_KEY.get(channel);
         String payload = jsonSerializer.serialize(obj);
 
-        redisTemplate.convertAndSend(channel, payload);
+        redisTemplate.convertAndSend(fullChannel, payload);
     }
 
-    public <T> void subscribe(String channelName, Consumer<T> consumer, Class<T> clazz) {
-        String channel = REDIS_EVENT_KEY.get(channelName);
+    public <T> void subscribe(String channel, Consumer<T> consumer, Class<T> clazz) {
+        String fullChannel = REDIS_EVENT_KEY.get(channel);
 
         MessageListener listener = (message, pattern) -> {
             String payload = new String(message.getBody());
             jsonSerializer.deserialize(payload, clazz).ifPresent(consumer);
         };
 
-        messageListenerContainer.addMessageListener(listener, new ChannelTopic(channel));
+        messageListenerContainer.addMessageListener(listener, new ChannelTopic(fullChannel));
     }
 }

@@ -2,13 +2,12 @@ package page.se3.datingapp.application.service.message.channel;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.SubService;
+import page.se3.datingapp.application.annotation.service.SubService;
 import page.se3.datingapp.application.interfaces.DistributedEventSystem;
 import page.se3.datingapp.application.repository.MessageRepository;
-import page.se3.datingapp.application.service.message.struct.MessageFetchResponse;
+import page.se3.datingapp.application.service.message.struct.MessageSend;
+import page.se3.datingapp.application.service.message.struct.MessagesFetched;
 import page.se3.datingapp.domain.model.user.UserKey;
-import page.se3.datingapp.application.service.message.struct.MessageSendRequest;
 import page.se3.datingapp.domain.model.message.Message;
 import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
 
@@ -19,7 +18,6 @@ import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
-@Service
 @SubService
 @RequiredArgsConstructor
 public class MessageChannelManager {
@@ -38,9 +36,9 @@ public class MessageChannelManager {
     public Message send(
             UserKey userKey,
             Long idChat,
-            MessageSendRequest messageSendRequest
+            MessageSend messageSend
     ) throws DataIntegrityViolation {
-        Message message = messageSendRequest.deriveInitial(Instant.now(), idChat, userKey.id());
+        Message message = messageSend.deriveInitial(Instant.now(), idChat, userKey.id());
 
         message = messageRepository.trySave(message);
         distributedEventSystem.invoke(CHANNEL_NAME, message);
@@ -55,7 +53,7 @@ public class MessageChannelManager {
         }
     }
 
-    public CompletableFuture<MessageFetchResponse> fetch(
+    public CompletableFuture<MessagesFetched> fetch(
             Long idChat,
             Instant lastFetchTime,
             Integer maxListSize,
@@ -66,7 +64,7 @@ public class MessageChannelManager {
         Runnable cleanup = addObserversAndGetCleanup(idChat, messageFetchObserver);
         messageFetchObserver.onCleanup(cleanup);
 
-        CompletableFuture<MessageFetchResponse> completableFuture = messageFetchObserver.getCompletableFuture();
+        CompletableFuture<MessagesFetched> completableFuture = messageFetchObserver.getCompletableFuture();
         List<Message> dbMessages;
 
         try {

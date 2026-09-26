@@ -1,8 +1,7 @@
 package page.se3.datingapp.application.service.user.info;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.RootService;
+import page.se3.datingapp.application.annotation.service.RootService;
 import page.se3.datingapp.application.service.relation.assembly.MultiRelationAssembler;
 import page.se3.datingapp.domain.model.user.info.UserBriefInfo;
 import page.se3.datingapp.domain.model.user.info.UserKnownInfo;
@@ -18,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.BiFunction;
 
-@Service
 @RootService
 @RequiredArgsConstructor
 public class UserInfoService {

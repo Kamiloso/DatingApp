@@ -1,17 +1,15 @@
 package page.se3.datingapp.application.service.user.account;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.RootService;
+import page.se3.datingapp.application.annotation.service.RootService;
 import page.se3.datingapp.application.repository.UserRepository;
+import page.se3.datingapp.application.service.user.account.struct.UserAccountRegister;
 import page.se3.datingapp.domain.exception.abort.reason.AccountAlreadyExists;
 import page.se3.datingapp.domain.exception.abort.reason.AccountNotFound;
 import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
-import page.se3.datingapp.application.service.user.account.struct.UserRegisterRequest;
 import page.se3.datingapp.domain.model.user.User;
 import page.se3.datingapp.domain.model.user.account.UserAccount;
 
-@Service
 @RootService
 @RequiredArgsConstructor
 public class UserAccountService {
@@ -26,9 +24,9 @@ public class UserAccountService {
 
     public UserAccount register(
             String email,
-            UserRegisterRequest userRegisterRequest
+            UserAccountRegister userAccountRegister
     ) throws AccountAlreadyExists {
-        User user = userRegisterRequest.deriveInitial(email);
+        User user = userAccountRegister.deriveInitial(email);
 
         try {
             return UserAccount.getFrom(userRepository.trySave(user));

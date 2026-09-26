@@ -1,11 +1,9 @@
 package page.se3.datingapp.application.service.matching.index;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.SubService;
+import page.se3.datingapp.application.annotation.service.SubService;
 import page.se3.datingapp.application.service.index.Indexer;
 
-@Service
 @SubService
 @RequiredArgsConstructor
 public class MatchingIndexer {

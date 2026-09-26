@@ -1,11 +1,9 @@
 package page.se3.datingapp.application.service.index;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.SubService;
+import page.se3.datingapp.application.annotation.service.SubService;
 import page.se3.datingapp.application.repository.GlobalRepository;
 
-@Service
 @SubService
 @RequiredArgsConstructor
 public class Indexer {

@@ -2,10 +2,11 @@ package page.se3.datingapp.application.service.matching;
 
 import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.RootService;
-import page.se3.datingapp.application.annotation.Transaction;
+import page.se3.datingapp.application.annotation.service.RootService;
+import page.se3.datingapp.application.annotation.transaction.ReadCommitted;
 import page.se3.datingapp.application.service.matching.index.MatchingIndexer;
+import page.se3.datingapp.domain.config.MatchingConfig;
+import page.se3.datingapp.domain.config.QuizConfig;
 import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.domain.exception.UnexpectedConflictException;
 import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
@@ -21,17 +22,16 @@ import page.se3.datingapp.domain.model.matching.matcher.Matcher;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.domain.model.user.User;
-import page.se3.datingapp.domain.config.AppConfig;
 
 import java.time.Instant;
 import java.util.List;
 
-@Service
 @RootService
 @RequiredArgsConstructor
 public class MatchingUseCase {
 
-    private final AppConfig appConfig;
+    private final MatchingConfig matchingConfig;
+    private final QuizConfig quizConfig;
     private final MatchingIndexer matchingIndexer;
     private final BlockRepository blockRepository;
     private final MatchGroupRepository matchGroupRepository;
@@ -42,10 +42,10 @@ public class MatchingUseCase {
 
     @PostConstruct
     private void init() {
-        this.matcher = new DefaultMatcher(appConfig);
+        this.matcher = new DefaultMatcher(matchingConfig);
     }
 
-    @Transaction.ReadCommitted
+    @ReadCommitted
     public void execute() {
         MatchingContext context = buildContext();
         List<Match> matches = generateMatches(context);
@@ -57,13 +57,13 @@ public class MatchingUseCase {
 
         MatchGroup matchGroup = matchGroupRepository.save(MatchGroup.getInitial(
                 Instant.now(),
-                appConfig.matching().matchCountLimit(),
-                appConfig.quiz().readyIndex()
+                matchingConfig.matchCountLimit(),
+                quizConfig.readyIndex()
         ));
 
         List<User> users = userRepository.findAllWhereReadyForShare(
                 matchingIndex,
-                appConfig.quiz().readyIndex()
+                quizConfig.readyIndex()
         );
 
         List<Long> idUserList = MapUtils.toList(users, User::id);

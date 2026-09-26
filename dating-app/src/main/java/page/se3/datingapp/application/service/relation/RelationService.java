@@ -1,8 +1,7 @@
 package page.se3.datingapp.application.service.relation;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import page.se3.datingapp.application.annotation.RootService;
+import page.se3.datingapp.application.annotation.service.RootService;
 import page.se3.datingapp.application.service.relation.assembly.MultiRelationAssembler;
 import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
 import page.se3.datingapp.application.service.relation.apply.RelationApplier;
@@ -17,7 +16,6 @@ import page.se3.datingapp.domain.model.user.UserKey;
 
 import java.util.List;
 
-@Service
 @RootService
 @RequiredArgsConstructor
 public class RelationService {

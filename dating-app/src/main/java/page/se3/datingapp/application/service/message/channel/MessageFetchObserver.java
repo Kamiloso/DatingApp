@@ -1,7 +1,7 @@
 package page.se3.datingapp.application.service.message.channel;
 
 import lombok.Getter;
-import page.se3.datingapp.application.service.message.struct.MessageFetchResponse;
+import page.se3.datingapp.application.service.message.struct.MessagesFetched;
 import page.se3.datingapp.domain.model.message.Message;
 
 import java.util.ArrayList;
@@ -15,7 +15,7 @@ public class MessageFetchObserver {
     private enum State {STARTED, DB_FETCHED, FINALIZED}
 
     @Getter
-    private final CompletableFuture<MessageFetchResponse> completableFuture;
+    private final CompletableFuture<MessagesFetched> completableFuture;
 
     private final Long idChat;
     private final Integer maxListSize;
@@ -26,8 +26,8 @@ public class MessageFetchObserver {
     public MessageFetchObserver(Long idChat, Integer maxListSize, Long waitTimeout) {
         this.idChat = idChat;
         this.maxListSize = maxListSize;
-        this.completableFuture = new CompletableFuture<MessageFetchResponse>()
-                .completeOnTimeout(MessageFetchResponse.empty(), waitTimeout, TimeUnit.MILLISECONDS);
+        this.completableFuture = new CompletableFuture<MessagesFetched>()
+                .completeOnTimeout(MessagesFetched.empty(), waitTimeout, TimeUnit.MILLISECONDS);
     }
 
     public synchronized void onCleanup(Runnable cleanup) {
@@ -48,7 +48,7 @@ public class MessageFetchObserver {
         }
 
         if (state == State.DB_FETCHED) {
-            completableFuture.complete(MessageFetchResponse.dirty(dirtyMessages));
+            completableFuture.complete(MessagesFetched.dirty(dirtyMessages));
             state = State.FINALIZED;
         }
     }
@@ -61,7 +61,7 @@ public class MessageFetchObserver {
         if (persistentMessages.isEmpty() && dirtyMessages.isEmpty()) {
             state = State.DB_FETCHED;
         } else {
-            completableFuture.complete(MessageFetchResponse.both(persistentMessages, dirtyMessages));
+            completableFuture.complete(MessagesFetched.both(persistentMessages, dirtyMessages));
             state = State.FINALIZED;
         }
     }
