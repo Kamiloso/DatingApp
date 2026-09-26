@@ -7,7 +7,7 @@ app:
   limits:
     batch-size: 512
   matching:
-    max-matches-per-user: 3
+    match-count-limit: 3
     max-age-difference: 3
     cycle:
       cron: "0 0 20 * * MON,THU"

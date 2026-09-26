@@ -20,3 +20,6 @@ logging:
 
 springdoc:
   default-produces-media-type: "application/json"
+
+app:
+  api-version: "1.0"

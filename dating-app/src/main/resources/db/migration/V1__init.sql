@@ -1,3 +1,4 @@
+DROP TABLE IF EXISTS globals;
 DROP TABLE IF EXISTS blocks;
 DROP TABLE IF EXISTS messages;
 DROP TABLE IF EXISTS chats;
@@ -14,13 +15,14 @@ CREATE TABLE users (
     age INT NOT NULL,
     field_of_study VARCHAR(255) NOT NULL,
     description VARCHAR(2047) NOT NULL,
-    target_gender ENUM('MAN', 'WOMAN', 'OTHER', 'ANY') NOT NULL,
-    target_relationship ENUM('FRIENDSHIP', 'ROMANTIC', 'BOTH') NOT NULL,
+    target_relationship_man ENUM('NONE', 'FRIENDSHIP', 'ROMANTIC', 'BOTH') NOT NULL,
+    target_relationship_woman ENUM('NONE', 'FRIENDSHIP', 'ROMANTIC', 'BOTH') NOT NULL,
+    target_relationship_other ENUM('NONE', 'FRIENDSHIP', 'ROMANTIC', 'BOTH') NOT NULL,
     quiz_answers VARCHAR(2047) NOT NULL,
-    is_participating BOOLEAN NOT NULL,
+    matching_index INT NOT NULL,
     ready_index INT NOT NULL,
 
-    INDEX idx_user_ready_indicator (is_participating, ready_index)
+    INDEX idx_user_ready_indicator (matching_index, ready_index)
 );
 
 CREATE TABLE match_groups (
@@ -50,16 +52,13 @@ CREATE TABLE matches (
 
 CREATE TABLE chats (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
-    id_user_first BIGINT NOT NULL,
-    id_user_second BIGINT NOT NULL,
     begin_time TIMESTAMP(3) NOT NULL,
     is_upgraded BOOLEAN NOT NULL,
+    id_match BIGINT NOT NULL,
 
-    CONSTRAINT unq_chat_user_pair UNIQUE (id_user_first, id_user_second),
-    CONSTRAINT chk_chat_user_pair CHECK (id_user_first < id_user_second),
+    CONSTRAINT unq_chat_id_match UNIQUE (id_match),
 
-    CONSTRAINT fk_chat_user_first FOREIGN KEY (id_user_first) REFERENCES users(id) ON DELETE CASCADE,
-    CONSTRAINT fk_chat_user_second FOREIGN KEY (id_user_second) REFERENCES users(id) ON DELETE CASCADE
+    CONSTRAINT fk_chat_match FOREIGN KEY (id_match) REFERENCES matches(id) ON DELETE CASCADE
 );
 
 CREATE TABLE messages (
@@ -77,9 +76,16 @@ CREATE TABLE blocks (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     id_user_owner BIGINT NOT NULL,
     id_user_blocked BIGINT NOT NULL,
+    is_silent BOOLEAN NOT NULL,
 
     CONSTRAINT unq_block_user_pair UNIQUE (id_user_owner, id_user_blocked),
+    CONSTRAINT chk_block_user_pair CHECK (id_user_owner != id_user_blocked),
 
     CONSTRAINT fk_block_user_owner FOREIGN KEY (id_user_owner) REFERENCES users(id) ON DELETE CASCADE,
     CONSTRAINT fk_block_user_blocked FOREIGN KEY (id_user_blocked) REFERENCES users(id) ON DELETE CASCADE
+);
+
+CREATE TABLE globals (
+    col_key VARCHAR(255) PRIMARY KEY,
+    col_value VARCHAR(255) NOT NULL
 );
