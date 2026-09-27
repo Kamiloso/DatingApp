@@ -1,1 +1,5 @@
 rootProject.name = 'dating-app'
+
+include 'source:domain'
+include 'source:application'
+include 'source:infrastructure'

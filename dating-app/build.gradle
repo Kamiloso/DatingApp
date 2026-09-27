@@ -1,66 +1,42 @@
+import org.springframework.boot.gradle.plugin.SpringBootPlugin
+
 plugins {
-	id 'java'
-	id 'org.springframework.boot' version '4.1.0'
-	id 'io.spring.dependency-management' version '1.1.7'
+    id 'org.springframework.boot' version '4.1.0' apply false
+    id 'io.spring.dependency-management' version '1.1.7'
 }
 
-group = 'page.se3'
-version = '0.0.1-SNAPSHOT'
+subprojects {
+    apply plugin: 'java-library'
+    apply plugin: 'io.spring.dependency-management'
 
-java {
-	toolchain {
-		languageVersion = JavaLanguageVersion.of(21)
-	}
-}
+    group = 'page.se3'
+    version = '0.0.1-SNAPSHOT'
 
-repositories {
-	mavenCentral()
-}
+    java {
+        toolchain {
+            languageVersion = JavaLanguageVersion.of(21)
+        }
+    }
 
-dependencies {
+    repositories {
+        mavenCentral()
+    }
 
-    // Spring Boot
-    implementation 'org.springframework.boot:spring-boot-starter-webmvc'
-    implementation 'org.springframework.boot:spring-boot-starter-validation'
-    implementation 'org.springframework.boot:spring-boot-starter-oauth2-resource-server'
-    implementation 'org.springframework.boot:spring-boot-starter-aspectj'
+    dependencyManagement {
+        imports {
+            mavenBom SpringBootPlugin.BOM_COORDINATES
+        }
+    }
 
-    // Springdoc
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:3.0.0'
+    dependencies {
+        compileOnly 'org.projectlombok:lombok'
+        annotationProcessor 'org.projectlombok:lombok'
+        testCompileOnly 'org.projectlombok:lombok'
+        testAnnotationProcessor 'org.projectlombok:lombok'
+        testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
+    }
 
-    // Redis
-    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
-
-    // MySQL
-    implementation 'org.springframework.boot:spring-boot-starter-data-jdbc'
-    runtimeOnly 'com.mysql:mysql-connector-j'
-
-    // Flyway
-    implementation 'org.flywaydb:flyway-core'
-    implementation 'org.flywaydb:flyway-mysql'
-
-    // Shedlock
-    implementation 'net.javacrumbs.shedlock:shedlock-spring:5.13.0'
-    implementation 'net.javacrumbs.shedlock:shedlock-provider-redis-spring:5.13.0'
-
-    // Lombok
-    compileOnly 'org.projectlombok:lombok'
-
-    // MapStruct
-    implementation 'org.mapstruct:mapstruct:1.5.5.Final'
-
-    // Annotation Processors
-    annotationProcessor 'org.mapstruct:mapstruct-processor:1.5.5.Final'
-    annotationProcessor 'org.projectlombok:lombok'
-    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
-
-    // Testing
-    testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
-    testCompileOnly 'org.projectlombok:lombok'
-    testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
-    testAnnotationProcessor 'org.projectlombok:lombok'
-}
-
-tasks.named('test') {
-	useJUnitPlatform()
+    tasks.named('test') {
+        useJUnitPlatform()
+    }
 }
