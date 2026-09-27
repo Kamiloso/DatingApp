@@ -12,6 +12,7 @@ public record MessageDto(
         @NotNull
         Long id,
 
+        @NotNull
         @Size(max = Template.LEN_2047)
         String message,
 

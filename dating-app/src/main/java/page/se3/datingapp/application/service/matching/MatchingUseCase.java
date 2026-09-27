@@ -1,6 +1,5 @@
 package page.se3.datingapp.application.service.matching;
 
-import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
 import page.se3.datingapp.application.annotation.transaction.ReadCommitted;
@@ -17,8 +16,8 @@ import page.se3.datingapp.application.repository.UserRepository;
 import page.se3.datingapp.domain.model.block.BlockMap;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.model.matching.MatchingContext;
-import page.se3.datingapp.domain.model.matching.matcher.impl.DefaultMatcher;
 import page.se3.datingapp.domain.model.matching.matcher.Matcher;
+import page.se3.datingapp.domain.model.matching.matcher.impl.DefaultMatcher;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.domain.model.user.User;
@@ -37,13 +36,6 @@ public class MatchingUseCase {
     private final MatchGroupRepository matchGroupRepository;
     private final MatchRepository matchRepository;
     private final UserRepository userRepository;
-
-    private volatile Matcher matcher;
-
-    @PostConstruct
-    private void init() {
-        this.matcher = new DefaultMatcher(matchingConfig);
-    }
 
     @ReadCommitted
     public void execute() {
@@ -85,6 +77,7 @@ public class MatchingUseCase {
     }
 
     private List<Match> generateMatches(MatchingContext ctx) {
+        Matcher matcher = new DefaultMatcher(matchingConfig);
         return MapUtils.toList(ctx.getProcess(matcher).run(), ctx::getMatch);
     }
 

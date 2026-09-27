@@ -2,6 +2,7 @@ package page.se3.datingapp.application.service.relation;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
+import page.se3.datingapp.application.annotation.transaction.ReadCommitted;
 import page.se3.datingapp.application.service.relation.assembly.MultiRelationAssembler;
 import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
 import page.se3.datingapp.application.service.relation.apply.RelationApplier;
@@ -45,6 +46,7 @@ public class RelationService {
         return RelationApply.getFrom(relation, userKey.id());
     }
 
+    @ReadCommitted
     public RelationApply setApply(UserKey userKey, Long idMatch, RelationApplyPatch relationApplyPatch)
             throws RelationNotFound {
         Relation relation = singleRelationAssembler.getByIdMatch(idMatch)

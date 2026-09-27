@@ -16,12 +16,12 @@ public class BatchProcessor {
     private final LimitConfig limitConfig;
 
     public <T> void process(List<T> sourceList, Consumer<List<T>> processor) {
-        int batchSize = limitConfig.batchSize();
+        int batchSize = limitConfig.maxBatchSize();
         SplitUtils.batchProcess(sourceList, batchSize, processor);
     }
 
     public <T, R> List<R> convert(List<T> sourceList, Function<List<T>, List<R>> converter) {
-        int batchSize = limitConfig.batchSize();
+        int batchSize = limitConfig.maxBatchSize();
         return SplitUtils.batchConvert(sourceList, batchSize, converter);
     }
 }

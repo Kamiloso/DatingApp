@@ -5,7 +5,8 @@ app:
     client-id: not-configured-yet
     allowed-email-regex: "@student\\.polsl\\.pl$"
   limits:
-    batch-size: 512
+    max-batch-size: 512
+    max-list-size: 64
   retry:
     max-retries: 6
     initial-sleep-millis: 100
