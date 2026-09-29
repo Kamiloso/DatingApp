@@ -30,7 +30,7 @@ public class TransactionConfig {
         );
     }
 
-    public static class ApplicationTransactionAnnotationParser implements TransactionAnnotationParser {
+    private static class ApplicationTransactionAnnotationParser implements TransactionAnnotationParser {
 
         @Override
         public TransactionAttribute parseTransactionAnnotation(@NonNull AnnotatedElement element) {

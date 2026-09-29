@@ -1,8 +1,6 @@
 app:
   start-message: "Backend has started successfully and is listening for requests..."
   auth:
-    url: "https://accounts.google.com"
-    client-id: not-configured-yet
     allowed-email-regex: "@student\\.polsl\\.pl$"
   limits:
     max-batch-size: 512

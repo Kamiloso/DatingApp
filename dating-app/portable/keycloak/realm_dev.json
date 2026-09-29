@@ -1,0 +1,77 @@
+{
+  "realm": "dating-app-realm",
+  "enabled": true,
+  "clients": [
+    {
+      "clientId": "dating-app-client",
+      "enabled": true,
+      "publicClient": true,
+      "directAccessGrantsEnabled": true,
+      "standardFlowEnabled": true,
+      "fullScopeAllowed": true,
+      "protocolMappers": [
+        {
+          "name": "email-mapper",
+          "protocol": "openid-connect",
+          "protocolMapper": "oidc-usermodel-property-mapper",
+          "consentRequired": false,
+          "config": {
+            "user.attribute": "email",
+            "claim.name": "email",
+            "jsonType.label": "String",
+            "id.token.claim": "true",
+            "access.token.claim": "true",
+            "userinfo.token.claim": "true"
+          }
+        }
+      ]
+    }
+  ],
+  "users": [
+    {
+      "username": "jkowalski",
+      "email": "jkowalski@student.polsl.pl",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Jan",
+      "lastName": "Kowalski",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "anowak",
+      "email": "anowak@student.polsl.pl",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Anna",
+      "lastName": "Nowak",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ]
+    },
+    {
+      "username": "jpilsudski",
+      "email": "jpilsudski@student.polsl.pl",
+      "emailVerified": true,
+      "enabled": true,
+      "firstName": "Józef",
+      "lastName": "Piłsudski",
+      "credentials": [
+        {
+          "type": "password",
+          "value": "password",
+          "temporary": false
+        }
+      ]
+    }
+  ]
+}

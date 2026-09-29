@@ -15,7 +15,6 @@ import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.domain.config.RetryConfig;
 import page.se3.datingapp.domain.core.util.ThreadUtils;
 import page.se3.datingapp.domain.exception.UnexpectedConflictException;
-import page.se3.datingapp.domain.exception.abort.AbortException;
 
 @Configuration
 @RequiredArgsConstructor
@@ -30,14 +29,11 @@ public class AutoRetryConfig {
 
         return new DefaultPointcutAdvisor(
                 new ComposablePointcut(classPointcut).union(methodPointcut),
-                new AutoRetryInterceptor(retryConfig)
+                new AutoRetryInterceptor()
         );
     }
 
-    @RequiredArgsConstructor
-    private static class AutoRetryInterceptor implements MethodInterceptor {
-
-        private final RetryConfig retryConfig;
+    public class AutoRetryInterceptor implements MethodInterceptor {
 
         @Override
         public Object invoke(@NonNull MethodInvocation invocation) throws Throwable {
@@ -61,8 +57,7 @@ public class AutoRetryConfig {
         }
 
         private boolean shouldRetry(Throwable e) {
-            return e instanceof AbortException
-                    || e instanceof UnexpectedConflictException
+            return e instanceof UnexpectedConflictException
                     || e instanceof PessimisticLockingFailureException;
         }
     }

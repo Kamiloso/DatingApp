@@ -8,26 +8,26 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import page.se3.datingapp.domain.exception.abort.AbortException;
 import page.se3.datingapp.domain.exception.abort.reason.InvalidParameterOrBody;
-import page.se3.datingapp.infrastructure.controller.dto.ProblemDto;
+import page.se3.datingapp.infrastructure.controller.dto.ErrorDto;
 
 @RestControllerAdvice
 @RequiredArgsConstructor
 public class GlobalExceptionHandler {
 
     @ExceptionHandler(ConstraintViolationException.class)
-    public ResponseEntity<@NonNull ProblemDto> handleConstraintViolationException(ConstraintViolationException e) {
+    public ResponseEntity<@NonNull ErrorDto> handleConstraintViolationException(ConstraintViolationException e) {
         return getResponseEntity(new InvalidParameterOrBody());
     }
 
     @ExceptionHandler(AbortException.class)
-    public ResponseEntity<@NonNull ProblemDto> handleAbortException(AbortException e) {
+    public ResponseEntity<@NonNull ErrorDto> handleAbortException(AbortException e) {
         return getResponseEntity(e);
     }
 
-    private static ResponseEntity<@NonNull ProblemDto> getResponseEntity(AbortException abortException) {
+    private static ResponseEntity<@NonNull ErrorDto> getResponseEntity(AbortException abortException) {
         int httpStatus = abortException.getStatus();
         String errorType = abortException.getErrorType();
 
-        return ResponseEntity.status(httpStatus).body(new ProblemDto(httpStatus, errorType));
+        return ResponseEntity.status(httpStatus).body(new ErrorDto(httpStatus, errorType));
     }
 }

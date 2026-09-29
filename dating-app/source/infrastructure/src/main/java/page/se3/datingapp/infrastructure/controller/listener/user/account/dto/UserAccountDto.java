@@ -57,5 +57,11 @@ public record UserAccountDto(
         Integer matchingIndex,
 
         @NotNull
-        Integer readyIndex
+        Integer readyIndex,
+
+        @NotNull
+        Boolean isPatched,
+
+        @NotNull
+        Boolean isActive
 ) {}

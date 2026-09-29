@@ -5,7 +5,7 @@ import org.springframework.data.relational.core.mapping.Table;
 import page.se3.datingapp.domain.enums.Gender;
 import page.se3.datingapp.domain.enums.Relationship;
 
-@Table("readyUsers")
+@Table("users")
 public record UserEntity(
         @Id Long id,
         String email,
@@ -20,5 +20,7 @@ public record UserEntity(
         Relationship targetRelationshipOther,
         String quizAnswers,
         Integer matchingIndex,
-        Integer readyIndex
+        Integer readyIndex,
+        Boolean isPatched,
+        Boolean isActive
 ) {}

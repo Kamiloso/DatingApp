@@ -1,14 +1,19 @@
 spring:
   application:
-    name: "dating-app"
+    name: dating-app
   datasource:
-    url: "jdbc:mysql://localhost:3306/dating_app?useSSL=false"
-    username: "root"
-    password: ""
+    url: "jdbc:mysql://localhost:3306/dating_app?useSSL=false&allowPublicKeyRetrieval=true"
+    username: dating_app
+    password: dating_app
     driver-class-name: "com.mysql.cj.jdbc.Driver"
+  security:
+    oauth2:
+      resourceserver:
+        jwt:
+          issuer-uri: "http://localhost:8081/realms/dating-app-realm"
   data:
     redis:
-      host: "localhost"
+      host: localhost
       port: 6379
   threads:
     virtual:

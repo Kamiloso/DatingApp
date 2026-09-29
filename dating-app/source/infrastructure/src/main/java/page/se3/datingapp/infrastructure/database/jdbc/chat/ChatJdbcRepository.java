@@ -1,6 +1,7 @@
 package page.se3.datingapp.infrastructure.database.jdbc.chat;
 
 import lombok.NonNull;
+import org.springframework.data.jdbc.repository.query.Modifying;
 import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
@@ -14,6 +15,7 @@ public interface ChatJdbcRepository extends ListCrudRepository<@NonNull ChatEnti
     @Query("SELECT * FROM chats WHERE id_match IN (:idMatchList)")
     List<ChatEntity> findAllByIdMatchList(List<Long> idMatchList);
 
+    @Modifying
     @Query("""
             INSERT IGNORE INTO chats (begin_time, is_upgraded, id_match)
                 VALUES (

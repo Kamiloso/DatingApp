@@ -15,15 +15,19 @@ public record UserAccountRegister(
         Relationship targetRelationshipWoman,
         Relationship targetRelationshipOther,
         String quizAnswers,
+        Boolean isReadyForMatching,
         Integer readyIndex
 ) {
 
-    public User deriveInitial(String email) {
+    public User deriveInitial(String email, int futureMatchingIndex) {
+        Integer matchingIndex = isReadyForMatching ? futureMatchingIndex : -1;
+
         return User.getInitial(
                 email, name, surname, gender, age, fieldOfStudy,
                 description, targetRelationshipMan,
                 targetRelationshipWoman, targetRelationshipOther,
-                quizAnswers, 0, readyIndex
+                quizAnswers, matchingIndex, readyIndex,
+                false, true
         );
     }
 }

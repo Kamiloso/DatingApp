@@ -3,7 +3,7 @@ package page.se3.datingapp.domain.model.user.account;
 import page.se3.datingapp.domain.enums.Gender;
 import page.se3.datingapp.domain.enums.Relationship;
 import page.se3.datingapp.domain.model.user.User;
-import page.se3.datingapp.domain.model.user.UserKey;
+import page.se3.datingapp.domain.model.user.AuthKey;
 
 public record UserAccount(
         Long id,
@@ -19,7 +19,9 @@ public record UserAccount(
         Relationship targetRelationshipOther,
         String quizAnswers,
         Integer matchingIndex,
-        Integer readyIndex
+        Integer readyIndex,
+        Boolean isPatched,
+        Boolean isActive
 ) {
 
     public static UserAccount getFrom(User user) {
@@ -37,11 +39,13 @@ public record UserAccount(
                 user.targetRelationshipOther(),
                 user.quizAnswers(),
                 user.matchingIndex(),
-                user.readyIndex()
+                user.readyIndex(),
+                user.isPatched(),
+                user.isActive()
         );
     }
 
-    public UserKey getUserKey() {
-        return new UserKey(id, gender);
+    public AuthKey getAuthKey() {
+        return new AuthKey(id, gender);
     }
 }

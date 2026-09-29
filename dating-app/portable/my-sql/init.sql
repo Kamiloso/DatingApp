@@ -2,6 +2,14 @@ CREATE DATABASE IF NOT EXISTS internal;
 CREATE DATABASE IF NOT EXISTS dating_app;
 CREATE DATABASE IF NOT EXISTS keycloak;
 
+CREATE USER IF NOT EXISTS 'dating_app'@'%' IDENTIFIED BY 'dating_app';
+GRANT ALL PRIVILEGES ON dating_app.* TO 'dating_app'@'%';
+
+CREATE USER IF NOT EXISTS 'keycloak'@'%' IDENTIFIED BY 'keycloak';
+GRANT ALL PRIVILEGES ON keycloak.* TO 'keycloak'@'%';
+
+FLUSH PRIVILEGES;
+
 USE internal;
 
 CREATE TABLE IF NOT EXISTS db_ready (id INT);

@@ -5,13 +5,12 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import page.se3.datingapp.domain.exception.abort.reason.AccountNotFound;
-import page.se3.datingapp.domain.exception.abort.reason.ChatAccessDenied;
-import page.se3.datingapp.domain.exception.abort.reason.ChatNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.chat.ChatAccessDenied;
+import page.se3.datingapp.domain.exception.abort.reason.chat.ChatNotFound;
+import page.se3.datingapp.domain.model.user.AuthKey;
+import page.se3.datingapp.infrastructure.annotation.AuthIdentity;
 import page.se3.datingapp.infrastructure.controller.listener.message.dto.MessageSendDto;
 import page.se3.datingapp.infrastructure.controller.listener.message.dto.MessageDto;
 
@@ -30,8 +29,8 @@ public class MessageController {
     @PostMapping
     @Operation(summary = "Sends a message")
     public MessageDto sendMessage(
-            @AuthenticationPrincipal
-            Jwt jwt,
+            @AuthIdentity
+            AuthKey authKey,
 
             @PathVariable
             Long idChat,
@@ -40,22 +39,22 @@ public class MessageController {
             @NotNull
             @Valid
             MessageSendDto messageSendDto
-    ) throws AccountNotFound, ChatNotFound, ChatAccessDenied {
-        return messageProxy.sendMessage(jwt, idChat, messageSendDto);
+    ) throws ChatNotFound, ChatAccessDenied {
+        return messageProxy.sendMessage(authKey, idChat, messageSendDto);
     }
 
     @GetMapping
     @Operation(summary = "Gets a next persistent message list (empty when no more messages available)")
     public List<MessageDto> fetchMessages(
-            @AuthenticationPrincipal
-            Jwt jwt,
+            @AuthIdentity
+            AuthKey authKey,
 
             @PathVariable
             Long idChat,
 
             @RequestParam
             Instant lastFetchTime
-    ) throws AccountNotFound, ChatNotFound, ChatAccessDenied {
-        return messageProxy.fetchMessages(jwt, idChat, lastFetchTime);
+    ) throws ChatNotFound, ChatAccessDenied {
+        return messageProxy.fetchMessages(authKey, idChat, lastFetchTime);
     }
 }

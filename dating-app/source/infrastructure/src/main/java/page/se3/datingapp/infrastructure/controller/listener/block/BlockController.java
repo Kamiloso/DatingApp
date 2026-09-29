@@ -5,11 +5,14 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.jwt.Jwt;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import page.se3.datingapp.domain.exception.abort.reason.*;
+import page.se3.datingapp.domain.exception.abort.reason.block.BlockAccessDenied;
+import page.se3.datingapp.domain.exception.abort.reason.block.BlockInsertionConflict;
+import page.se3.datingapp.domain.exception.abort.reason.block.BlockNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.block.BlockSelfConflict;
+import page.se3.datingapp.domain.model.user.AuthKey;
+import page.se3.datingapp.infrastructure.annotation.AuthIdentity;
 import page.se3.datingapp.infrastructure.controller.listener.block.dto.BlockDto;
 import page.se3.datingapp.infrastructure.controller.listener.block.dto.BlockAddDto;
 
@@ -27,39 +30,39 @@ public class BlockController {
     @GetMapping
     @Operation(summary = "Retrieves blocks that the user is aware of")
     public List<BlockDto> getBlocks(
-            @AuthenticationPrincipal
-            Jwt jwt,
+            @AuthIdentity
+            AuthKey authKey,
 
             @RequestParam
             Boolean owned,
 
             @RequestParam
             Boolean received
-    ) throws AccountNotFound {
-        return blockProxy.getBlocks(jwt, owned, received);
+    ) {
+        return blockProxy.getBlocks(authKey, owned, received);
     }
 
     @PostMapping
     @Operation(summary = "Blocks the specified user")
     public BlockDto createBlock(
-            @AuthenticationPrincipal
-            Jwt jwt,
+            @AuthIdentity
+            AuthKey authKey,
 
             @RequestBody
             BlockAddDto blockAddDto
-    ) throws AccountNotFound, SelfBlockConflict, BlockAlreadyExists {
-        return blockProxy.createBlock(jwt, blockAddDto);
+    ) throws BlockSelfConflict, BlockInsertionConflict {
+        return blockProxy.createBlock(authKey, blockAddDto);
     }
 
     @DeleteMapping("/{idBlock}")
     @Operation(summary = "Unblocks the specified user")
     public ResponseEntity<@NonNull Void> deleteBlock(
-            @AuthenticationPrincipal
-            Jwt jwt,
+            @AuthIdentity
+            AuthKey authKey,
 
             @PathVariable
             Long idBlock
-    ) throws AccountNotFound, BlockNotFound, BlockAccessDenied {
-        return blockProxy.deleteBlock(jwt, idBlock);
+    ) throws BlockNotFound, BlockAccessDenied {
+        return blockProxy.deleteBlock(authKey, idBlock);
     }
 }

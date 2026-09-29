@@ -1,7 +1,7 @@
 @echo off
 
 set "JAR_SOURCE_DIR=.\build\libs"
-set "CONFIG_SOURCE_DIR=.\config"
+set "CONFIG_SOURCE_DIR=.\source\infrastructure\config"
 set "BACKEND_DIR=.\portable\backend"
 
 call .\gradlew.bat clean bootJar

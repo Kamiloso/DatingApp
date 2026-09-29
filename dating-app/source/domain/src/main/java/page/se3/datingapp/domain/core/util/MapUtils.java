@@ -1,15 +1,19 @@
 package page.se3.datingapp.domain.core.util;
 
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 public final class MapUtils {
 
     private MapUtils() {}
+
+    public static <T, R> R map(
+            T value,
+            Function<T, R> mapValue
+    ) {
+        return mapValue.apply(value);
+    }
 
     public static <T, R> List<R> toList(
             Collection<T> collection,

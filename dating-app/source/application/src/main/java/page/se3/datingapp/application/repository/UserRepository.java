@@ -10,6 +10,8 @@ public interface UserRepository {
 
     Optional<User> findByEmail(String email);
 
+    Optional<User> findByIdForUpdate(Long id);
+
     List<User> findAllByIdList(List<Long> idList);
 
     List<User> findAllWhereReadyForShare(Integer matchingIndex, Integer readyIndex);

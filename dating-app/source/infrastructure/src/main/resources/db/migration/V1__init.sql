@@ -21,6 +21,8 @@ CREATE TABLE users (
     quiz_answers VARCHAR(2047) NOT NULL,
     matching_index INT NOT NULL,
     ready_index INT NOT NULL,
+    is_patched BOOLEAN NOT NULL,
+    is_active BOOLEAN NOT NULL,
 
     INDEX idx_user_ready_indicator (matching_index, ready_index)
 );

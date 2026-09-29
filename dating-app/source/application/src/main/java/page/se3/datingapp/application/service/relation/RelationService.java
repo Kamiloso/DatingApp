@@ -7,13 +7,13 @@ import page.se3.datingapp.application.service.relation.assembly.MultiRelationAss
 import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
 import page.se3.datingapp.application.service.relation.apply.RelationApplier;
 import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.domain.exception.abort.reason.RelationNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.relation.RelationNotFound;
 import page.se3.datingapp.domain.model.relation.Relation;
 import page.se3.datingapp.domain.model.relation.apply.RelationApply;
 import page.se3.datingapp.application.service.relation.struct.RelationApplyPatch;
 import page.se3.datingapp.domain.model.relation.chat.RelationChat;
 import page.se3.datingapp.domain.model.relation.match.RelationMatch;
-import page.se3.datingapp.domain.model.user.UserKey;
+import page.se3.datingapp.domain.model.user.AuthKey;
 
 import java.util.List;
 
@@ -25,34 +25,34 @@ public class RelationService {
     private final SingleRelationAssembler singleRelationAssembler;
     private final RelationApplier relationApplier;
 
-    public List<RelationMatch> getMatchList(UserKey userKey) {
+    public List<RelationMatch> getMatchList(AuthKey authKey) {
         return MapUtils.toList(
-                multiRelationAssembler.getByIdUserForApplicationPurposes(userKey.id(), 0, false),
+                multiRelationAssembler.getByIdUserForApplicationPurposes(authKey.id(), 0, false),
                 RelationMatch::getFrom
         );
     }
 
-    public List<RelationChat> getChatList(UserKey userKey) {
+    public List<RelationChat> getChatList(AuthKey authKey) {
         return MapUtils.toList(
-                multiRelationAssembler.getByIdUserForApplicationPurposes(userKey.id(), 1, false),
+                multiRelationAssembler.getByIdUserForApplicationPurposes(authKey.id(), 1, false),
                 RelationChat::getFrom
         );
     }
 
-    public RelationApply getApply(UserKey userKey, Long idMatch) throws RelationNotFound {
+    public RelationApply getApply(AuthKey authKey, Long idMatch) throws RelationNotFound {
         Relation relation = singleRelationAssembler.getByIdMatch(idMatch)
                 .orElseThrow(RelationNotFound::new);
 
-        return RelationApply.getFrom(relation, userKey.id());
+        return RelationApply.getFrom(relation, authKey.id());
     }
 
     @ReadCommitted
-    public RelationApply setApply(UserKey userKey, Long idMatch, RelationApplyPatch relationApplyPatch)
+    public RelationApply setApply(AuthKey authKey, Long idMatch, RelationApplyPatch relationApplyPatch)
             throws RelationNotFound {
         Relation relation = singleRelationAssembler.getByIdMatch(idMatch)
                 .orElseThrow(RelationNotFound::new);
 
-        boolean isFirst = relation.match().containsIdUserAsFirst(userKey.id());
+        boolean isFirst = relation.match().containsIdUserAsFirst(authKey.id());
         boolean isApplied = relationApplyPatch.isAppliedByYou();
 
         relationApplier.setMatchIsApplied(idMatch, isFirst, isApplied);
@@ -60,7 +60,7 @@ public class RelationService {
         relation = singleRelationAssembler.getByIdMatch(idMatch)
                 .orElseThrow(RelationNotFound::new);
 
-        RelationApply relationApply = RelationApply.getFrom(relation, userKey.id());
+        RelationApply relationApply = RelationApply.getFrom(relation, authKey.id());
 
         if (relationApply.shouldCreateChat()) {
             relationApplier.createChatIfNotExists(relation.match());

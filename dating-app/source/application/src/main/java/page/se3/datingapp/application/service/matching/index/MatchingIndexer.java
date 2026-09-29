@@ -12,7 +12,7 @@ public class MatchingIndexer {
 
     private final Indexer indexer;
 
-    public int getNext() {
+    public int getFuture() {
         return (int) indexer.getByKey(MATCHING_INDEX_KEY) + 1;
     }
 

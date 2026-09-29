@@ -2,6 +2,9 @@ services:
   db:
     ports:
       - "3306:3306"
+    volumes:
+      - type: tmpfs
+        target: /var/lib/mysql
 
   redis:
     ports:
@@ -10,3 +13,12 @@ services:
   backend:
     profiles:
       - ignore
+
+  keycloak:
+    environment:
+      KC_DB: dev-mem
+      KC_DB_URL: jdbc:h2:mem:keycloakdev;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE
+      KC_DB_USERNAME: null
+      KC_DB_PASSWORD: null
+    volumes:
+      - ./keycloak/realm_dev.json:/opt/keycloak/data/import/realm.json:ro

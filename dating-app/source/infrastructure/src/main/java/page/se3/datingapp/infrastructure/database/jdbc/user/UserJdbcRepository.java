@@ -11,6 +11,9 @@ public interface UserJdbcRepository extends ListCrudRepository<@NonNull UserEnti
 
     Optional<UserEntity> findByEmail(String email);
 
+    @Query("SELECT * FROM users WHERE id = :id FOR UPDATE")
+    Optional<UserEntity> findByIdForUpdate(Long id);
+
     @Query("""
             SELECT * FROM users
                 WHERE

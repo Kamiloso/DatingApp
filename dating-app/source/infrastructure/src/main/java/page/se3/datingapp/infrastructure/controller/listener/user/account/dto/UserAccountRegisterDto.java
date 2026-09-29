@@ -47,7 +47,7 @@ public record UserAccountRegisterDto(
         String quizAnswers,
 
         @NotNull
-        Integer matchingIndex,
+        Boolean isReadyForMatching,
 
         @NotNull
         Integer readyIndex

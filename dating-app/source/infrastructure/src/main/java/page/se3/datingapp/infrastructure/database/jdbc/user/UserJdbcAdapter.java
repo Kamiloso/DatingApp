@@ -27,6 +27,11 @@ public class UserJdbcAdapter implements UserRepository {
     }
 
     @Override
+    public Optional<User> findByIdForUpdate(Long id) {
+        return userJdbcRepository.findByIdForUpdate(id).map(userMapper::toDomain);
+    }
+
+    @Override
     public List<User> findAllByIdList(List<Long> idList) {
         return MapUtils.toList(
                 batchProcessor.convert(idList, userJdbcRepository::findAllById),

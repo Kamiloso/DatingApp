@@ -34,7 +34,7 @@ public class AppConfigPostProcessor implements BeanFactoryPostProcessor, Environ
                 .get();
 
         if (!Validated.isValidRecursive(appConfig)) {
-            throw new BeanCreationException("AppConfig validation failed");
+            throw new IllegalStateException("AppConfig validation failed");
         }
 
         List<ConfigBean> configBeans = ConfigBean.findRecursive(appConfig);

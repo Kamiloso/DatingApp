@@ -24,43 +24,43 @@ public class UserInfoService {
     private final MultiRelationAssembler multiRelationAssembler;
     private final UserRepository userRepository;
 
-    public List<UserBriefInfo> getBriefList(UserKey userKey) {
+    public List<UserBriefInfo> getBriefList(AuthKey authKey) {
         List<Relation> briefRelations = multiRelationAssembler
-                .getByIdUserForApplicationPurposes(userKey.id(), 0, true);
+                .getByIdUserForApplicationPurposes(authKey.id(), 0, true);
 
-        return getUserInfoList(userKey, briefRelations, UserBriefInfo::getFrom);
+        return getUserInfoList(authKey, briefRelations, UserBriefInfo::getFrom);
     }
 
-    public List<UserKnownInfo> getKnownList(UserKey userKey) {
+    public List<UserKnownInfo> getKnownList(AuthKey authKey) {
         List<Relation> knownRelations = multiRelationAssembler
-                .getByIdUserForApplicationPurposes(userKey.id(), 1, true);
+                .getByIdUserForApplicationPurposes(authKey.id(), 1, true);
 
-        return getUserInfoList(userKey, knownRelations, UserKnownInfo::getFrom);
+        return getUserInfoList(authKey, knownRelations, UserKnownInfo::getFrom);
     }
 
-    public List<UserTrustedInfo> getTrustedList(UserKey userKey) {
+    public List<UserTrustedInfo> getTrustedList(AuthKey authKey) {
         List<Relation> trustedRelations = multiRelationAssembler
-                .getByIdUserForApplicationPurposes(userKey.id(), 1, false).stream()
+                .getByIdUserForApplicationPurposes(authKey.id(), 1, false).stream()
                 .filter(r -> r.chat().isUpgraded())
                 .toList();
 
-        return getUserInfoList(userKey, trustedRelations, UserTrustedInfo::getFrom);
+        return getUserInfoList(authKey, trustedRelations, UserTrustedInfo::getFrom);
     }
 
     private <R> List<R> getUserInfoList(
-            UserKey userKey,
+            AuthKey authKey,
             List<Relation> relationList,
             BiFunction<User, Gender, R> mapper
     ) {
         Set<Long> idList = new HashSet<>();
 
-        idList.add(userKey.id());
+        idList.add(authKey.id());
         relationList.forEach(r -> idList.add(r.match().idUserFirst()));
         relationList.forEach(r -> idList.add(r.match().idUserSecond()));
 
         return MapUtils.toList(
                 userRepository.findAllByIdList(List.copyOf(idList)),
-                u -> mapper.apply(u, userKey.gender())
+                u -> mapper.apply(u, authKey.gender())
         );
     }
 }

@@ -19,7 +19,7 @@ public interface BlockJdbcRepository extends ListCrudRepository<@NonNull BlockEn
     List<BlockEntity> findAllByIdUserBlockedWhereNotSilent(Long idUserBlocked);
 
     @Query("""
-            SELECT * FROM matches
+            SELECT * FROM blocks
                 WHERE
                     id_user_owner IN (:idUserList) OR
                     id_user_blocked IN (:idUserList)

@@ -9,4 +9,4 @@ Information:
 
 Note:
   - Do not remove the portable folder. It will not regenerate.
-  - To refresh portable folder, run build-portable.bat script (on Windows)
+  - To refresh portable folder with the latest backend build, run build-portable.bat script (on Windows)
