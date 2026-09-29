@@ -2,9 +2,9 @@ package page.se3.datingapp.infrastructure.controller.listener.user.account;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import page.se3.datingapp.application.service.user.account.struct.UserAccountBasePatch;
-import page.se3.datingapp.application.service.user.account.struct.UserAccountDetailPatch;
-import page.se3.datingapp.application.service.user.account.struct.UserAccountRegister;
+import page.se3.datingapp.domain.model.user.account.UserAccountBasePatch;
+import page.se3.datingapp.domain.model.user.account.UserAccountDetailPatch;
+import page.se3.datingapp.domain.model.user.account.UserAccountRegister;
 import page.se3.datingapp.domain.model.user.account.UserAccount;
 import page.se3.datingapp.infrastructure.controller.listener.user.account.dto.UserAccountBasePatchDto;
 import page.se3.datingapp.infrastructure.controller.listener.user.account.dto.UserAccountDetailPatchDto;

@@ -9,7 +9,6 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockInsertionConflict;
-import page.se3.datingapp.domain.exception.abort.reason.block.BlockNotFound;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockSelfConflict;
 import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.infrastructure.annotation.AuthIdentity;
@@ -62,7 +61,7 @@ public class BlockController {
 
             @PathVariable
             Long idBlock
-    ) throws BlockNotFound, BlockAccessDenied {
+    ) throws BlockAccessDenied {
         return blockProxy.deleteBlock(authKey, idBlock);
     }
 }

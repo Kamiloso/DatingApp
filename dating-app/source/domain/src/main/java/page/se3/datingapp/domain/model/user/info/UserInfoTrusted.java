@@ -4,7 +4,7 @@ import page.se3.datingapp.domain.enums.Gender;
 import page.se3.datingapp.domain.enums.Relationship;
 import page.se3.datingapp.domain.model.user.User;
 
-public record UserTrustedInfo(
+public record UserInfoTrusted(
         Long id,
         String name,
         String surname,
@@ -15,8 +15,8 @@ public record UserTrustedInfo(
         Relationship targetRelationship
 ) {
 
-    public static UserTrustedInfo getFrom(User user, Gender askingGender) {
-        return new UserTrustedInfo(
+    public static UserInfoTrusted getFrom(User user, Gender askingGender) {
+        return new UserInfoTrusted(
                 user.id(),
                 user.name(),
                 user.surname(),

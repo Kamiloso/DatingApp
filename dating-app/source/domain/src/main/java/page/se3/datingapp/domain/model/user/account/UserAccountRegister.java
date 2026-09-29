@@ -1,4 +1,4 @@
-package page.se3.datingapp.application.service.user.account.struct;
+package page.se3.datingapp.domain.model.user.account;
 
 import page.se3.datingapp.domain.enums.Gender;
 import page.se3.datingapp.domain.enums.Relationship;

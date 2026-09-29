@@ -12,7 +12,7 @@ public interface UserRepository {
 
     Optional<User> findByIdForUpdate(Long id);
 
-    List<User> findAllByIdList(List<Long> idList);
+    Optional<User> findByIdWhereIsActive(Long id);
 
     List<User> findAllWhereReadyForShare(Integer matchingIndex, Integer readyIndex);
 

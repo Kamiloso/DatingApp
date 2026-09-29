@@ -24,7 +24,7 @@ CREATE TABLE users (
     is_patched BOOLEAN NOT NULL,
     is_active BOOLEAN NOT NULL,
 
-    INDEX idx_user_ready_indicator (matching_index, ready_index)
+    INDEX idx_user_ready_indicator (matching_index, ready_index, is_active)
 );
 
 CREATE TABLE match_groups (

@@ -8,7 +8,7 @@ import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatNotFound;
 import page.se3.datingapp.domain.model.user.AuthKey;
-import page.se3.datingapp.application.service.message.struct.MessageSend;
+import page.se3.datingapp.domain.model.message.MessageSend;
 import page.se3.datingapp.infrastructure.controller.listener.message.dto.MessageSendDto;
 import page.se3.datingapp.infrastructure.controller.listener.message.dto.MessageDto;
 

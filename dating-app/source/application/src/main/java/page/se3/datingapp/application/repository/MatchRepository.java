@@ -10,6 +10,8 @@ public interface MatchRepository {
 
     Optional<Match> findById(Long id);
 
+    Optional<Match> findByIdUserDirectForApplicationPurposes(Long idUser, Long idUserOther, Boolean blocked);
+
     List<Match> findAllByIdUserList(List<Long> idUserList);
 
     List<Match> findAllByIdUserForApplicationPurposes(Long idUser, Boolean blocked);

@@ -14,4 +14,8 @@ public record Relation(
     public boolean chatExists() {
         return chat != null;
     }
+
+    public boolean meetsChatRequirements(int withChat) {
+        return (withChat >= 0 && chatExists()) || (withChat <= 0 && !chatExists());
+    }
 }

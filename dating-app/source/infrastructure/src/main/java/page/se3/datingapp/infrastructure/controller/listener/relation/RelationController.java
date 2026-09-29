@@ -10,8 +10,7 @@ import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.infrastructure.annotation.AuthIdentity;
 import page.se3.datingapp.infrastructure.controller.listener.relation.dto.RelationChatDto;
 import page.se3.datingapp.infrastructure.controller.listener.relation.dto.RelationMatchDto;
-import page.se3.datingapp.infrastructure.controller.listener.relation.dto.RelationApplyDto;
-import page.se3.datingapp.infrastructure.controller.listener.relation.dto.RelationApplyPatchDto;
+import page.se3.datingapp.infrastructure.controller.listener.relation.dto.RelationMatchApplyPatchDto;
 
 import java.util.List;
 
@@ -24,39 +23,60 @@ public class RelationController {
 
     private final RelationProxy relationProxy;
 
-    @GetMapping("/match")
-    @Operation(summary = "Gets all match relations that are not known to be blocked")
-    public List<RelationMatchDto> getMatchRelationList(
-            @AuthIdentity
-            AuthKey authKey
-    ) {
-        return relationProxy.getMatchRelationList(authKey);
-    }
-
-    @GetMapping("/chat")
-    @Operation(summary = "Gets all chat relations that are not known to be blocked")
-    public List<RelationChatDto> getChatRelationList(
-            @AuthIdentity
-            AuthKey authKey
-    ) {
-        return relationProxy.getChatRelationList(authKey);
-    }
-
-    @GetMapping("/{idMatch}/apply")
-    @Operation(summary = "Gets apply state of relation")
-    public RelationApplyDto getRelationApply(
+    @GetMapping("/{idMatch}/match")
+    @Operation(summary = "Gets match relation")
+    public RelationMatchDto getMatchRelation(
             @AuthIdentity
             AuthKey authKey,
 
             @PathVariable
             Long idMatch
     ) throws RelationNotFound {
-        return relationProxy.getRelationApply(authKey, idMatch);
+        return relationProxy.getMatchRelation(authKey, idMatch);
+    }
+
+    @GetMapping("/{idMatch}/chat")
+    @Operation(summary = "Gets chat relation")
+    public RelationChatDto getChatRelation(
+            @AuthIdentity
+            AuthKey authKey,
+
+            @PathVariable
+            Long idMatch
+    ) throws RelationNotFound {
+        return relationProxy.getChatRelation(authKey, idMatch);
+    }
+
+    @GetMapping("/match")
+    @Operation(summary = "Gets all match relations")
+    public List<RelationMatchDto> getMatchRelations(
+            @AuthIdentity
+            AuthKey authKey,
+
+            @RequestParam
+            Integer withChat,
+
+            @RequestParam
+            Boolean blocked
+    ) {
+        return relationProxy.getMatchRelations(authKey, withChat, blocked);
+    }
+
+    @GetMapping("/chat")
+    @Operation(summary = "Gets all chat relations")
+    public List<RelationChatDto> getChatRelations(
+            @AuthIdentity
+            AuthKey authKey,
+
+            @RequestParam
+            Boolean blocked
+    ) {
+        return relationProxy.getChatRelations(authKey, blocked);
     }
 
     @PatchMapping("/{idMatch}/apply")
-    @Operation(summary = "Patches apply state of relation")
-    public RelationApplyDto patchRelationApply(
+    @Operation(summary = "Patches apply state of match relation")
+    public RelationMatchDto patchRelationMatchApply(
             @AuthIdentity
             AuthKey authKey,
 
@@ -64,8 +84,8 @@ public class RelationController {
             Long idMatch,
 
             @RequestBody
-            RelationApplyPatchDto relationApplyPatchDto
+            RelationMatchApplyPatchDto relationMatchApplyPatchDto
     ) throws RelationNotFound {
-        return relationProxy.patchRelationApply(authKey, idMatch, relationApplyPatchDto);
+        return relationProxy.patchRelationMatchApply(authKey, idMatch, relationMatchApplyPatchDto);
     }
 }

@@ -4,9 +4,10 @@ import page.se3.datingapp.domain.enums.Gender;
 import page.se3.datingapp.domain.enums.Relationship;
 import page.se3.datingapp.domain.model.user.User;
 
-public record UserBriefInfo(
+public record UserInfoKnown(
         Long id,
         String name,
+        String surname,
         Gender gender,
         Integer age,
         String fieldOfStudy,
@@ -14,10 +15,11 @@ public record UserBriefInfo(
         Relationship targetRelationship
 ) {
 
-    public static UserBriefInfo getFrom(User user, Gender askingGender) {
-        return new UserBriefInfo(
+    public static UserInfoKnown getFrom(User user, Gender askingGender) {
+        return new UserInfoKnown(
                 user.id(),
                 user.name(),
+                user.surname(),
                 user.gender(),
                 user.age(),
                 user.fieldOfStudy(),

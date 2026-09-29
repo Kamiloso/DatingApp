@@ -2,15 +2,14 @@ package page.se3.datingapp.application.service.relation;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
-import page.se3.datingapp.application.annotation.transaction.ReadCommitted;
+import page.se3.datingapp.application.annotation.transaction.ExplicitNoTransaction;
 import page.se3.datingapp.application.service.relation.assembly.MultiRelationAssembler;
 import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
 import page.se3.datingapp.application.service.relation.apply.RelationApplier;
 import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.domain.exception.abort.reason.relation.RelationNotFound;
 import page.se3.datingapp.domain.model.relation.Relation;
-import page.se3.datingapp.domain.model.relation.apply.RelationApply;
-import page.se3.datingapp.application.service.relation.struct.RelationApplyPatch;
+import page.se3.datingapp.domain.model.relation.RelationMatchApplyPatch;
 import page.se3.datingapp.domain.model.relation.chat.RelationChat;
 import page.se3.datingapp.domain.model.relation.match.RelationMatch;
 import page.se3.datingapp.domain.model.user.AuthKey;
@@ -25,48 +24,51 @@ public class RelationService {
     private final SingleRelationAssembler singleRelationAssembler;
     private final RelationApplier relationApplier;
 
-    public List<RelationMatch> getMatchList(AuthKey authKey) {
+    public RelationMatch getMatch(AuthKey authKey, Long idMatch) throws RelationNotFound {
+        return singleRelationAssembler.getByIdMatch(idMatch)
+                .filter(r -> r.match().containsIdUser(authKey.id()))
+                .map(RelationMatch::getFrom)
+                .orElseThrow(RelationNotFound::new);
+    }
+
+    public RelationChat getChat(AuthKey authKey, Long idMatch) throws RelationNotFound {
+        return singleRelationAssembler.getByIdMatch(idMatch)
+                .filter(r -> r.match().containsIdUser(authKey.id()))
+                .filter(Relation::chatExists)
+                .map(RelationChat::getFrom)
+                .orElseThrow(RelationNotFound::new);
+    }
+
+    public List<RelationMatch> getMatchList(AuthKey authKey, int withChat, boolean blocked) {
         return MapUtils.toList(
-                multiRelationAssembler.getByIdUserForApplicationPurposes(authKey.id(), 0, false),
+                multiRelationAssembler.getByIdUserForApplicationPurposes(authKey.id(), withChat, blocked),
                 RelationMatch::getFrom
         );
     }
 
-    public List<RelationChat> getChatList(AuthKey authKey) {
+    public List<RelationChat> getChatList(AuthKey authKey, boolean blocked) {
         return MapUtils.toList(
-                multiRelationAssembler.getByIdUserForApplicationPurposes(authKey.id(), 1, false),
+                multiRelationAssembler.getByIdUserForApplicationPurposes(authKey.id(), 1, blocked),
                 RelationChat::getFrom
         );
     }
 
-    public RelationApply getApply(AuthKey authKey, Long idMatch) throws RelationNotFound {
-        Relation relation = singleRelationAssembler.getByIdMatch(idMatch)
-                .orElseThrow(RelationNotFound::new);
-
-        return RelationApply.getFrom(relation, authKey.id());
-    }
-
-    @ReadCommitted
-    public RelationApply setApply(AuthKey authKey, Long idMatch, RelationApplyPatch relationApplyPatch)
+    @ExplicitNoTransaction
+    public RelationMatch setMatchApply(AuthKey authKey, Long idMatch, RelationMatchApplyPatch relationMatchApplyPatch)
             throws RelationNotFound {
-        Relation relation = singleRelationAssembler.getByIdMatch(idMatch)
+        boolean isApplied = relationMatchApplyPatch.isAppliedByYou();
+
+        relationApplier.setMatchIsApplied(authKey, idMatch, isApplied);
+
+        RelationMatch relationMatch = singleRelationAssembler.getByIdMatch(idMatch)
+                .map(RelationMatch::getFrom)
                 .orElseThrow(RelationNotFound::new);
 
-        boolean isFirst = relation.match().containsIdUserAsFirst(authKey.id());
-        boolean isApplied = relationApplyPatch.isAppliedByYou();
-
-        relationApplier.setMatchIsApplied(idMatch, isFirst, isApplied);
-
-        relation = singleRelationAssembler.getByIdMatch(idMatch)
-                .orElseThrow(RelationNotFound::new);
-
-        RelationApply relationApply = RelationApply.getFrom(relation, authKey.id());
-
-        if (relationApply.shouldCreateChat()) {
-            relationApplier.createChatIfNotExists(relation.match());
-            relationApply = relationApply.withChatExists(true);
+        if (relationMatch.shouldCreateChat()) {
+            relationApplier.createChatIfNotExists(idMatch);
+            relationMatch = relationMatch.withChatExists(true);
         }
 
-        return relationApply;
+        return relationMatch;
     }
 }

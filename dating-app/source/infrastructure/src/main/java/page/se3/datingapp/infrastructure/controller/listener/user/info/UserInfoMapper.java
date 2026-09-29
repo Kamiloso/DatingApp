@@ -2,9 +2,9 @@ package page.se3.datingapp.infrastructure.controller.listener.user.info;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import page.se3.datingapp.domain.model.user.info.UserBriefInfo;
-import page.se3.datingapp.domain.model.user.info.UserKnownInfo;
-import page.se3.datingapp.domain.model.user.info.UserTrustedInfo;
+import page.se3.datingapp.domain.model.user.info.UserInfoBrief;
+import page.se3.datingapp.domain.model.user.info.UserInfoKnown;
+import page.se3.datingapp.domain.model.user.info.UserInfoTrusted;
 import page.se3.datingapp.infrastructure.controller.listener.user.info.dto.UserInfoBriefDto;
 import page.se3.datingapp.infrastructure.controller.listener.user.info.dto.UserInfoKnownDto;
 import page.se3.datingapp.infrastructure.controller.listener.user.info.dto.UserInfoTrustedDto;
@@ -12,7 +12,7 @@ import page.se3.datingapp.infrastructure.controller.listener.user.info.dto.UserI
 @Mapper(componentModel = MappingConstants.ComponentModel.SPRING)
 public interface UserInfoMapper {
 
-    UserInfoBriefDto toDto(UserBriefInfo userBriefInfo);
-    UserInfoKnownDto toDto(UserKnownInfo userKnownInfo);
-    UserInfoTrustedDto toDto(UserTrustedInfo userTrustedInfo);
+    UserInfoBriefDto toDto(UserInfoBrief userInfoBrief);
+    UserInfoKnownDto toDto(UserInfoKnown userInfoKnown);
+    UserInfoTrustedDto toDto(UserInfoTrusted userInfoTrusted);
 }

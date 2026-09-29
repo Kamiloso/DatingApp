@@ -6,7 +6,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.application.service.block.BlockService;
-import page.se3.datingapp.application.service.block.struct.BlockAdd;
+import page.se3.datingapp.domain.model.block.BlockAdd;
 import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockInsertionConflict;
@@ -45,7 +45,7 @@ public class BlockProxy {
     }
 
     public ResponseEntity<@NonNull Void> deleteBlock(AuthKey authKey, Long idBlock)
-            throws BlockNotFound, BlockAccessDenied {
+            throws BlockAccessDenied {
         blockService.remove(authKey, idBlock);
 
         return Response.noContent();

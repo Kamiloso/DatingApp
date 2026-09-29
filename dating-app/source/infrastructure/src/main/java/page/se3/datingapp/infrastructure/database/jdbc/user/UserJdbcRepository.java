@@ -13,12 +13,16 @@ public interface UserJdbcRepository extends ListCrudRepository<@NonNull UserEnti
 
     @Query("SELECT * FROM users WHERE id = :id FOR UPDATE")
     Optional<UserEntity> findByIdForUpdate(Long id);
+    
+    @Query("SELECT * FROM users WHERE id = :id AND is_active = 1")
+    Optional<UserEntity> findByIdWhereIsActive(Long id);
 
     @Query("""
             SELECT * FROM users
                 WHERE
                     matching_index = :matchingIndex AND
-                    ready_index = :readyIndex
+                    ready_index = :readyIndex AND
+                    is_active = 1
                 FOR SHARE
             """)
     List<UserEntity> findAllWhereReadyForShare(Integer matchingIndex, Integer readyIndex);

@@ -2,12 +2,11 @@ package page.se3.datingapp.application.service.block;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
-import page.se3.datingapp.application.service.block.struct.BlockAdd;
+import page.se3.datingapp.domain.model.block.BlockAdd;
 import page.se3.datingapp.domain.exception.abort.reason.*;
 import page.se3.datingapp.application.repository.BlockRepository;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockInsertionConflict;
-import page.se3.datingapp.domain.exception.abort.reason.block.BlockNotFound;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockSelfConflict;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.model.user.AuthKey;
@@ -49,9 +48,11 @@ public class BlockService {
         }
     }
 
-    public void remove(AuthKey authKey, Long idBlock) throws BlockNotFound, BlockAccessDenied {
-        Block block = blockRepository.findById(idBlock)
-                .orElseThrow(BlockNotFound::new);
+    public void remove(AuthKey authKey, Long idBlock) throws BlockAccessDenied {
+        Block block = blockRepository.findById(idBlock).orElse(null);
+        if (block == null) {
+            return;
+        }
 
         if (!block.containsIdUserAsOwner(authKey.id())) {
             throw new BlockAccessDenied();

@@ -1,6 +1,4 @@
-package page.se3.datingapp.application.service.message.struct;
-
-import page.se3.datingapp.domain.model.message.Message;
+package page.se3.datingapp.domain.model.message;
 
 import java.time.Instant;
 

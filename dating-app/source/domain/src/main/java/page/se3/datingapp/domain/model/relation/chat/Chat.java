@@ -14,4 +14,8 @@ public record Chat(
     public static Chat getInitial(Instant beginTime, Boolean isUpgraded, Long idMatch) {
         return new Chat(null, beginTime, isUpgraded, idMatch);
     }
+
+    public static Chat getBeginnerInitial(Instant beginTime, Long idMatch) {
+        return getInitial(beginTime, false, idMatch);
+    }
 }

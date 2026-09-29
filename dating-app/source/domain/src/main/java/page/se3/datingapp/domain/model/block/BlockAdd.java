@@ -1,6 +1,4 @@
-package page.se3.datingapp.application.service.block.struct;
-
-import page.se3.datingapp.domain.model.block.Block;
+package page.se3.datingapp.domain.model.block;
 
 public record BlockAdd(
         Long idUserBlocked,

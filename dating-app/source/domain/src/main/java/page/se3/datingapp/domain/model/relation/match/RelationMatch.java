@@ -1,9 +1,11 @@
 package page.se3.datingapp.domain.model.relation.match;
 
+import lombok.With;
 import page.se3.datingapp.domain.model.relation.Relation;
 
 import java.time.Instant;
 
+@With
 public record RelationMatch(
         Long idMatch,
         Long idUserFirst,
@@ -28,5 +30,9 @@ public record RelationMatch(
                 relation.match().isAppliedBySecond(),
                 relation.chatExists()
         );
+    }
+
+    public boolean shouldCreateChat() {
+        return isAppliedByFirst && isAppliedBySecond && !chatExists;
     }
 }

@@ -7,7 +7,6 @@ import page.se3.datingapp.application.repository.MatchGroupRepository;
 import page.se3.datingapp.application.repository.MatchRepository;
 import page.se3.datingapp.domain.model.relation.chat.Chat;
 import page.se3.datingapp.domain.model.relation.match.Match;
-import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.domain.model.relation.Relation;
 
 import java.util.Optional;
@@ -21,37 +20,34 @@ public class SingleRelationAssembler {
     private final ChatRepository chatRepository;
 
     public Optional<Relation> getByIdMatch(Long idMatch) {
-        Match match = matchRepository.findById(idMatch).orElse(null);
-        if (match == null) {
-            return Optional.empty();
-        }
-
-        MatchGroup matchGroup = matchGroupRepository.findById(match.idMatchGroup()).orElse(null);
-        if (matchGroup == null) {
-            return Optional.empty();
-        }
-
-        Chat chat = chatRepository.findByIdMatch(match.id()).orElse(null);
-
-        return Optional.of(new Relation(matchGroup, match, chat));
+        return matchRepository.findById(idMatch).flatMap(this::assemblyFromMatch);
     }
 
     public Optional<Relation> getByIdChat(Long idChat) {
-        Chat chat = chatRepository.findById(idChat).orElse(null);
-        if (chat == null) {
-            return Optional.empty();
-        }
+        return chatRepository.findById(idChat).flatMap(this::assemblyFromChat);
+    }
 
-        Match match = matchRepository.findById(chat.idMatch()).orElse(null);
-        if (match == null) {
-            return Optional.empty();
-        }
+    public Optional<Relation> getByIdUserDirectForApplicationPurposes(
+            Long idUser, Long idUserOther, int withChat, boolean blocked
+    ) {
+        return matchRepository.findByIdUserDirectForApplicationPurposes(idUser, idUserOther, blocked)
+                .flatMap(this::assemblyFromMatch)
+                .filter(r -> r.meetsChatRequirements(withChat));
+    }
 
-        MatchGroup matchGroup = matchGroupRepository.findById(match.idMatchGroup()).orElse(null);
-        if (matchGroup == null) {
-            return Optional.empty();
-        }
+    private Optional<Relation> assemblyFromMatch(Match match) {
+        return matchGroupRepository.findById(match.idMatchGroup())
+                .map(matchGroup -> new Relation(
+                        matchGroup,
+                        match,
+                        chatRepository.findByIdMatch(match.id()).orElse(null)
+                ));
+    }
 
-        return Optional.of(new Relation(matchGroup, match, chat));
+    private Optional<Relation> assemblyFromChat(Chat chat) {
+        return matchRepository.findById(chat.idMatch())
+                .flatMap(match -> matchGroupRepository.findById(match.idMatchGroup())
+                        .map(matchGroup -> new Relation(matchGroup, match, chat))
+                );
     }
 }

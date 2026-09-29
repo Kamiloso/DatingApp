@@ -6,8 +6,19 @@ import org.springframework.data.jdbc.repository.query.Query;
 import org.springframework.data.repository.ListCrudRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MatchJdbcRepository extends ListCrudRepository<@NonNull MatchEntity, @NonNull Long> {
+
+    @Query("""
+            SELECT * FROM matches
+                WHERE
+                    (
+                        (matches.id_user_first = :idUser AND matches.id_user_second = :idUserOther) OR
+                        (matches.id_user_first = :idUserOther AND matches.id_user_second = :idUser)
+                    ) AND
+            """ + Preset.PASSES_BLOCKED_OR_IS_NOT_BLOCKED)
+    Optional<MatchEntity> findByIdUserDirectForApplicationPurposes(Long idUser, Long idUserOther, Boolean blocked);
 
     @Query("""
             SELECT * FROM matches
@@ -23,29 +34,8 @@ public interface MatchJdbcRepository extends ListCrudRepository<@NonNull MatchEn
                     (
                         matches.id_user_first = :idUser OR
                         matches.id_user_second = :idUser
-                    ) AND (
-                        :blocked = 1 OR
-                        NOT EXISTS (
-                            SELECT 1 FROM blocks
-                                WHERE
-                                    (
-                                        (
-                                            blocks.id_user_owner = matches.id_user_first AND
-                                            blocks.id_user_blocked = matches.id_user_second
-                                        ) OR (
-                                            blocks.id_user_owner = matches.id_user_second AND
-                                            blocks.id_user_blocked = matches.id_user_first
-                                        )
-                                    ) AND (
-                                        blocks.id_user_owner = :idUser OR
-                                        (
-                                            blocks.id_user_blocked = :idUser AND
-                                            blocks.is_silent = 0
-                                        )
-                                    )
-                        )
-                    )
-            """)
+                    ) AND
+            """ + Preset.PASSES_BLOCKED_OR_IS_NOT_BLOCKED)
     List<MatchEntity> findAllByIdUserForApplicationPurposes(Long idUser, Boolean blocked);
 
     @Modifying
@@ -63,4 +53,31 @@ public interface MatchJdbcRepository extends ListCrudRepository<@NonNull MatchEn
                 WHERE id = :id
             """)
     void updateIsAppliedBySecondById(Long id, Boolean isAppliedBySecond);
+
+    class Preset {
+        private static final String PASSES_BLOCKED_OR_IS_NOT_BLOCKED = """
+            (
+                :blocked = 1 OR
+                NOT EXISTS (
+                    SELECT 1 FROM blocks
+                        WHERE
+                            (
+                                (
+                                    blocks.id_user_owner = matches.id_user_first AND
+                                    blocks.id_user_blocked = matches.id_user_second
+                                ) OR (
+                                    blocks.id_user_owner = matches.id_user_second AND
+                                    blocks.id_user_blocked = matches.id_user_first
+                                )
+                            ) AND (
+                                blocks.id_user_owner = :idUser OR
+                                (
+                                    blocks.id_user_blocked = :idUser AND
+                                    blocks.is_silent = 0
+                                )
+                            )
+                )
+            )
+            """;
+    }
 }

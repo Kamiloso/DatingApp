@@ -8,7 +8,6 @@ import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.application.repository.UserRepository;
 import page.se3.datingapp.domain.model.user.User;
 import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
-import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,7 +16,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserJdbcAdapter implements UserRepository {
 
-    private final BatchProcessor batchProcessor;
     private final UserJdbcRepository userJdbcRepository;
     private final UserMapper userMapper;
 
@@ -27,16 +25,14 @@ public class UserJdbcAdapter implements UserRepository {
     }
 
     @Override
+    @RequiresTransaction
     public Optional<User> findByIdForUpdate(Long id) {
         return userJdbcRepository.findByIdForUpdate(id).map(userMapper::toDomain);
     }
 
     @Override
-    public List<User> findAllByIdList(List<Long> idList) {
-        return MapUtils.toList(
-                batchProcessor.convert(idList, userJdbcRepository::findAllById),
-                userMapper::toDomain
-        );
+    public Optional<User> findByIdWhereIsActive(Long id) {
+        return userJdbcRepository.findByIdWhereIsActive(id).map(userMapper::toDomain);
     }
 
     @Override

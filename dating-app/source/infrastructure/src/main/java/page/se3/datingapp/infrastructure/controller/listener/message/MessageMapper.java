@@ -2,7 +2,7 @@ package page.se3.datingapp.infrastructure.controller.listener.message;
 
 import org.mapstruct.Mapper;
 import org.mapstruct.MappingConstants;
-import page.se3.datingapp.application.service.message.struct.MessageSend;
+import page.se3.datingapp.domain.model.message.MessageSend;
 import page.se3.datingapp.domain.model.message.Message;
 import page.se3.datingapp.infrastructure.controller.listener.message.dto.MessageSendDto;
 import page.se3.datingapp.infrastructure.controller.listener.message.dto.MessageDto;

@@ -27,6 +27,12 @@ public class MatchJdbcAdapter implements MatchRepository {
     }
 
     @Override
+    public Optional<Match> findByIdUserDirectForApplicationPurposes(Long idUser, Long idUserOther, Boolean blocked) {
+        return matchJdbcRepository.findByIdUserDirectForApplicationPurposes(idUser, idUserOther, blocked)
+                .map(matchMapper::toDomain);
+    }
+
+    @Override
     public List<Match> findAllByIdUserList(List<Long> idUserList) {
         return MapUtils.toList(
                 batchProcessor.convert(idUserList, matchJdbcRepository::findAllByIdUserList),

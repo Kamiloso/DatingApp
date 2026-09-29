@@ -2,8 +2,9 @@ package page.se3.datingapp.application.service.message;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
+import page.se3.datingapp.application.repository.ChatRepository;
 import page.se3.datingapp.application.repository.MessageRepository;
-import page.se3.datingapp.application.service.message.struct.MessageSend;
+import page.se3.datingapp.domain.model.message.MessageSend;
 import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
 import page.se3.datingapp.domain.config.LimitConfig;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatAccessDenied;
@@ -22,6 +23,7 @@ public class MessageService {
 
     private final LimitConfig limitConfig;
     private final SingleRelationAssembler singleRelationAssembler;
+    private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
 
     public Message send(AuthKey authKey, Long idChat, MessageSend messageSend)
@@ -57,11 +59,7 @@ public class MessageService {
         Relation relation = singleRelationAssembler.getByIdChat(idChat)
                 .orElseThrow(ChatNotFound::new);
 
-        if (!relation.chatExists()) {
-            throw new ChatNotFound();
-        }
-
-        if (relation.match().containsIdUser(authKey.id())) {
+        if (!relation.match().containsIdUser(authKey.id())) {
             throw new ChatAccessDenied();
         }
     }

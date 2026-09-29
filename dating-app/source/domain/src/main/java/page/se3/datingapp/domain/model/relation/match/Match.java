@@ -1,9 +1,7 @@
 package page.se3.datingapp.domain.model.relation.match;
 
 import page.se3.datingapp.domain.annotation.MayBeNull;
-import page.se3.datingapp.domain.model.relation.chat.Chat;
 
-import java.time.Instant;
 import java.util.Objects;
 
 public record Match(
@@ -25,10 +23,6 @@ public record Match(
                 null, idUserFirst, idUserSecond, score, isDoubleMatch,
                 isAppliedByFirst, isAppliedBySecond, idMatchGroup
         );
-    }
-
-    public Chat deriveInitial(Instant beginTime) {
-        return Chat.getInitial(beginTime, false, id);
     }
 
     public boolean isFullyApplied() {
