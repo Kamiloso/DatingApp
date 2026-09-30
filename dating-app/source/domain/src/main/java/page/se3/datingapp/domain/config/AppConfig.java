@@ -6,7 +6,6 @@ import page.se3.datingapp.domain.config.interfaces.Validated;
 public record AppConfig(
         String apiVersion,
         String startMessage,
-        AuthConfig auth,
         RetryConfig retry,
         LimitConfig limits,
         MatchingConfig matching,
@@ -15,6 +14,6 @@ public record AppConfig(
 
     @Override
     public Object[] getChildren() {
-        return new Object[] {apiVersion, startMessage, auth, retry, limits, matching, quiz};
+        return new Object[] {apiVersion, startMessage, retry, limits, matching, quiz};
     }
 }

@@ -8,10 +8,10 @@ import page.se3.datingapp.application.service.matching.index.MatchingIndexer;
 import page.se3.datingapp.domain.model.user.account.UserAccountBasePatch;
 import page.se3.datingapp.domain.model.user.account.UserAccountDetailPatch;
 import page.se3.datingapp.domain.model.user.account.UserAccountRegister;
-import page.se3.datingapp.domain.exception.UnexpectedConflictException;
+import page.se3.datingapp.domain.exception.UnexpectedRuntimeException;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountAlreadyExists;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotFound;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountPatchDenied;
 import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.domain.model.user.User;
@@ -44,7 +44,7 @@ public class UserAccountService {
 
         try {
             return UserAccount.getFrom(userRepository.trySave(user));
-        } catch (DataIntegrityViolation e) {
+        } catch (DatabaseConflictException e) {
             throw new AccountAlreadyExists();
         }
     }
@@ -61,8 +61,8 @@ public class UserAccountService {
 
         try {
             return UserAccount.getFrom(userRepository.trySave(user));
-        } catch (DataIntegrityViolation e) {
-            throw new UnexpectedConflictException(e);
+        } catch (DatabaseConflictException e) {
+            throw new UnexpectedRuntimeException(e);
         }
     }
 
@@ -80,8 +80,8 @@ public class UserAccountService {
 
         try {
             return UserAccount.getFrom(userRepository.trySave(user));
-        } catch (DataIntegrityViolation e) {
-            throw new UnexpectedConflictException(e);
+        } catch (DatabaseConflictException e) {
+            throw new UnexpectedRuntimeException(e);
         }
     }
 }

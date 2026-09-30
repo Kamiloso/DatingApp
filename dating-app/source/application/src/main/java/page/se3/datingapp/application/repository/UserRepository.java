@@ -1,6 +1,6 @@
 package page.se3.datingapp.application.repository;
 
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.user.User;
 
 import java.util.List;
@@ -16,5 +16,5 @@ public interface UserRepository {
 
     List<User> findAllWhereReadyForShare(Integer matchingIndex, Integer readyIndex);
 
-    User trySave(User user) throws DataIntegrityViolation;
+    User trySave(User user) throws DatabaseConflictException;
 }

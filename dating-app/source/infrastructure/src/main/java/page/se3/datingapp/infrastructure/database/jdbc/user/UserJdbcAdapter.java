@@ -7,7 +7,7 @@ import page.se3.datingapp.application.annotation.transaction.RequiresTransaction
 import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.application.repository.UserRepository;
 import page.se3.datingapp.domain.model.user.User;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 
 import java.util.List;
 import java.util.Optional;
@@ -45,13 +45,13 @@ public class UserJdbcAdapter implements UserRepository {
     }
 
     @Override
-    public User trySave(User user) throws DataIntegrityViolation {
+    public User trySave(User user) throws DatabaseConflictException {
         UserEntity userEntity = userMapper.toEntity(user);
 
         try {
             userEntity = userJdbcRepository.save(userEntity);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolation();
+            throw new DatabaseConflictException(e);
         }
 
         return userMapper.toDomain(userEntity);

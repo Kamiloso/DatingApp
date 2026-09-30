@@ -13,5 +13,5 @@ public interface ChatRepository {
 
     List<Chat> findAllByIdMatchList(List<Long> idMatchList);
 
-    void saveIfNotExists(Chat chat);
+    void createIfNotExists(Chat chat);
 }

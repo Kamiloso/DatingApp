@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.transaction.RequiresTransaction;
 import page.se3.datingapp.application.repository.MatchRepository;
 import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
 
@@ -50,13 +50,13 @@ public class MatchJdbcAdapter implements MatchRepository {
 
     @Override
     @RequiresTransaction
-    public List<Match> trySaveAll(List<Match> matchList) throws DataIntegrityViolation {
+    public List<Match> trySaveAll(List<Match> matchList) throws DatabaseConflictException {
         List<MatchEntity> matchEntityList = MapUtils.toList(matchList, matchMapper::toEntity);
 
         try {
             matchEntityList = batchProcessor.convert(matchEntityList, matchJdbcRepository::saveAll);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolation();
+            throw new DatabaseConflictException(e);
         }
 
         return MapUtils.toList(matchEntityList, matchMapper::toDomain);

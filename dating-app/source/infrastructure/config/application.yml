@@ -1,7 +1,5 @@
 app:
   start-message: "Backend has started successfully and is listening for requests..."
-  auth:
-    allowed-email-regex: "@student\\.polsl\\.pl$"
   limits:
     max-batch-size: 512
     max-list-size: 64

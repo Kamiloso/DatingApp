@@ -12,9 +12,6 @@ public interface ChatJdbcRepository extends ListCrudRepository<@NonNull ChatEnti
 
     Optional<ChatEntity> findByIdMatch(Long idMatch);
 
-    @Query("SELECT * FROM chats WHERE id_match = :idMatch FOR UPDATE")
-    Optional<ChatEntity> findByIdMatchForUpdate(Long idMatch);
-
     @Query("SELECT * FROM chats WHERE id_match IN (:idMatchList)")
     List<ChatEntity> findAllByIdMatchList(List<Long> idMatchList);
 
@@ -27,5 +24,5 @@ public interface ChatJdbcRepository extends ListCrudRepository<@NonNull ChatEnti
                     :#{#chatEntity.idMatch}
                 )
             """)
-    void saveIfNotExists(ChatEntity chatEntity);
+    void createIfNotExists(ChatEntity chatEntity);
 }

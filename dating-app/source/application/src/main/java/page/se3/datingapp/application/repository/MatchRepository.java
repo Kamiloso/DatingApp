@@ -1,6 +1,6 @@
 package page.se3.datingapp.application.repository;
 
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.match.Match;
 
 import java.util.List;
@@ -16,7 +16,7 @@ public interface MatchRepository {
 
     List<Match> findAllByIdUserForApplicationPurposes(Long idUser, Boolean blocked);
 
-    List<Match> trySaveAll(List<Match> matchList) throws DataIntegrityViolation;
+    List<Match> trySaveAll(List<Match> matchList) throws DatabaseConflictException;
 
     void updateIsAppliedOfIdUserById(Long id, Long idUser, Boolean isApplied);
 }

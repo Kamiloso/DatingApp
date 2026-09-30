@@ -14,7 +14,7 @@ import org.springframework.dao.PessimisticLockingFailureException;
 import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.domain.config.RetryConfig;
 import page.se3.datingapp.domain.core.util.ThreadUtils;
-import page.se3.datingapp.domain.exception.UnexpectedConflictException;
+import page.se3.datingapp.domain.exception.UnexpectedRuntimeException;
 
 @Configuration
 @RequiredArgsConstructor
@@ -57,7 +57,7 @@ public class AutoRetryConfig {
         }
 
         private boolean shouldRetry(Throwable e) {
-            return e instanceof UnexpectedConflictException
+            return e instanceof UnexpectedRuntimeException
                     || e instanceof PessimisticLockingFailureException;
         }
     }

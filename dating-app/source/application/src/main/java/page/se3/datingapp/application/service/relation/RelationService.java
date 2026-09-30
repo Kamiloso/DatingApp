@@ -69,7 +69,7 @@ public class RelationService {
                 .orElseThrow(RelationNotFound::new);
 
         if (relationMatch.shouldCreateChat()) {
-            chatRepository.saveIfNotExists(Chat.getBeginnerInitial(Instant.now(), idMatch));
+            chatRepository.createIfNotExists(Chat.getBeginnerInitial(Instant.now(), idMatch));
             relationMatch = relationMatch.withChatExists(true);
         }
 

@@ -1,9 +1,11 @@
 package page.se3.datingapp.infrastructure.database.jdbc.matchgroup;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.domain.core.util.MapUtils;
 import page.se3.datingapp.application.repository.MatchGroupRepository;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
 
@@ -32,9 +34,14 @@ public class MatchGroupJdbcAdapter implements MatchGroupRepository {
     }
 
     @Override
-    public MatchGroup save(MatchGroup matchGroup) {
+    public MatchGroup trySave(MatchGroup matchGroup) throws DatabaseConflictException {
         MatchGroupEntity matchGroupEntity = matchGroupMapper.toEntity(matchGroup);
-        matchGroupEntity = matchGroupJdbcRepository.save(matchGroupEntity);
+
+        try {
+            matchGroupEntity = matchGroupJdbcRepository.save(matchGroupEntity);
+        } catch (DataIntegrityViolationException e) {
+            throw new DatabaseConflictException(e);
+        }
 
         return matchGroupMapper.toDomain(matchGroupEntity);
     }

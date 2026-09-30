@@ -5,7 +5,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.repository.MessageRepository;
 import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.message.Message;
 
 import java.time.Instant;
@@ -31,13 +31,13 @@ public class MessageJdbcAdapter implements MessageRepository {
     }
 
     @Override
-    public Message trySave(Message message) throws DataIntegrityViolation {
+    public Message trySave(Message message) throws DatabaseConflictException {
         MessageEntity messageEntity = messageMapper.toEntity(message);
 
         try {
             messageEntity = messageJdbcRepository.save(messageEntity);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolation();
+            throw new DatabaseConflictException(e);
         }
 
         return messageMapper.toDomain(messageEntity);

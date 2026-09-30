@@ -7,8 +7,8 @@ import page.se3.datingapp.application.service.matching.index.MatchingIndexer;
 import page.se3.datingapp.domain.config.MatchingConfig;
 import page.se3.datingapp.domain.config.QuizConfig;
 import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.domain.exception.UnexpectedConflictException;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.UnexpectedRuntimeException;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.application.repository.BlockRepository;
 import page.se3.datingapp.application.repository.MatchGroupRepository;
 import page.se3.datingapp.application.repository.MatchRepository;
@@ -46,19 +46,25 @@ public class MatchingUseCase {
 
         try {
             var ignored = matchRepository.trySaveAll(matches);
-        } catch (DataIntegrityViolation e) {
-            throw new UnexpectedConflictException(e);
+        } catch (DatabaseConflictException e) {
+            throw new UnexpectedRuntimeException(e);
         }
     }
 
     private MatchingContext buildContext() {
         int matchingIndex = matchingIndexer.getIncrementedForUpdate();
 
-        MatchGroup matchGroup = matchGroupRepository.save(MatchGroup.getBeginnerInitial(
-                Instant.now(),
-                matchingConfig.matchCountLimit(),
-                quizConfig.readyIndex()
-        ));
+        MatchGroup matchGroup;
+
+        try {
+            matchGroup = matchGroupRepository.trySave(MatchGroup.getBeginnerInitial(
+                    Instant.now(),
+                    matchingConfig.matchCountLimit(),
+                    quizConfig.readyIndex()
+            ));
+        } catch (DatabaseConflictException e) {
+            throw new UnexpectedRuntimeException(e);
+        }
 
         List<User> users = userRepository.findAllWhereReadyForShare(
                 matchingIndex,

@@ -2,8 +2,8 @@ package page.se3.datingapp.application.service.block;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.block.BlockAdd;
-import page.se3.datingapp.domain.exception.abort.reason.*;
 import page.se3.datingapp.application.repository.BlockRepository;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.block.BlockInsertionConflict;
@@ -43,7 +43,7 @@ public class BlockService {
 
         try {
             return blockRepository.trySave(block);
-        } catch (DataIntegrityViolation e) {
+        } catch (DatabaseConflictException e) {
             throw new BlockInsertionConflict();
         }
     }

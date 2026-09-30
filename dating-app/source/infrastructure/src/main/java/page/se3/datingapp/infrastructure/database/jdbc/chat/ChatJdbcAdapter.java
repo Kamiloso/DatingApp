@@ -37,8 +37,8 @@ public class ChatJdbcAdapter implements ChatRepository {
     }
 
     @Override
-    public void saveIfNotExists(Chat chat) {
+    public void createIfNotExists(Chat chat) {
         ChatEntity chatEntity = chatMapper.toEntity(chat);
-        chatJdbcRepository.saveIfNotExists(chatEntity);
+        chatJdbcRepository.createIfNotExists(chatEntity);
     }
 }

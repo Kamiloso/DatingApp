@@ -8,7 +8,7 @@ import page.se3.datingapp.application.service.relation.assembly.SingleRelationAs
 import page.se3.datingapp.domain.config.LimitConfig;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatNotFound;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.Relation;
 import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.domain.model.message.Message;
@@ -35,7 +35,7 @@ public class MessageService {
 
         try {
             return messageRepository.trySave(message);
-        } catch (DataIntegrityViolation e) {
+        } catch (DatabaseConflictException e) {
             throw new ChatNotFound();
         }
     }

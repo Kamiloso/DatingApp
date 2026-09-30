@@ -6,7 +6,7 @@ import org.springframework.stereotype.Repository;
 import page.se3.datingapp.application.repository.BlockRepository;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
 
 import java.util.List;
@@ -47,13 +47,13 @@ public class BlockJdbcAdapter implements BlockRepository {
     }
 
     @Override
-    public Block trySave(Block block) throws DataIntegrityViolation {
+    public Block trySave(Block block) throws DatabaseConflictException {
         BlockEntity blockEntity = blockMapper.toEntity(block);
 
         try {
             blockEntity = blockJdbcRepository.save(blockEntity);
         } catch (DataIntegrityViolationException e) {
-            throw new DataIntegrityViolation();
+            throw new DatabaseConflictException(e);
         }
 
         return blockMapper.toDomain(blockEntity);

@@ -1,5 +1,6 @@
 package page.se3.datingapp.application.repository;
 
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 
 import java.util.List;
@@ -11,5 +12,5 @@ public interface MatchGroupRepository {
 
     List<MatchGroup> findAllByIdList(List<Long> idList);
 
-    MatchGroup save(MatchGroup matchGroup);
+    MatchGroup trySave(MatchGroup matchGroup) throws DatabaseConflictException;
 }

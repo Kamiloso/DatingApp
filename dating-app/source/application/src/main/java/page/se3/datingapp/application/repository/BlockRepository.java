@@ -1,7 +1,7 @@
 package page.se3.datingapp.application.repository;
 
 import page.se3.datingapp.domain.model.block.Block;
-import page.se3.datingapp.domain.exception.abort.reason.DataIntegrityViolation;
+import page.se3.datingapp.domain.exception.DatabaseConflictException;
 
 import java.util.List;
 import java.util.Optional;
@@ -16,7 +16,7 @@ public interface BlockRepository {
 
     List<Block> findAllByIdUserList(List<Long> idUserList);
 
-    Block trySave(Block block) throws DataIntegrityViolation;
+    Block trySave(Block block) throws DatabaseConflictException;
 
     void deleteById(Long id);
 }
