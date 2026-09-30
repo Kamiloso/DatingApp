@@ -31,7 +31,7 @@ services:
       start_period: 40s
 
   keycloak:
-    image: quay.io/keycloak/keycloak:24.0.4
+    image: quay.io/keycloak/keycloak:26.0.2
     container_name: dating-app-keycloak
     command: start-dev --import-realm
     ports:

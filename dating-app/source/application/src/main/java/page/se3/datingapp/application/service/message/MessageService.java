@@ -2,7 +2,6 @@ package page.se3.datingapp.application.service.message;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
-import page.se3.datingapp.application.repository.ChatRepository;
 import page.se3.datingapp.application.repository.MessageRepository;
 import page.se3.datingapp.domain.model.message.MessageSend;
 import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
@@ -23,7 +22,6 @@ public class MessageService {
 
     private final LimitConfig limitConfig;
     private final SingleRelationAssembler singleRelationAssembler;
-    private final ChatRepository chatRepository;
     private final MessageRepository messageRepository;
 
     public Message send(AuthKey authKey, Long idChat, MessageSend messageSend)

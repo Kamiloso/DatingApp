@@ -41,18 +41,18 @@ public interface MatchJdbcRepository extends ListCrudRepository<@NonNull MatchEn
     @Modifying
     @Query("""
             UPDATE matches
-                SET is_applied_by_first = :isAppliedByFirst
+                SET
+                    is_applied_first = CASE WHEN id_user_first = :idUser
+                        THEN :isApplied
+                        ELSE is_applied_first
+                    END,
+                    is_applied_second = CASE WHEN id_user_second = :idUser
+                        THEN :isApplied
+                        ELSE is_applied_second
+                    END
                 WHERE id = :id
             """)
-    void updateIsAppliedByFirstById(Long id, Boolean isAppliedByFirst);
-
-    @Modifying
-    @Query("""
-            UPDATE matches
-                SET is_applied_by_second = :isAppliedBySecond
-                WHERE id = :id
-            """)
-    void updateIsAppliedBySecondById(Long id, Boolean isAppliedBySecond);
+    void updateIsAppliedOfIdUserById(Long id, Long idUser, Boolean isApplied);
 
     class Preset {
         private static final String PASSES_BLOCKED_OR_IS_NOT_BLOCKED = """

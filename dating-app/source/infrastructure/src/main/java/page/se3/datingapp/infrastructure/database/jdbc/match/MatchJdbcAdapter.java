@@ -63,12 +63,7 @@ public class MatchJdbcAdapter implements MatchRepository {
     }
 
     @Override
-    public void updateIsAppliedByFirstById(Long id, Boolean isAppliedByFirst) {
-        matchJdbcRepository.updateIsAppliedByFirstById(id, isAppliedByFirst);
-    }
-
-    @Override
-    public void updateIsAppliedBySecondById(Long id, Boolean isAppliedBySecond) {
-        matchJdbcRepository.updateIsAppliedBySecondById(id, isAppliedBySecond);
+    public void updateIsAppliedOfIdUserById(Long id, Long idUser, Boolean isApplied) {
+        matchJdbcRepository.updateIsAppliedOfIdUserById(id, idUser, isApplied);
     }
 }

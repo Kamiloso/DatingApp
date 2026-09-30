@@ -24,10 +24,11 @@ def menu_ask() -> str:
     print(" 2 - Run container (dev)")
     print(" 3 - Stop container")
     print(" 4 - Open MySQL console")
-    print(" 5 - Nuke container")
-    print(" 6 - View logs")
-    print(" 7 - Refresh")
-    print(" 8 - Exit")
+    print(" 5 - Open Redis console")
+    print(" 6 - Nuke container")
+    print(" 7 - View logs")
+    print(" 8 - Refresh")
+    print(" 9 - Exit")
     print()
     print(" Select an option:")
     print(" > ", end="")
@@ -42,10 +43,11 @@ def menu_ask() -> str:
         2: "run_container_dev",
         3: "stop_container",
         4: "open_mysql_console",
-        5: "nuke_container",
-        6: "view_logs",
-        7: "refresh",
-        8: "exit"
+        5: "open_redis_console",
+        6: "nuke_container",
+        7: "view_logs",
+        8: "refresh",
+        9: "exit"
     }
 
     return mappings.get(option, "invalid_option")
@@ -71,6 +73,9 @@ def main():
 
             elif choice == "open_mysql_console":
                 result = preprint(lambda: shell_execute("docker exec -it dating-app-db mysql -u root dating_app")).returncode
+
+            elif choice == "open_redis_console":
+                result = preprint(lambda: shell_execute("docker exec -it dating-app-redis redis-cli")).returncode
 
             elif choice == "nuke_container":
                 result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" down -v')).returncode

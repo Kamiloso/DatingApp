@@ -58,6 +58,12 @@ public class TransactionConfig {
                         TransactionDefinition.PROPAGATION_MANDATORY
                 );
             }
+            if (AnnotatedElementUtils.hasAnnotation(element, ExplicitNoTransaction.class)) {
+                return createAttribute(
+                        TransactionDefinition.ISOLATION_DEFAULT,
+                        TransactionDefinition.PROPAGATION_NEVER
+                );
+            }
             return null;
         }
 

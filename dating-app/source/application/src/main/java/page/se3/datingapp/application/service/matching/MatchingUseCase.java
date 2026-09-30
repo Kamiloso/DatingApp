@@ -16,7 +16,7 @@ import page.se3.datingapp.application.repository.UserRepository;
 import page.se3.datingapp.domain.model.block.BlockMap;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.model.matching.MatchingContext;
-import page.se3.datingapp.domain.model.matching.matcher.Matcher;
+import page.se3.datingapp.domain.model.matching.MatchingProcess;
 import page.se3.datingapp.domain.model.matching.matcher.impl.DefaultMatcher;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
@@ -39,15 +39,22 @@ public class MatchingUseCase {
 
     @ReadCommitted
     public void execute() {
-        MatchingContext context = buildContext();
-        List<Match> matches = generateMatches(context);
-        saveMatches(matches);
+        MatchingContext ctx = buildContext();
+        MatchingProcess matchingProcess = ctx.getProcess(new DefaultMatcher(matchingConfig));
+
+        List<Match> matches = MapUtils.toList(matchingProcess.run(), ctx::getMatch);
+
+        try {
+            var ignored = matchRepository.trySaveAll(matches);
+        } catch (DataIntegrityViolation e) {
+            throw new UnexpectedConflictException(e);
+        }
     }
 
     private MatchingContext buildContext() {
         int matchingIndex = matchingIndexer.getIncrementedForUpdate();
 
-        MatchGroup matchGroup = matchGroupRepository.save(MatchGroup.getInitial(
+        MatchGroup matchGroup = matchGroupRepository.save(MatchGroup.getBeginnerInitial(
                 Instant.now(),
                 matchingConfig.matchCountLimit(),
                 quizConfig.readyIndex()
@@ -61,31 +68,14 @@ public class MatchingUseCase {
         List<Long> idUserList = MapUtils.toList(users, User::id);
 
         BlockMap blockMap = BlockMap.builder()
-                .withBlocking(
-                        matchRepository.findAllByIdUserList(idUserList),
-                        Match::idUserFirst,
-                        Match::idUserSecond
+                .withBlocking(matchRepository.findAllByIdUserList(idUserList),
+                        Match::idUserFirst, Match::idUserSecond
                 )
-                .withBlocking(
-                        blockRepository.findAllByIdUserList(idUserList),
-                        Block::idUserOwner,
-                        Block::idUserBlocked
+                .withBlocking(blockRepository.findAllByIdUserList(idUserList),
+                        Block::idUserOwner, Block::idUserBlocked
                 )
                 .build();
 
         return new MatchingContext(matchGroup, users, blockMap);
-    }
-
-    private List<Match> generateMatches(MatchingContext ctx) {
-        Matcher matcher = new DefaultMatcher(matchingConfig);
-        return MapUtils.toList(ctx.getProcess(matcher).run(), ctx::getMatch);
-    }
-
-    private void saveMatches(List<Match> matches) {
-        try {
-            var ignored = matchRepository.trySaveAll(matches);
-        } catch (DataIntegrityViolation e) {
-            throw new UnexpectedConflictException(e);
-        }
     }
 }

@@ -14,4 +14,8 @@ public record MatchGroup(
     public static MatchGroup getInitial(Instant matchTime, Integer matchCountLimit, Integer readyIndex) {
         return new MatchGroup(null, matchTime, matchCountLimit, readyIndex);
     }
+
+    public static MatchGroup getBeginnerInitial(Instant matchTime, Integer matchCountLimit, Integer readyIndex) {
+        return getInitial(matchTime, matchCountLimit, readyIndex);
+    }
 }

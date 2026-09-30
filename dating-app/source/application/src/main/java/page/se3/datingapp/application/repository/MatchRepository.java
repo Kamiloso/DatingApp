@@ -18,7 +18,5 @@ public interface MatchRepository {
 
     List<Match> trySaveAll(List<Match> matchList) throws DataIntegrityViolation;
 
-    void updateIsAppliedByFirstById(Long id, Boolean isAppliedByFirst);
-
-    void updateIsAppliedBySecondById(Long id, Boolean isAppliedBySecond);
+    void updateIsAppliedOfIdUserById(Long id, Long idUser, Boolean isApplied);
 }
