@@ -1,21 +1,21 @@
-package page.se3.datingapp.domain.model.matching.matcher;
+package page.se3.datingapp.domain.service.matcher;
 
 import lombok.RequiredArgsConstructor;
+import page.se3.datingapp.domain.annotation.DomainService;
 import page.se3.datingapp.domain.config.app.matching.MatchingConfig;
 import page.se3.datingapp.domain.enums.Relationship;
 import page.se3.datingapp.domain.model.user.User;
 
+@DomainService
 @RequiredArgsConstructor
-public class DefaultMatcher implements Matcher {
+public class UserMatcher {
 
     private final MatchingConfig matchingConfig;
 
-    @Override
     public int matchCountLimit() {
         return matchingConfig.matchCountLimit();
     }
 
-    @Override
     public boolean meetsRequirements(User userMain, User userMatch) {
         int maxAgeDifference = matchingConfig.maxAgeDifference();
         int ageDifference = Math.abs(userMain.age() - userMatch.age());
@@ -30,7 +30,6 @@ public class DefaultMatcher implements Matcher {
         return isAgeMatch && isRelationshipMatch;
     }
 
-    @Override
     public int computeScore(User userMain, User userMatch) {
         return -Math.abs(userMain.age() - userMatch.age()); // TODO: make scoring more robust
     }

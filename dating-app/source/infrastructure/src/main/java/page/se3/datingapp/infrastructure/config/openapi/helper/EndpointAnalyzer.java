@@ -15,12 +15,6 @@ public class EndpointAnalyzer {
 
     private final HandlerMethod handlerMethod;
 
-    public boolean requiresValidation() {
-        return Arrays.stream(handlerMethod.getMethodParameters())
-                .flatMap(param -> Arrays.stream(param.getParameterAnnotations()))
-                .anyMatch(annotation -> annotation.annotationType().getName().startsWith("jakarta.validation"));
-    }
-
     public boolean usesAuthorization(Predicate<IdentityParam> condition) {
         return Arrays.stream(handlerMethod.getMethodParameters())
                 .anyMatch(param -> condition.test(new IdentityParam(param)));

@@ -11,6 +11,7 @@ import org.springframework.core.type.filter.AnnotationTypeFilter;
 import org.springframework.stereotype.Component;
 import page.se3.datingapp.application.annotation.service.RootService;
 import page.se3.datingapp.application.annotation.service.SubService;
+import page.se3.datingapp.domain.annotation.DomainService;
 
 @Component
 public class ServicePostProcessor implements BeanDefinitionRegistryPostProcessor {
@@ -20,6 +21,7 @@ public class ServicePostProcessor implements BeanDefinitionRegistryPostProcessor
     @Override
     public void postProcessBeanDefinitionRegistry(@NonNull BeanDefinitionRegistry registry) throws BeansException {
         var scanner = new ClassPathScanningCandidateComponentProvider(false);
+        scanner.addIncludeFilter(new AnnotationTypeFilter(DomainService.class));
         scanner.addIncludeFilter(new AnnotationTypeFilter(RootService.class));
         scanner.addIncludeFilter(new AnnotationTypeFilter(SubService.class));
 

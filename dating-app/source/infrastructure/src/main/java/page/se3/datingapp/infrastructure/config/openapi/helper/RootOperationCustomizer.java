@@ -6,7 +6,6 @@ import org.springframework.web.method.HandlerMethod;
 import page.se3.datingapp.domain.exception.abort.AbortException;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotFound;
 import page.se3.datingapp.domain.exception.abort.internal.AuthorizationFailed;
-import page.se3.datingapp.domain.exception.abort.internal.InvalidParameterOrBody;
 import page.se3.datingapp.infrastructure.foundation.identity.helper.IdentityParam;
 
 import java.util.List;
@@ -25,10 +24,6 @@ public class RootOperationCustomizer {
     }
 
     public Operation customize(String securitySchemeName) {
-        if (endpointAnalyzer.requiresValidation()) {
-            errorInfoRegistry.addDocumentation(new InvalidParameterOrBody());
-        }
-
         boolean usesAuthorization = endpointAnalyzer.usesAuthorization(IdentityParam::isValid);
         boolean usesAuthKey = endpointAnalyzer.usesAuthorization(IdentityParam::usesAuthKey);
 

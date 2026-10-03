@@ -1,29 +1,25 @@
 package page.se3.datingapp.infrastructure.controller.service;
 
-import lombok.NonNull;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Service;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import page.se3.datingapp.infrastructure.controller.struct.Response;
 
 import java.net.URI;
 
-public final class Response {
+@Service
+public final class ResponseFactory {
 
-    private Response() {}
-
-    public static <T> ResponseEntity<@NonNull T> ok(T body) {
-        return ResponseEntity.ok().body(body);
+    public <T> Response<T> created(T body) {
+        return new Response<>(ResponseEntity.created(Uri.current()).body(body));
     }
 
-    public static <T> ResponseEntity<@NonNull T> created(T body) {
-        return ResponseEntity.created(Uri.current()).body(body);
+    public <T> Response<T> created(T body, Long id) {
+        return new Response<>(ResponseEntity.created(Uri.withId(id)).body(body));
     }
 
-    public static <T> ResponseEntity<@NonNull T> created(T body, Long id) {
-        return ResponseEntity.created(Uri.withId(id)).body(body);
-    }
-
-    public static ResponseEntity<@NonNull Void> noContent() {
-        return ResponseEntity.noContent().build();
+    public Response<Void> noContent() {
+        return new Response<>(ResponseEntity.noContent().build());
     }
 
     private interface Uri {

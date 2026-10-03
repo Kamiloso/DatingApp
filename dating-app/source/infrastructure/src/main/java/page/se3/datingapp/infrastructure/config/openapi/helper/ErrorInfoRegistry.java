@@ -9,7 +9,7 @@ import io.swagger.v3.oas.models.responses.ApiResponses;
 import io.swagger.v3.oas.models.security.SecurityRequirement;
 import org.springframework.http.HttpStatus;
 import page.se3.datingapp.domain.exception.abort.AbortException;
-import page.se3.datingapp.infrastructure.config.controller.response.dto.ResponseError;
+import page.se3.datingapp.infrastructure.config.controller.response.dto.ResponseErrorDto;
 
 public class ErrorInfoRegistry {
 
@@ -29,26 +29,22 @@ public class ErrorInfoRegistry {
         int httpStatus = abortException.getStatus();
 
         String httpStatusStr = String.valueOf(httpStatus);
-        String errorType = abortException.getErrorType();
         String reasonPhrase = HttpStatus.valueOf(httpStatus).getReasonPhrase();
+        String code = abortException.getErrorCode();
+        String message = abortException.getMessage();
 
         ApiResponse apiResponse = apiResponses.computeIfAbsent(httpStatusStr, key -> new ApiResponse());
 
-        updateDescription(apiResponse, reasonPhrase, errorType);
-        ensureContentSchema(apiResponse);
-    }
+        String description = apiResponse.getDescription();
+        if (description == null || description.isEmpty()) {
+            description = reasonPhrase;
+        }
 
-    private void updateDescription(ApiResponse apiResponse, String reasonPhrase, String errorType) {
-        String oldDescription = apiResponse.getDescription();
-        apiResponse.setDescription(oldDescription == null || oldDescription.isEmpty()
-                ? reasonPhrase + "\n\n`" + errorType + "`"
-                : oldDescription + ", `" + errorType + "`"
-        );
-    }
+        description += "\n\n`" + code + "` *- " + message + "*";
+        apiResponse.setDescription(description);
 
-    private void ensureContentSchema(ApiResponse apiResponse) {
         if (apiResponse.getContent() == null) {
-            String schemaName = ResponseError.class.getSimpleName();
+            String schemaName = ResponseErrorDto.class.getSimpleName();
             Schema<?> schema = new Schema<>().$ref("#/components/schemas/" + schemaName);
 
             MediaType mediaType = new MediaType().schema(schema);

@@ -14,7 +14,8 @@ import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.domain.model.message.MessageSend;
 import page.se3.datingapp.infrastructure.controller.rest.message.dto.MessageSendDto;
 import page.se3.datingapp.infrastructure.controller.rest.message.dto.MessageDto;
-import page.se3.datingapp.infrastructure.controller.service.Response;
+import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
+import page.se3.datingapp.infrastructure.controller.struct.Response;
 
 import java.time.Instant;
 import java.util.List;
@@ -26,8 +27,9 @@ public class MessageProxy {
 
     private final MessageService messageService;
     private final MessageMapper messageMapper;
+    private final ResponseFactory responseFactory;
 
-    public ResponseEntity<@NonNull MessageDto> sendMessage(AuthKey authKey, Long idChat, MessageSendDto messageSendDto)
+    public Response<MessageDto> sendMessage(AuthKey authKey, Long idChat, MessageSendDto messageSendDto)
             throws ChatNotFound, ChatAccessDenied {
         MessageSend messageSend = messageMapper.toDomain(messageSendDto);
 
@@ -36,7 +38,7 @@ public class MessageProxy {
                 messageMapper::toDto
         );
 
-        return Response.created(messageDto, messageDto.id());
+        return responseFactory.created(messageDto, messageDto.id());
     }
 
     public MessageDto getMessage(AuthKey authKey, Long idChat, Long idMessage)

@@ -7,11 +7,11 @@ import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoi
 
 @Service
 @RequiredArgsConstructor
-public class Aborting {
+public class FailFast {
 
     private final LimitingConfig limitingConfig;
 
-    public void throwOnProduction() throws DebugOnlyEndpoint {
+    public void abortOnProduction() throws DebugOnlyEndpoint {
         if (!limitingConfig.allowDebugEndpoints()) {
             throw new DebugOnlyEndpoint();
         }

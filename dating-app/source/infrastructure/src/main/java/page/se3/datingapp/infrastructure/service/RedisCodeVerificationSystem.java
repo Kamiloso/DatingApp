@@ -34,7 +34,9 @@ public class RedisCodeVerificationSystem implements CodeVerificationSystem {
     @Override
     public Optional<String> verifyAndTakeEmail(String code) {
         String redisKey = UniqueKey.merge(UNIQUE_KEY, code);
-        return Optional.ofNullable(redisTemplate.opsForValue().getAndDelete(redisKey));
+        String email = redisTemplate.opsForValue().getAndDelete(redisKey);
+
+        return Optional.ofNullable(email);
     }
 
     private String generateCode() {

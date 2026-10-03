@@ -17,8 +17,9 @@ import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountBasePatchDto;
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountDetailPatchDto;
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountRegisterDto;
-import page.se3.datingapp.infrastructure.controller.service.Response;
+import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountDto;
+import page.se3.datingapp.infrastructure.controller.struct.Response;
 
 @Service
 @AutoRetry
@@ -27,6 +28,7 @@ public class UserAccountProxy {
 
     private final UserAccountService userAccountService;
     private final UserAccountMapper userAccountMapper;
+    private final ResponseFactory responseFactory;
 
     public UserAccountDto getUserAccount(String email) throws AccountNotFound {
         return Streams.map(
@@ -35,7 +37,7 @@ public class UserAccountProxy {
         );
     }
 
-    public ResponseEntity<@NonNull UserAccountDto> registerUserAccount(
+    public Response<UserAccountDto> registerUserAccount(
             String email,
             UserAccountRegisterDto userAccountRegisterDto
     ) throws AccountInsertionFailed {
@@ -46,7 +48,7 @@ public class UserAccountProxy {
                 userAccountMapper::toDto
         );
 
-        return Response.created(userAccountDto);
+        return responseFactory.created(userAccountDto);
     }
 
     public UserAccountDto patchUserAccountDetail(

@@ -10,7 +10,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import page.se3.datingapp.domain.exception.abort.reason.auth.EmailRegexMismatch;
+import page.se3.datingapp.domain.exception.abort.reason.auth.EmailValidationFailed;
 import page.se3.datingapp.domain.exception.abort.reason.auth.EmailSendingFailed;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidCredentials;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidVerificationCode;
@@ -28,19 +28,19 @@ public class AuthController {
     private final AuthProxy authProxy;
 
     @PostMapping("/api/auth/actions/send-verification-code")
-    @Operation(description = "Sends verification code on a specific email")
+    @Operation(description = "Sends verification code to a specific email")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<@NonNull Void> sendVerificationCode(
             @Valid
             @NotNull
             @RequestBody
             SendVerificationCodeDto sendVerificationCodeDto
-    ) throws EmailRegexMismatch, EmailSendingFailed {
-        return authProxy.sendVerificationCode(sendVerificationCodeDto);
+    ) throws EmailValidationFailed, EmailSendingFailed {
+        return authProxy.sendVerificationCode(sendVerificationCodeDto).get();
     }
 
     @PostMapping("/api/auth/actions/set-password-by-verification-code")
-    @Operation(description = "Sets a password by verification code")
+    @Operation(description = "Sets password by verification code")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<@NonNull Void> setPasswordByVerificationCode(
             @Valid
@@ -48,13 +48,13 @@ public class AuthController {
             @RequestBody
             SetPasswordByVerificationCodeDto setPasswordByVerificationCodeDto
     ) throws InvalidVerificationCode {
-        return authProxy.setPasswordByVerificationCode(setPasswordByVerificationCodeDto);
+        return authProxy.setPasswordByVerificationCode(setPasswordByVerificationCodeDto).get();
     }
 
     @PostMapping("/api/auth/actions/set-password")
-    @Operation(description = "Sets a password")
+    @Operation(description = "Sets password while in session")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<@NonNull Void> setPassword(
+    public ResponseEntity<@NonNull Void> setPasswordBySession(
             @AuthIdentity
             String email,
 
@@ -63,37 +63,37 @@ public class AuthController {
             @RequestBody
             SetPasswordDto setPasswordDto
     ) {
-        return authProxy.setPassword(email, setPasswordDto);
+        return authProxy.setPasswordBySession(email, setPasswordDto).get();
     }
 
     @PostMapping("/api/auth/jwt/requests/login")
-    @Operation(description = "Generates a JWT token by login")
+    @Operation(description = "Generates JWT token by login")
     public JwtTokenDto computeJwtByLogin(
             @Valid
             @NotNull
             @RequestBody
             LoginDto loginDto
-    ) throws EmailRegexMismatch, InvalidCredentials {
+    ) throws EmailValidationFailed, InvalidCredentials {
         return authProxy.computeJwtByLogin(loginDto);
     }
 
     @PostMapping("/api/auth/jwt/requests/debug-login")
-    @Operation(description = "Generates a JWT token for debug purposes")
+    @Operation(description = "Generates JWT token for debug purposes")
     public JwtTokenDto getJwtByDebugLogin(
             @Valid
             @NotNull
             @RequestBody
             DebugLoginDto debugLoginDto
-    ) throws DebugOnlyEndpoint, EmailRegexMismatch {
+    ) throws DebugOnlyEndpoint, EmailValidationFailed {
         return authProxy.getJwtByDebugLogin(debugLoginDto);
     }
 
-    @GetMapping("/api/auth/jwt/refreshed")
-    @Operation(description = "Refreshes a JWT token")
-    public JwtTokenDto refreshJwt(
+    @GetMapping("/api/auth/jwt/regenerate")
+    @Operation(description = "Refreshes JWT token while in session")
+    public JwtTokenDto regenerateJwtBySession(
             @AuthIdentity
             String email
     ) {
-        return authProxy.refreshJwt(email);
+        return authProxy.regenerateJwtBySession(email);
     }
 }

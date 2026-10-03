@@ -69,7 +69,7 @@ public class BlockController {
             @RequestBody
             BlockAddDto blockAddDto
     ) throws SelfBlockingConflict, BlockInsertionFailed {
-        return blockProxy.createBlock(authKey, blockAddDto);
+        return blockProxy.createBlock(authKey, blockAddDto).get();
     }
 
     @DeleteMapping("/{idBlock}")
@@ -82,6 +82,6 @@ public class BlockController {
             @PathVariable
             Long idBlock
     ) throws BlockAccessDenied {
-        return blockProxy.deleteBlock(authKey, idBlock);
+        return blockProxy.deleteBlock(authKey, idBlock).get();
     }
 }

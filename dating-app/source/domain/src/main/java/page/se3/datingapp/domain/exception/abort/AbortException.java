@@ -20,16 +20,16 @@ public abstract class AbortException extends Exception {
     }
 
     private final HttpResponse httpResponse;
-    private final String errorType;
+    private final String errorCode;
 
     public AbortException(HttpResponse httpResponse) {
-        this(httpResponse, "");
+        this(httpResponse, "No message available");
     }
 
     public AbortException(HttpResponse httpResponse, String message) {
         super(message);
         this.httpResponse = httpResponse;
-        this.errorType = Naming.pascalToSnakeCase(getClass().getSimpleName());
+        this.errorCode = Naming.pascalToSnakeCase(getClass().getSimpleName());
     }
 
     public int getStatus() {

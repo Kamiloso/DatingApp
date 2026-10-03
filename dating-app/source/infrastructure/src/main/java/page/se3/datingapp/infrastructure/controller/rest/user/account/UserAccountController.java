@@ -50,7 +50,7 @@ public class UserAccountController {
             @RequestBody
             UserAccountRegisterDto userAccountRegisterDto
     ) throws AccountInsertionFailed {
-        return userAccountProxy.registerUserAccount(email, userAccountRegisterDto);
+        return userAccountProxy.registerUserAccount(email, userAccountRegisterDto).get();
     }
 
     @PatchMapping("/detail")

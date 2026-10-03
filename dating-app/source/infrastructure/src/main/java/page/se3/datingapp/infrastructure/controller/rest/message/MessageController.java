@@ -45,7 +45,7 @@ public class MessageController {
             @RequestBody
             MessageSendDto messageSendDto
     ) throws ChatNotFound, ChatAccessDenied {
-        return messageProxy.sendMessage(authKey, idChat, messageSendDto);
+        return messageProxy.sendMessage(authKey, idChat, messageSendDto).get();
     }
 
     @GetMapping("/{idMessage}")

@@ -16,7 +16,7 @@ import page.se3.datingapp.domain.model.block.BlockMap;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.model.matching.MatchingContext;
 import page.se3.datingapp.domain.model.matching.MatchingProcess;
-import page.se3.datingapp.domain.model.matching.matcher.DefaultMatcher;
+import page.se3.datingapp.domain.service.matcher.UserMatcher;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.domain.model.user.User;
@@ -28,6 +28,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MatchingUseCase {
 
+    private final UserMatcher userMatcher;
     private final MatchingConfig matchingConfig;
     private final MatchingIndexer matchingIndexer;
     private final BlockRepository blockRepository;
@@ -38,7 +39,7 @@ public class MatchingUseCase {
     @ReadCommitted
     public void execute() {
         MatchingContext ctx = buildContext();
-        MatchingProcess matchingProcess = ctx.getProcess(new DefaultMatcher(matchingConfig));
+        MatchingProcess matchingProcess = ctx.getProcess(userMatcher);
 
         List<Match> matches = Streams.toList(matchingProcess.run(), ctx::getMatch);
 

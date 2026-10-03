@@ -14,9 +14,9 @@ import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import page.se3.datingapp.domain.config.app.AppConfig;
+import page.se3.datingapp.infrastructure.config.controller.response.dto.ResponseErrorDto;
 import page.se3.datingapp.infrastructure.config.openapi.helper.RootOperationCustomizer;
 import page.se3.datingapp.infrastructure.controller.annotation.AuthIdentity;
-import page.se3.datingapp.infrastructure.config.controller.response.dto.ResponseError;
 import page.se3.datingapp.domain.Final;
 
 @Configuration
@@ -54,10 +54,10 @@ public class SwaggerConfig {
             );
 
             ResolvedSchema resolvedSchema = ModelConverters.getInstance()
-                    .resolveAsResolvedSchema(new AnnotatedType(ResponseError.class));
+                    .resolveAsResolvedSchema(new AnnotatedType(ResponseErrorDto.class));
 
             openApi.getComponents().addSchemas(
-                    ResponseError.class.getSimpleName(),
+                    ResponseErrorDto.class.getSimpleName(),
                     resolvedSchema.schema
             );
         };

@@ -25,6 +25,6 @@ public class MatchingController {
     @Operation(summary = "Runs next matching manually")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<@NonNull Void> runMatching() throws DebugOnlyEndpoint {
-        return matchingProxy.runMatchingFromController();
+        return matchingProxy.runMatchingFromDebugController().get();
     }
 }

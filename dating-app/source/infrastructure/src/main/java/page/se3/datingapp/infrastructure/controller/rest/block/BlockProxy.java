@@ -1,8 +1,6 @@
 package page.se3.datingapp.infrastructure.controller.rest.block;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.application.service.block.BlockService;
@@ -14,8 +12,9 @@ import page.se3.datingapp.domain.exception.abort.reason.block.BlockInsertionFail
 import page.se3.datingapp.domain.exception.abort.reason.block.SelfBlockingConflict;
 import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.infrastructure.controller.rest.block.dto.BlockAddDto;
-import page.se3.datingapp.infrastructure.controller.service.Response;
+import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
 import page.se3.datingapp.infrastructure.controller.rest.block.dto.BlockDto;
+import page.se3.datingapp.infrastructure.controller.struct.Response;
 
 import java.util.List;
 
@@ -26,6 +25,7 @@ public class BlockProxy {
 
     private final BlockService blockService;
     private final BlockMapper blockMapper;
+    private final ResponseFactory responseFactory;
 
     public BlockDto getBlock(AuthKey authKey, Long idBlock) throws BlockNotFound, BlockAccessDenied {
         return Streams.map(
@@ -41,7 +41,7 @@ public class BlockProxy {
         );
     }
 
-    public ResponseEntity<@NonNull BlockDto> createBlock(AuthKey authKey, BlockAddDto blockAddDto)
+    public Response<BlockDto> createBlock(AuthKey authKey, BlockAddDto blockAddDto)
             throws SelfBlockingConflict, BlockInsertionFailed {
         BlockAdd blockAdd = blockMapper.toDomain(blockAddDto);
 
@@ -50,12 +50,12 @@ public class BlockProxy {
                 blockMapper::toDto
         );
 
-        return Response.created(blockDto, blockDto.id());
+        return responseFactory.created(blockDto, blockDto.id());
     }
 
-    public ResponseEntity<@NonNull Void> deleteBlock(AuthKey authKey, Long idBlock)
+    public Response<Void> deleteBlock(AuthKey authKey, Long idBlock)
             throws BlockAccessDenied {
         blockService.remove(authKey, idBlock);
-        return Response.noContent();
+        return responseFactory.noContent();
     }
 }

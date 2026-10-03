@@ -9,8 +9,6 @@ import page.se3.datingapp.application.service.auth.interfaces.PasswordHasher;
 import page.se3.datingapp.application.service.auth.repository.AccountRepository;
 import page.se3.datingapp.domain.config.app.auth.verificationcode.AuthVerificationCodeConfig;
 import page.se3.datingapp.domain.config.app.email.message.EmailMessageConfig;
-import page.se3.datingapp.domain.exception.DatabaseConflictException;
-import page.se3.datingapp.domain.exception.UnexpectedRuntimeException;
 import page.se3.datingapp.domain.exception.abort.reason.auth.EmailSendingFailed;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidCredentials;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidVerificationCode;
@@ -45,17 +43,12 @@ public class AuthService {
         String email = codeVerificationSystem.verifyAndTakeEmail(verificationCode)
                 .orElseThrow(InvalidVerificationCode::new);
 
-        setPassword(email, newPassword);
+        setPasswordByEmail(email, newPassword);
     }
 
-    public void setPassword(String email, String newPassword) {
+    public void setPasswordByEmail(String email, String newPassword) {
         Account account = Account.getSelfInitial(email, passwordHasher.hash(newPassword));
-
-        try {
-            accountRepository.trySave(account);
-        } catch (DatabaseConflictException e) {
-            throw new UnexpectedRuntimeException(e);
-        }
+        accountRepository.insertOrReplace(account);
     }
 
     public String getJwtByLogin(String email, String password) throws InvalidCredentials {

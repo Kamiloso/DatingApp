@@ -1,11 +1,13 @@
 package page.se3.datingapp.infrastructure.service;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.service.auth.interfaces.PasswordHasher;
 
 @Service
+@RequiredArgsConstructor
 public class BCryptPasswordHasher implements PasswordHasher {
 
     private final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();

@@ -3,15 +3,15 @@ package page.se3.datingapp.domain.model.matching;
 import page.se3.datingapp.domain.core.struct.Weight;
 import page.se3.datingapp.domain.core.util.Streams;
 import page.se3.datingapp.domain.model.block.BlockMap;
-import page.se3.datingapp.domain.model.matching.matcher.Matcher;
 import page.se3.datingapp.domain.model.user.User;
+import page.se3.datingapp.domain.service.matcher.UserMatcher;
 
 import java.util.*;
 
 public record MatchingProcess(
         List<User> readyUsers,
         BlockMap blockMap,
-        Matcher matcher
+        UserMatcher userMatcher
 ) {
 
     public MatchingProcess {
@@ -41,10 +41,10 @@ public record MatchingProcess(
                 continue;
             }
 
-            int score = matcher.computeScore(userMain, userMatch);
+            int score = userMatcher.computeScore(userMain, userMatch);
             topMatches.offer(new Weight<>(userMatch, score));
 
-            if (topMatches.size() > matcher.matchCountLimit()) {
+            if (topMatches.size() > userMatcher.matchCountLimit()) {
                 topMatches.poll();
             }
         }
@@ -59,7 +59,7 @@ public record MatchingProcess(
     private boolean isMatchingAllowed(User userMain, User userMatch) {
         boolean isSameUser = Objects.equals(userMain.id(), userMatch.id());
         boolean isBlocked = blockMap.isPairBlocked(userMain.id(), userMatch.id());
-        boolean meetsRequirements = matcher.meetsRequirements(userMain, userMatch);
+        boolean meetsRequirements = userMatcher.meetsRequirements(userMain, userMatch);
 
         return !isSameUser && !isBlocked && meetsRequirements;
     }
