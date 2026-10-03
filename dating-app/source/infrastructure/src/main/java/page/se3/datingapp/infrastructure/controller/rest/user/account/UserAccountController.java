@@ -17,7 +17,7 @@ import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAc
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountDetailPatchDto;
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountDto;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountInsertionFailed;
-import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotRegistered;
 import page.se3.datingapp.infrastructure.controller.rest.user.account.dto.UserAccountRegisterDto;
 
 @RestController
@@ -34,7 +34,7 @@ public class UserAccountController {
     public UserAccountDto getUserAccount(
             @AuthIdentity
             String email
-    ) throws AccountNotFound {
+    ) throws AccountNotRegistered {
         return userAccountProxy.getUserAccount(email);
     }
 
@@ -63,7 +63,7 @@ public class UserAccountController {
             @NotNull
             @RequestBody
             UserAccountDetailPatchDto userAccountDetailPatchDto
-    ) throws AccountNotFound {
+    ) throws AccountNotRegistered {
         return userAccountProxy.patchUserAccountDetail(authKey, userAccountDetailPatchDto);
     }
 
@@ -77,7 +77,7 @@ public class UserAccountController {
             @NotNull
             @RequestBody
             UserAccountBasePatchDto userAccountBasePatchDto
-    ) throws AccountNotFound, AccountPatchDenied {
+    ) throws AccountNotRegistered, AccountPatchDenied {
         return userAccountProxy.patchUserAccountBase(authKey, userAccountBasePatchDto);
     }
 }

@@ -5,6 +5,6 @@ import page.se3.datingapp.domain.exception.abort.AbortException;
 public final class ChatAccessDenied extends AbortException {
 
     public ChatAccessDenied() {
-        super(HttpResponse.FORBIDDEN);
+        super(HttpResponse.FORBIDDEN, "No permission to access this chat");
     }
 }

@@ -10,6 +10,7 @@ import page.se3.datingapp.domain.config.helper.ConfigBean;
 public record AppConfig(
         String applicationDisplayName,
         String startMessage,
+        Boolean isDevelopmentMode,
         AuthConfig auth,
         EmailConfig email,
         LimitingConfig limiting,

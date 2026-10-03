@@ -41,7 +41,7 @@ services:
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dating_app?useSSL=false&allowPublicKeyRetrieval=true
       SPRING_DATA_REDIS_HOST: 'redis'
       SPRING_DATA_REDIS_PORT: '6379'
-      APP_LIMITING_ALLOW_DEBUG_ENDPOINTS: 'false'
+      APP_IS_DEVELOPMENT_MODE: 'false'
     networks:
       - app-network
     volumes:

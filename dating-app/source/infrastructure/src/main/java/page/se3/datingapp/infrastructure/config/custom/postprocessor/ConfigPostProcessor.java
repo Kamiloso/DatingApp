@@ -1,4 +1,4 @@
-package page.se3.datingapp.infrastructure.config.custom;
+package page.se3.datingapp.infrastructure.config.custom.postprocessor;
 
 import lombok.NonNull;
 import org.springframework.beans.BeansException;

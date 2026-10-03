@@ -11,10 +11,9 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 import page.se3.datingapp.domain.exception.abort.reason.auth.EmailValidationFailed;
-import page.se3.datingapp.domain.exception.abort.reason.auth.EmailSendingFailed;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidCredentials;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidVerificationCode;
-import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoint;
+import page.se3.datingapp.domain.exception.abort.reason.endpoint.DevelopmentOnlyEndpoint;
 import page.se3.datingapp.infrastructure.controller.annotation.AuthIdentity;
 import page.se3.datingapp.infrastructure.controller.rest.auth.dto.*;
 
@@ -29,13 +28,13 @@ public class AuthController {
 
     @PostMapping("/api/auth/actions/send-verification-code")
     @Operation(description = "Sends verification code to a specific email")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @ResponseStatus(HttpStatus.ACCEPTED)
     public ResponseEntity<@NonNull Void> sendVerificationCode(
             @Valid
             @NotNull
             @RequestBody
             SendVerificationCodeDto sendVerificationCodeDto
-    ) throws EmailValidationFailed, EmailSendingFailed {
+    ) throws EmailValidationFailed {
         return authProxy.sendVerificationCode(sendVerificationCodeDto).get();
     }
 
@@ -84,11 +83,11 @@ public class AuthController {
             @NotNull
             @RequestBody
             DebugLoginDto debugLoginDto
-    ) throws DebugOnlyEndpoint, EmailValidationFailed {
+    ) throws DevelopmentOnlyEndpoint, EmailValidationFailed {
         return authProxy.getJwtByDebugLogin(debugLoginDto);
     }
 
-    @GetMapping("/api/auth/jwt/regenerate")
+    @GetMapping("/api/auth/jwt/regenerated")
     @Operation(description = "Refreshes JWT token while in session")
     public JwtTokenDto regenerateJwtBySession(
             @AuthIdentity

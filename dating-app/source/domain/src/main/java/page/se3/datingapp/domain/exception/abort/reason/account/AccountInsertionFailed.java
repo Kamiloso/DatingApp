@@ -5,6 +5,6 @@ import page.se3.datingapp.domain.exception.abort.AbortException;
 public final class AccountInsertionFailed extends AbortException {
 
     public AccountInsertionFailed() {
-        super(HttpResponse.CONFLICT);
+        super(HttpResponse.CONFLICT, "Account insertion was blocked by integrity checks");
     }
 }

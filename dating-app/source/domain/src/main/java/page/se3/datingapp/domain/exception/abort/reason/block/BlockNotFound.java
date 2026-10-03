@@ -5,6 +5,6 @@ import page.se3.datingapp.domain.exception.abort.AbortException;
 public final class BlockNotFound extends AbortException {
 
     public BlockNotFound() {
-        super(HttpResponse.NOT_FOUND);
+        super(HttpResponse.NOT_FOUND, "Block cannot be found");
     }
 }

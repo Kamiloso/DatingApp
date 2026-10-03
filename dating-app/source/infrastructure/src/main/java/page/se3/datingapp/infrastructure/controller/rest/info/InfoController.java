@@ -4,10 +4,11 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoint;
+import page.se3.datingapp.domain.exception.abort.reason.endpoint.DevelopmentOnlyEndpoint;
 import page.se3.datingapp.infrastructure.controller.rest.info.dto.ApiVersionDto;
 
 @RestController
@@ -27,7 +28,8 @@ public class InfoController {
 
     @GetMapping("/crashing-resource")
     @Operation(summary = "Crashes the request and returns status 500")
-    public ResponseEntity<@NonNull Void> crashRequest() throws DebugOnlyEndpoint {
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public ResponseEntity<@NonNull Void> crashRequest() throws DevelopmentOnlyEndpoint {
         return infoProxy.crashRequest().get();
     }
 }

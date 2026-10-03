@@ -9,7 +9,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
-import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoint;
+import page.se3.datingapp.domain.exception.abort.reason.endpoint.DevelopmentOnlyEndpoint;
 
 @Slf4j
 @RestController
@@ -24,7 +24,7 @@ public class MatchingController {
     @GetMapping("/next")
     @Operation(summary = "Runs next matching manually")
     @ResponseStatus(HttpStatus.NO_CONTENT)
-    public ResponseEntity<@NonNull Void> runMatching() throws DebugOnlyEndpoint {
+    public ResponseEntity<@NonNull Void> runMatching() throws DevelopmentOnlyEndpoint {
         return matchingProxy.runMatchingFromDebugController().get();
     }
 }

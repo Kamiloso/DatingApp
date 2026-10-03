@@ -4,7 +4,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
-import page.se3.datingapp.infrastructure.config.controller.argument.IdentityArgumentResolver;
+import page.se3.datingapp.infrastructure.config.controller.IdentityArgumentResolver;
 
 import java.util.List;
 

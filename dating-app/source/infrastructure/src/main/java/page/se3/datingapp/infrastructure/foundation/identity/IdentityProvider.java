@@ -10,7 +10,7 @@ import org.springframework.security.oauth2.server.resource.web.DefaultBearerToke
 import org.springframework.stereotype.Component;
 import page.se3.datingapp.domain.service.email.EmailValidator;
 import page.se3.datingapp.application.service.user.UserAccountService;
-import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotRegistered;
 import page.se3.datingapp.domain.exception.abort.internal.AuthorizationFailed;
 import page.se3.datingapp.infrastructure.foundation.identity.helper.IdentityParam;
 
@@ -26,7 +26,7 @@ public class IdentityProvider {
     private final BearerTokenResolver bearerTokenResolver = new DefaultBearerTokenResolver();
 
     public Object resolveIdentity(IdentityParam identityParam, HttpServletRequest httpServletRequest)
-            throws AccountNotFound, AuthorizationFailed {
+            throws AuthorizationFailed, AccountNotRegistered {
         String token = Optional.ofNullable(httpServletRequest)
                 .map(bearerTokenResolver::resolve)
                 .orElseThrow(AuthorizationFailed::new);

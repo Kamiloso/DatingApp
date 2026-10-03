@@ -5,6 +5,6 @@ import page.se3.datingapp.domain.exception.abort.AbortException;
 public final class BlockAccessDenied extends AbortException {
 
     public BlockAccessDenied() {
-        super(HttpResponse.FORBIDDEN);
+        super(HttpResponse.FORBIDDEN, "No permission to access this block");
     }
 }

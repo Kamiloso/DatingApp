@@ -10,7 +10,7 @@ import page.se3.datingapp.domain.model.user.account.UserAccountDetailPatch;
 import page.se3.datingapp.domain.model.user.account.UserAccountRegister;
 import page.se3.datingapp.domain.exception.UnexpectedRuntimeException;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountInsertionFailed;
-import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotRegistered;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.exception.abort.reason.account.AccountPatchDenied;
 import page.se3.datingapp.domain.model.user.AuthKey;
@@ -24,14 +24,10 @@ public class UserAccountService {
     private final UserRepository userRepository;
     private final MatchingIndexer matchingIndexer;
 
-    public AuthKey getAuthKey(String email) throws AccountNotFound {
-        return get(email).getAuthKey(); // TODO: add caching
-    }
-
-    public UserAccount get(String email) throws AccountNotFound {
+    public UserAccount get(String email) throws AccountNotRegistered {
         return userRepository.findByEmail(email)
                 .map(UserAccount::getFrom)
-                .orElseThrow(AccountNotFound::new);
+                .orElseThrow(AccountNotRegistered::new);
     }
 
     public UserAccount register(
@@ -49,13 +45,17 @@ public class UserAccountService {
         }
     }
 
+    public AuthKey getAuthKey(String email) throws AccountNotRegistered {
+        return get(email).getAuthKey(); // TODO: add caching
+    }
+
     @ReadCommitted
     public UserAccount patchDetail(AuthKey authKey, UserAccountDetailPatch userAccountDetailPatch)
-            throws AccountNotFound {
+            throws AccountNotRegistered {
         int futureMatchingIndex = matchingIndexer.getFuture();
 
         User user = userRepository.findByIdForUpdate(authKey.id())
-                .orElseThrow(AccountNotFound::new);
+                .orElseThrow(AccountNotRegistered::new);
 
         user = userAccountDetailPatch.applyPatch(user, futureMatchingIndex);
 
@@ -68,9 +68,9 @@ public class UserAccountService {
 
     @ReadCommitted
     public UserAccount patchBase(AuthKey authKey, UserAccountBasePatch userAccountBasePatch)
-            throws AccountNotFound, AccountPatchDenied {
+            throws AccountNotRegistered, AccountPatchDenied {
         User user = userRepository.findByIdForUpdate(authKey.id())
-                .orElseThrow(AccountNotFound::new);
+                .orElseThrow(AccountNotRegistered::new);
 
         if (user.isPatched()) {
             throw new AccountPatchDenied();

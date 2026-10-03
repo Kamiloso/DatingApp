@@ -5,6 +5,6 @@ import page.se3.datingapp.domain.exception.abort.AbortException;
 public final class EmailValidationFailed extends AbortException {
 
     public EmailValidationFailed() {
-        super(HttpResponse.BAD_REQUEST);
+        super(HttpResponse.BAD_REQUEST, "Invalid email was provided");
     }
 }

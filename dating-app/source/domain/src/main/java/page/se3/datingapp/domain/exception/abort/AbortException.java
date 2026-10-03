@@ -20,7 +20,7 @@ public abstract class AbortException extends Exception {
     }
 
     private final HttpResponse httpResponse;
-    private final String errorCode;
+    private final String code;
 
     public AbortException(HttpResponse httpResponse) {
         this(httpResponse, "No message available");
@@ -29,7 +29,7 @@ public abstract class AbortException extends Exception {
     public AbortException(HttpResponse httpResponse, String message) {
         super(message);
         this.httpResponse = httpResponse;
-        this.errorCode = Naming.pascalToSnakeCase(getClass().getSimpleName());
+        this.code = Naming.pascalToSnakeCase(getClass().getSimpleName());
     }
 
     public int getStatus() {

@@ -1,4 +1,4 @@
-package page.se3.datingapp.infrastructure.config.controller.response;
+package page.se3.datingapp.infrastructure.config.controller;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.*;
@@ -16,7 +16,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
         HttpStatus httpStatus = HttpStatus.valueOf(ex.getStatus());
 
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(httpStatus, ex.getMessage());
-        problem.setProperty("code", ex.getErrorCode());
+        problem.setProperty("code", ex.getCode());
 
         return problem;
     }

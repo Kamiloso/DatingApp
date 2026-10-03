@@ -9,7 +9,6 @@ import page.se3.datingapp.application.service.auth.interfaces.PasswordHasher;
 import page.se3.datingapp.application.service.auth.repository.AccountRepository;
 import page.se3.datingapp.domain.config.app.auth.verificationcode.AuthVerificationCodeConfig;
 import page.se3.datingapp.domain.config.app.email.message.EmailMessageConfig;
-import page.se3.datingapp.domain.exception.abort.reason.auth.EmailSendingFailed;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidCredentials;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidVerificationCode;
 import page.se3.datingapp.domain.model.account.Account;
@@ -28,11 +27,11 @@ public class AuthService {
     private final EmailSender emailSender;
     private final AccountRepository accountRepository;
 
-    public void sendCode(String email) throws EmailSendingFailed {
+    public void sendCode(String email) {
         Duration lifetime = Duration.ofMillis(authVerificationCodeConfig.expirationMillis());
         String code = codeVerificationSystem.obtainAndRemember(email, lifetime);
 
-        emailSender.send(email,
+        emailSender.sendAsync(email,
                 emailMessageConfig.topic(),
                 emailMessageConfig.contents().replace("#CODE", code)
         );

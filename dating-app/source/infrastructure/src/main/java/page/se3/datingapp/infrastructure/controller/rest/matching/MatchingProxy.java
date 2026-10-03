@@ -7,10 +7,10 @@ import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.application.service.matching.MatchingUseCase;
 import page.se3.datingapp.domain.core.util.Reporting;
-import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoint;
+import page.se3.datingapp.domain.exception.abort.reason.endpoint.DevelopmentOnlyEndpoint;
 import page.se3.datingapp.infrastructure.controller.service.FailFast;
 import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
-import page.se3.datingapp.infrastructure.controller.struct.Response;
+import page.se3.datingapp.infrastructure.controller.service.helper.Response;
 
 @Slf4j
 @Service
@@ -21,7 +21,7 @@ public class MatchingProxy {
     private final ResponseFactory responseFactory;
     private final FailFast failFast;
 
-    public Response<Void> runMatchingFromDebugController() throws DebugOnlyEndpoint {
+    public Response<Void> runMatchingFromDebugController() throws DevelopmentOnlyEndpoint {
         failFast.abortOnProduction();
 
         runMatchingInternal("Debug matching");

@@ -1,4 +1,4 @@
-package page.se3.datingapp.infrastructure.config.controller.argument;
+package page.se3.datingapp.infrastructure.config.controller;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.NonNull;
@@ -9,7 +9,7 @@ import org.springframework.web.bind.support.WebDataBinderFactory;
 import org.springframework.web.context.request.NativeWebRequest;
 import org.springframework.web.method.support.HandlerMethodArgumentResolver;
 import org.springframework.web.method.support.ModelAndViewContainer;
-import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotFound;
+import page.se3.datingapp.domain.exception.abort.reason.account.AccountNotRegistered;
 import page.se3.datingapp.domain.exception.abort.internal.AuthorizationFailed;
 import page.se3.datingapp.infrastructure.foundation.identity.IdentityProvider;
 import page.se3.datingapp.infrastructure.foundation.identity.helper.IdentityParam;
@@ -31,7 +31,7 @@ public class IdentityArgumentResolver implements HandlerMethodArgumentResolver {
             ModelAndViewContainer mavContainer,
             @NonNull NativeWebRequest webRequest,
             WebDataBinderFactory binderFactory
-    ) throws AuthorizationFailed, AccountNotFound {
+    ) throws AuthorizationFailed, AccountNotRegistered {
         IdentityParam identityParam = new IdentityParam(parameter);
         HttpServletRequest httpServletRequest = webRequest.getNativeRequest(HttpServletRequest.class);
 

@@ -6,14 +6,13 @@ import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.domain.service.email.EmailValidator;
 import page.se3.datingapp.application.service.auth.AuthService;
 import page.se3.datingapp.domain.exception.abort.reason.auth.EmailValidationFailed;
-import page.se3.datingapp.domain.exception.abort.reason.auth.EmailSendingFailed;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidCredentials;
 import page.se3.datingapp.domain.exception.abort.reason.auth.InvalidVerificationCode;
-import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoint;
+import page.se3.datingapp.domain.exception.abort.reason.endpoint.DevelopmentOnlyEndpoint;
 import page.se3.datingapp.infrastructure.controller.rest.auth.dto.*;
 import page.se3.datingapp.infrastructure.controller.service.FailFast;
 import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
-import page.se3.datingapp.infrastructure.controller.struct.Response;
+import page.se3.datingapp.infrastructure.controller.service.helper.Response;
 
 @Service
 @RequiredArgsConstructor
@@ -25,10 +24,10 @@ public class AuthProxy {
     private final FailFast failFast;
 
     public Response<Void> sendVerificationCode(SendVerificationCodeDto sendVerificationCodeDto)
-            throws EmailValidationFailed, EmailSendingFailed {
+            throws EmailValidationFailed {
         String email = emailValidator.checkEmail(sendVerificationCodeDto.email());
         authService.sendCode(email);
-        return responseFactory.noContent();
+        return responseFactory.accepted();
     }
 
     @AutoRetry
@@ -57,7 +56,7 @@ public class AuthProxy {
 
     @AutoRetry
     public JwtTokenDto getJwtByDebugLogin(DebugLoginDto debugLoginDto)
-            throws DebugOnlyEndpoint, EmailValidationFailed {
+            throws DevelopmentOnlyEndpoint, EmailValidationFailed {
         failFast.abortOnProduction();
 
         String email = emailValidator.checkEmail(debugLoginDto.email());

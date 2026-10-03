@@ -14,7 +14,7 @@ import page.se3.datingapp.domain.model.user.AuthKey;
 import page.se3.datingapp.infrastructure.controller.rest.block.dto.BlockAddDto;
 import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
 import page.se3.datingapp.infrastructure.controller.rest.block.dto.BlockDto;
-import page.se3.datingapp.infrastructure.controller.struct.Response;
+import page.se3.datingapp.infrastructure.controller.service.helper.Response;
 
 import java.util.List;
 

@@ -2,18 +2,18 @@ package page.se3.datingapp.infrastructure.controller.service;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import page.se3.datingapp.domain.config.app.limiting.LimitingConfig;
-import page.se3.datingapp.domain.exception.abort.reason.endpoint.DebugOnlyEndpoint;
+import page.se3.datingapp.domain.config.app.AppConfig;
+import page.se3.datingapp.domain.exception.abort.reason.endpoint.DevelopmentOnlyEndpoint;
 
 @Service
 @RequiredArgsConstructor
 public class FailFast {
 
-    private final LimitingConfig limitingConfig;
+    private final AppConfig appConfig;
 
-    public void abortOnProduction() throws DebugOnlyEndpoint {
-        if (!limitingConfig.allowDebugEndpoints()) {
-            throw new DebugOnlyEndpoint();
+    public void abortOnProduction() throws DevelopmentOnlyEndpoint {
+        if (!appConfig.isDevelopmentMode()) {
+            throw new DevelopmentOnlyEndpoint();
         }
     }
 }

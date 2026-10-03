@@ -14,8 +14,8 @@ import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import page.se3.datingapp.domain.config.app.AppConfig;
-import page.se3.datingapp.infrastructure.config.controller.response.dto.ResponseErrorDto;
-import page.se3.datingapp.infrastructure.config.openapi.helper.RootOperationCustomizer;
+import page.se3.datingapp.infrastructure.config.openapi.helper.ResponseErrorScheme;
+import page.se3.datingapp.infrastructure.config.openapi.helper.OperationConfigurer;
 import page.se3.datingapp.infrastructure.controller.annotation.AuthIdentity;
 import page.se3.datingapp.domain.Final;
 
@@ -54,10 +54,10 @@ public class SwaggerConfig {
             );
 
             ResolvedSchema resolvedSchema = ModelConverters.getInstance()
-                    .resolveAsResolvedSchema(new AnnotatedType(ResponseErrorDto.class));
+                    .resolveAsResolvedSchema(new AnnotatedType(ResponseErrorScheme.class));
 
             openApi.getComponents().addSchemas(
-                    ResponseErrorDto.class.getSimpleName(),
+                    ResponseErrorScheme.class.getSimpleName(),
                     resolvedSchema.schema
             );
         };
@@ -65,7 +65,7 @@ public class SwaggerConfig {
 
     @Bean
     public OperationCustomizer operationCustomizer() {
-        return (operation, handlerMethod) -> new RootOperationCustomizer(operation, handlerMethod)
-                .customize(BEARER_AUTH);
+        return (operation, handlerMethod) -> new OperationConfigurer(operation, handlerMethod)
+                .configure(BEARER_AUTH);
     }
 }

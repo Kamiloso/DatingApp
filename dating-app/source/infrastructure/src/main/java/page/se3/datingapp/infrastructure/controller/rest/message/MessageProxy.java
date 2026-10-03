@@ -1,8 +1,6 @@
 package page.se3.datingapp.infrastructure.controller.rest.message;
 
-import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.AutoRetry;
 import page.se3.datingapp.application.service.message.MessageService;
@@ -15,7 +13,7 @@ import page.se3.datingapp.domain.model.message.MessageSend;
 import page.se3.datingapp.infrastructure.controller.rest.message.dto.MessageSendDto;
 import page.se3.datingapp.infrastructure.controller.rest.message.dto.MessageDto;
 import page.se3.datingapp.infrastructure.controller.service.ResponseFactory;
-import page.se3.datingapp.infrastructure.controller.struct.Response;
+import page.se3.datingapp.infrastructure.controller.service.helper.Response;
 
 import java.time.Instant;
 import java.util.List;
