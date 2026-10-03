@@ -19,7 +19,6 @@ public record UserAccount(
         Relationship targetRelationshipOther,
         String quizAnswers,
         Integer matchingIndex,
-        Integer readyIndex,
         Boolean isPatched,
         Boolean isActive
 ) {
@@ -39,13 +38,12 @@ public record UserAccount(
                 user.targetRelationshipOther(),
                 user.quizAnswers(),
                 user.matchingIndex(),
-                user.readyIndex(),
                 user.isPatched(),
                 user.isActive()
         );
     }
 
     public AuthKey getAuthKey() {
-        return new AuthKey(id, gender);
+        return new AuthKey(id, email, gender);
     }
 }

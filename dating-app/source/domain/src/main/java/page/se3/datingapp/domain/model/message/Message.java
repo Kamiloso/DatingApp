@@ -1,6 +1,6 @@
 package page.se3.datingapp.domain.model.message;
 
-import page.se3.datingapp.domain.annotation.MayBeNull;
+import page.se3.datingapp.domain.core.annotation.MayBeNull;
 
 import java.time.Instant;
 

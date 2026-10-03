@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.transaction.RequiresTransaction;
-import page.se3.datingapp.application.repository.MatchRepository;
-import page.se3.datingapp.domain.core.util.MapUtils;
+import page.se3.datingapp.application.service.relation.repository.MatchRepository;
+import page.se3.datingapp.domain.core.util.Streams;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
@@ -34,7 +34,7 @@ public class MatchJdbcAdapter implements MatchRepository {
 
     @Override
     public List<Match> findAllByIdUserList(List<Long> idUserList) {
-        return MapUtils.toList(
+        return Streams.toList(
                 batchProcessor.convert(idUserList, matchJdbcRepository::findAllByIdUserList),
                 matchMapper::toDomain
         );
@@ -42,7 +42,7 @@ public class MatchJdbcAdapter implements MatchRepository {
 
     @Override
     public List<Match> findAllByIdUserForApplicationPurposes(Long idUser, Boolean blocked) {
-        return MapUtils.toList(
+        return Streams.toList(
                 matchJdbcRepository.findAllByIdUserForApplicationPurposes(idUser, blocked),
                 matchMapper::toDomain
         );
@@ -51,7 +51,7 @@ public class MatchJdbcAdapter implements MatchRepository {
     @Override
     @RequiresTransaction
     public List<Match> trySaveAll(List<Match> matchList) throws DatabaseConflictException {
-        List<MatchEntity> matchEntityList = MapUtils.toList(matchList, matchMapper::toEntity);
+        List<MatchEntity> matchEntityList = Streams.toList(matchList, matchMapper::toEntity);
 
         try {
             matchEntityList = batchProcessor.convert(matchEntityList, matchJdbcRepository::saveAll);
@@ -59,7 +59,7 @@ public class MatchJdbcAdapter implements MatchRepository {
             throw new DatabaseConflictException(e);
         }
 
-        return MapUtils.toList(matchEntityList, matchMapper::toDomain);
+        return Streams.toList(matchEntityList, matchMapper::toDomain);
     }
 
     @Override

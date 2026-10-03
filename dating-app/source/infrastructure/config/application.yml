@@ -1,19 +1,39 @@
 app:
+  application-display-name: "Dating App"
   start-message: "Backend has started successfully and is listening for requests..."
-  limits:
-    max-batch-size: 512
-    max-list-size: 64
-  retry:
-    max-retries: 6
-    initial-sleep-millis: 100
-    sleep-time-multiplier: 2.0
+  auth:
+    allowed-email-regex: ".+@student\\.polsl\\.pl"
+    jwt:
+      issuer: "dating-app"
+      expiration-millis: 900000
+    verification-code:
+      expiration-millis: 900000
+  email:
+    credentials:
+      host: "localhost"
+      port: 1025
+      username: ""
+      password: ""
+      from-email: noreply@localhost
+    message:
+      topic: "${app.application-display-name} - account verification"
+      contents: "This is an auto-generated message. Please do not reply.\nIf you did not request this, please ignore it.\nVerification code: #CODE"
+  limiting:
+    allow-debug-endpoints: true
+    capacity:
+      max-batch-size: 512
+      max-list-size: 64
+    retry:
+      max-retries: 6
+      initial-sleep-millis: 100
+      sleep-time-multiplier: 2.0
   matching:
     match-count-limit: 3
     max-age-difference: 3
     schedule:
       cron: "0 0 20 * * MON,THU"
       timezone: "Europe/Warsaw"
-      lock-at-least-for-minutes: 5
-      lock-at-most-for-minutes: 30
+      lock-at-least-for-millis: 1000
+      lock-at-most-for-millis: 120000
   quiz:
-    ready-index: 1
+    survey-version: 1

@@ -20,7 +20,6 @@ public record UserEntity(
         Relationship targetRelationshipOther,
         String quizAnswers,
         Integer matchingIndex,
-        Integer readyIndex,
         Boolean isPatched,
         Boolean isActive
 ) {}

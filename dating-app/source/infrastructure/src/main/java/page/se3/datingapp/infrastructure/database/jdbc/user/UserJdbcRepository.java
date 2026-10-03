@@ -21,9 +21,7 @@ public interface UserJdbcRepository extends ListCrudRepository<@NonNull UserEnti
             SELECT * FROM users
                 WHERE
                     matching_index = :matchingIndex AND
-                    ready_index = :readyIndex AND
                     is_active = 1
-                FOR SHARE
             """)
-    List<UserEntity> findAllWhereReadyForShare(Integer matchingIndex, Integer readyIndex);
+    List<UserEntity> findAllWhereReady(Integer matchingIndex);
 }

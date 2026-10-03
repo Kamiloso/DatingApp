@@ -5,6 +5,13 @@ DROP TABLE IF EXISTS chats;
 DROP TABLE IF EXISTS matches;
 DROP TABLE IF EXISTS match_groups;
 DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS accounts;
+
+CREATE TABLE accounts (
+    email VARCHAR(255) PRIMARY KEY,
+    password_hash VARCHAR(255) NOT NULL,
+    is_banned BOOLEAN NOT NULL
+);
 
 CREATE TABLE users (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
@@ -20,18 +27,16 @@ CREATE TABLE users (
     target_relationship_other ENUM('NONE', 'FRIENDSHIP', 'ROMANTIC', 'BOTH') NOT NULL,
     quiz_answers VARCHAR(2047) NOT NULL,
     matching_index INT NOT NULL,
-    ready_index INT NOT NULL,
     is_patched BOOLEAN NOT NULL,
     is_active BOOLEAN NOT NULL,
 
-    INDEX idx_user_ready_indicator (matching_index, ready_index, is_active)
+    INDEX idx_user_ready_indicator (matching_index, is_active)
 );
 
 CREATE TABLE match_groups (
     id BIGINT PRIMARY KEY AUTO_INCREMENT,
     match_time TIMESTAMP(3) NOT NULL,
-    match_count_limit INT NOT NULL,
-    ready_index INT NOT NULL
+    match_count_limit INT NOT NULL
 );
 
 CREATE TABLE matches (

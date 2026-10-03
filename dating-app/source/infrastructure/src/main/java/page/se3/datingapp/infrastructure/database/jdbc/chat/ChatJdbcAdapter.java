@@ -2,8 +2,8 @@ package page.se3.datingapp.infrastructure.database.jdbc.chat;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Repository;
-import page.se3.datingapp.application.repository.ChatRepository;
-import page.se3.datingapp.domain.core.util.MapUtils;
+import page.se3.datingapp.application.service.relation.repository.ChatRepository;
+import page.se3.datingapp.domain.core.util.Streams;
 import page.se3.datingapp.domain.model.relation.chat.Chat;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
 
@@ -30,7 +30,7 @@ public class ChatJdbcAdapter implements ChatRepository {
 
     @Override
     public List<Chat> findAllByIdMatchList(List<Long> idMatchList) {
-        return MapUtils.toList(
+        return Streams.toList(
                 batchProcessor.convert(idMatchList, chatJdbcRepository::findAllByIdMatchList),
                 chatMapper::toDomain
         );

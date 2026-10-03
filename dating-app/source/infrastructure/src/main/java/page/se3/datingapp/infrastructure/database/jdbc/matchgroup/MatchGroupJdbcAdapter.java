@@ -3,8 +3,8 @@ package page.se3.datingapp.infrastructure.database.jdbc.matchgroup;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
-import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.application.repository.MatchGroupRepository;
+import page.se3.datingapp.domain.core.util.Streams;
+import page.se3.datingapp.application.service.relation.repository.MatchGroupRepository;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
@@ -27,7 +27,7 @@ public class MatchGroupJdbcAdapter implements MatchGroupRepository {
 
     @Override
     public List<MatchGroup> findAllByIdList(List<Long> idList) {
-        return MapUtils.toList(
+        return Streams.toList(
                 batchProcessor.convert(idList, matchGroupJdbcRepository::findAllById),
                 matchGroupMapper::toDomain
         );

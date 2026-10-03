@@ -13,14 +13,17 @@ import org.springdoc.core.customizers.OperationCustomizer;
 import org.springdoc.core.utils.SpringDocUtils;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import page.se3.datingapp.domain.config.AppConfig;
-import page.se3.datingapp.infrastructure.annotation.AuthIdentity;
-import page.se3.datingapp.infrastructure.config.openapi.customizer.RootOperationCustomizer;
-import page.se3.datingapp.infrastructure.controller.dto.ErrorDto;
+import page.se3.datingapp.domain.config.app.AppConfig;
+import page.se3.datingapp.infrastructure.config.openapi.helper.RootOperationCustomizer;
+import page.se3.datingapp.infrastructure.controller.annotation.AuthIdentity;
+import page.se3.datingapp.infrastructure.config.controller.response.dto.ResponseError;
+import page.se3.datingapp.domain.Final;
 
 @Configuration
 @RequiredArgsConstructor
 public class SwaggerConfig {
+
+    private static final String BEARER_AUTH = "BearerAuth";
 
     private final AppConfig appConfig;
 
@@ -31,8 +34,8 @@ public class SwaggerConfig {
     @Bean
     public OpenAPI openAPI() {
         return new OpenAPI().info(new Info()
-                .title("Dating App API")
-                .version(appConfig.apiVersion())
+                .title(appConfig.applicationDisplayName() + " API")
+                .version(Final.API_VERSION)
         );
     }
 
@@ -43,8 +46,7 @@ public class SwaggerConfig {
                 openApi.setComponents(new Components());
             }
 
-            openApi.getComponents().addSecuritySchemes(
-                    "BearerAuth",
+            openApi.getComponents().addSecuritySchemes(BEARER_AUTH,
                     new SecurityScheme()
                             .type(SecurityScheme.Type.HTTP)
                             .scheme("bearer")
@@ -52,10 +54,10 @@ public class SwaggerConfig {
             );
 
             ResolvedSchema resolvedSchema = ModelConverters.getInstance()
-                    .resolveAsResolvedSchema(new AnnotatedType(ErrorDto.class));
+                    .resolveAsResolvedSchema(new AnnotatedType(ResponseError.class));
 
             openApi.getComponents().addSchemas(
-                    ErrorDto.class.getSimpleName(),
+                    ResponseError.class.getSimpleName(),
                     resolvedSchema.schema
             );
         };
@@ -63,6 +65,7 @@ public class SwaggerConfig {
 
     @Bean
     public OperationCustomizer operationCustomizer() {
-        return (operation, handlerMethod) -> new RootOperationCustomizer(operation, handlerMethod).customize();
+        return (operation, handlerMethod) -> new RootOperationCustomizer(operation, handlerMethod)
+                .customize(BEARER_AUTH);
     }
 }

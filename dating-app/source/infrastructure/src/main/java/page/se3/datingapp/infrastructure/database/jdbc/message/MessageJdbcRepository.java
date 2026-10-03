@@ -6,8 +6,11 @@ import org.springframework.data.repository.ListCrudRepository;
 
 import java.time.Instant;
 import java.util.List;
+import java.util.Optional;
 
 public interface MessageJdbcRepository extends ListCrudRepository<@NonNull MessageEntity, @NonNull Long> {
+
+    Optional<MessageEntity> findByIdAndIdChat(Long id, Long idChat);
 
     @Query("""
             SELECT * FROM messages

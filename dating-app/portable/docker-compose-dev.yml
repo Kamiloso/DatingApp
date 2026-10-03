@@ -14,11 +14,11 @@ services:
     profiles:
       - ignore
 
-  keycloak:
-    environment:
-      KC_DB: dev-mem
-      KC_DB_URL: jdbc:h2:mem:keycloakdev;DB_CLOSE_DELAY=-1;NON_KEYWORDS=VALUE
-      KC_DB_USERNAME: null
-      KC_DB_PASSWORD: null
-    volumes:
-      - ./keycloak/realm_dev.json:/opt/keycloak/data/import/realm.json:ro
+  mail:
+    image: python:3.10-alpine
+    container_name: dating-app-mail
+    command: python -u -m smtpd -n -c DebuggingServer 0.0.0.0:1025
+    ports:
+      - "1025:1025"
+    networks:
+      - app-network

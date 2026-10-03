@@ -3,9 +3,9 @@ package page.se3.datingapp.infrastructure.database.jdbc.block;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Repository;
-import page.se3.datingapp.application.repository.BlockRepository;
+import page.se3.datingapp.application.service.block.repository.BlockRepository;
 import page.se3.datingapp.domain.model.block.Block;
-import page.se3.datingapp.domain.core.util.MapUtils;
+import page.se3.datingapp.domain.core.util.Streams;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
 import page.se3.datingapp.infrastructure.database.service.BatchProcessor;
 
@@ -27,12 +27,12 @@ public class BlockJdbcAdapter implements BlockRepository {
 
     @Override
     public List<Block> findAllByIdUserOwner(Long idUserOwner) {
-        return MapUtils.toList(blockJdbcRepository.findAllByIdUserOwner(idUserOwner), blockMapper::toDomain);
+        return Streams.toList(blockJdbcRepository.findAllByIdUserOwner(idUserOwner), blockMapper::toDomain);
     }
 
     @Override
     public List<Block> findAllByIdUserBlockedWhereNotSilent(Long idUserBlocked) {
-        return MapUtils.toList(
+        return Streams.toList(
                 blockJdbcRepository.findAllByIdUserBlockedWhereNotSilent(idUserBlocked),
                 blockMapper::toDomain
         );
@@ -40,7 +40,7 @@ public class BlockJdbcAdapter implements BlockRepository {
 
     @Override
     public List<Block> findAllByIdUserList(List<Long> idUserList) {
-        return MapUtils.toList(
+        return Streams.toList(
                 batchProcessor.convert(idUserList, blockJdbcRepository::findAllByIdUserList),
                 blockMapper::toDomain
         );

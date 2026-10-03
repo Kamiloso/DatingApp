@@ -1,7 +1,7 @@
 package page.se3.datingapp.domain.model.matching;
 
 import page.se3.datingapp.domain.core.struct.Weight;
-import page.se3.datingapp.domain.core.util.MapUtils;
+import page.se3.datingapp.domain.core.util.Streams;
 import page.se3.datingapp.domain.model.block.BlockMap;
 import page.se3.datingapp.domain.model.matching.matcher.Matcher;
 import page.se3.datingapp.domain.model.user.User;
@@ -49,7 +49,7 @@ public record MatchingProcess(
             }
         }
 
-        return MapUtils.toList(topMatches, userMatchWeight -> Matching.getSingle(
+        return Streams.toList(topMatches, userMatchWeight -> Matching.getSingle(
                 userMain.id(),
                 userMatchWeight.item().id(),
                 userMatchWeight.weight()

@@ -3,21 +3,20 @@ package page.se3.datingapp.application.service.matching;
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
 import page.se3.datingapp.application.annotation.transaction.ReadCommitted;
-import page.se3.datingapp.application.service.matching.index.MatchingIndexer;
-import page.se3.datingapp.domain.config.MatchingConfig;
-import page.se3.datingapp.domain.config.QuizConfig;
-import page.se3.datingapp.domain.core.util.MapUtils;
+import page.se3.datingapp.application.service.matching.indexer.MatchingIndexer;
+import page.se3.datingapp.domain.config.app.matching.MatchingConfig;
+import page.se3.datingapp.domain.core.util.Streams;
 import page.se3.datingapp.domain.exception.UnexpectedRuntimeException;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
-import page.se3.datingapp.application.repository.BlockRepository;
-import page.se3.datingapp.application.repository.MatchGroupRepository;
-import page.se3.datingapp.application.repository.MatchRepository;
-import page.se3.datingapp.application.repository.UserRepository;
+import page.se3.datingapp.application.service.block.repository.BlockRepository;
+import page.se3.datingapp.application.service.relation.repository.MatchGroupRepository;
+import page.se3.datingapp.application.service.relation.repository.MatchRepository;
+import page.se3.datingapp.application.service.user.repository.UserRepository;
 import page.se3.datingapp.domain.model.block.BlockMap;
 import page.se3.datingapp.domain.model.block.Block;
 import page.se3.datingapp.domain.model.matching.MatchingContext;
 import page.se3.datingapp.domain.model.matching.MatchingProcess;
-import page.se3.datingapp.domain.model.matching.matcher.impl.DefaultMatcher;
+import page.se3.datingapp.domain.model.matching.matcher.DefaultMatcher;
 import page.se3.datingapp.domain.model.relation.match.Match;
 import page.se3.datingapp.domain.model.relation.match.MatchGroup;
 import page.se3.datingapp.domain.model.user.User;
@@ -30,7 +29,6 @@ import java.util.List;
 public class MatchingUseCase {
 
     private final MatchingConfig matchingConfig;
-    private final QuizConfig quizConfig;
     private final MatchingIndexer matchingIndexer;
     private final BlockRepository blockRepository;
     private final MatchGroupRepository matchGroupRepository;
@@ -42,7 +40,7 @@ public class MatchingUseCase {
         MatchingContext ctx = buildContext();
         MatchingProcess matchingProcess = ctx.getProcess(new DefaultMatcher(matchingConfig));
 
-        List<Match> matches = MapUtils.toList(matchingProcess.run(), ctx::getMatch);
+        List<Match> matches = Streams.toList(matchingProcess.run(), ctx::getMatch);
 
         try {
             var ignored = matchRepository.trySaveAll(matches);
@@ -54,24 +52,16 @@ public class MatchingUseCase {
     private MatchingContext buildContext() {
         int matchingIndex = matchingIndexer.getIncrementedForUpdate();
 
-        MatchGroup matchGroup;
+        MatchGroup matchGroup = MatchGroup.selfDeriveInitial(Instant.now(), matchingConfig.matchCountLimit());
 
         try {
-            matchGroup = matchGroupRepository.trySave(MatchGroup.getBeginnerInitial(
-                    Instant.now(),
-                    matchingConfig.matchCountLimit(),
-                    quizConfig.readyIndex()
-            ));
+            matchGroup = matchGroupRepository.trySave(matchGroup);
         } catch (DatabaseConflictException e) {
             throw new UnexpectedRuntimeException(e);
         }
 
-        List<User> users = userRepository.findAllWhereReadyForShare(
-                matchingIndex,
-                quizConfig.readyIndex()
-        );
-
-        List<Long> idUserList = MapUtils.toList(users, User::id);
+        List<User> users = userRepository.findAllWhereReady(matchingIndex);
+        List<Long> idUserList = Streams.toList(users, User::id);
 
         BlockMap blockMap = BlockMap.builder()
                 .withBlocking(matchRepository.findAllByIdUserList(idUserList),

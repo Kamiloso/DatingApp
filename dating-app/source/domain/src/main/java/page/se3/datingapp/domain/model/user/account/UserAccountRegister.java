@@ -15,8 +15,7 @@ public record UserAccountRegister(
         Relationship targetRelationshipWoman,
         Relationship targetRelationshipOther,
         String quizAnswers,
-        Boolean isReadyForMatching,
-        Integer readyIndex
+        Boolean isReadyForMatching
 ) {
 
     public User deriveInitial(String email, int futureMatchingIndex) {
@@ -26,7 +25,7 @@ public record UserAccountRegister(
                 email, name, surname, gender, age, fieldOfStudy,
                 description, targetRelationshipMan,
                 targetRelationshipWoman, targetRelationshipOther,
-                quizAnswers, matchingIndex, readyIndex,
+                quizAnswers, matchingIndex,
                 false, true
         );
     }

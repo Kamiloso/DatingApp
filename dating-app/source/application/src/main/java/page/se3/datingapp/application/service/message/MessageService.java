@@ -2,10 +2,11 @@ package page.se3.datingapp.application.service.message;
 
 import lombok.RequiredArgsConstructor;
 import page.se3.datingapp.application.annotation.service.RootService;
-import page.se3.datingapp.application.repository.MessageRepository;
+import page.se3.datingapp.application.service.message.repository.MessageRepository;
+import page.se3.datingapp.domain.exception.abort.reason.message.MessageNotFound;
 import page.se3.datingapp.domain.model.message.MessageSend;
-import page.se3.datingapp.application.service.relation.assembly.SingleRelationAssembler;
-import page.se3.datingapp.domain.config.LimitConfig;
+import page.se3.datingapp.application.service.relation.assembler.SingleRelationAssembler;
+import page.se3.datingapp.domain.config.app.limiting.capacity.CapacityConfig;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatAccessDenied;
 import page.se3.datingapp.domain.exception.abort.reason.chat.ChatNotFound;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
@@ -20,7 +21,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class MessageService {
 
-    private final LimitConfig limitConfig;
+    private final CapacityConfig capacityConfig;
     private final SingleRelationAssembler singleRelationAssembler;
     private final MessageRepository messageRepository;
 
@@ -28,16 +29,21 @@ public class MessageService {
             throws ChatNotFound, ChatAccessDenied {
         checkExistenceAndPrivileges(authKey, idChat);
 
-        var sendTime = Instant.now();
-        Long idUserSender = authKey.id();
-
-        Message message = messageSend.deriveInitial(sendTime, idChat, idUserSender);
+        Message message = messageSend.deriveInitial(Instant.now(), idChat, authKey.id());
 
         try {
             return messageRepository.trySave(message);
         } catch (DatabaseConflictException e) {
             throw new ChatNotFound();
         }
+    }
+
+    public Message get(AuthKey authKey, Long idChat, Long idMessage)
+            throws ChatNotFound, ChatAccessDenied, MessageNotFound {
+        checkExistenceAndPrivileges(authKey, idChat);
+
+        return messageRepository.findByIdAndIdChat(idMessage, idChat)
+                .orElseThrow(MessageNotFound::new);
     }
 
     public List<Message> fetch(
@@ -47,7 +53,7 @@ public class MessageService {
     ) throws ChatNotFound, ChatAccessDenied {
         checkExistenceAndPrivileges(authKey, idChat);
 
-        Integer maxListSize = limitConfig.maxListSize();
+        Integer maxListSize = capacityConfig.maxListSize();
 
         return messageRepository.findAllByIdChatForApplicationPurposes(idChat, lastFetchTime, maxListSize);
     }

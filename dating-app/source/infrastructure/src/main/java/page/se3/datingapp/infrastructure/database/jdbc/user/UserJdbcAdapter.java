@@ -4,8 +4,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import page.se3.datingapp.application.annotation.transaction.RequiresTransaction;
-import page.se3.datingapp.domain.core.util.MapUtils;
-import page.se3.datingapp.application.repository.UserRepository;
+import page.se3.datingapp.domain.core.util.Streams;
+import page.se3.datingapp.application.service.user.repository.UserRepository;
 import page.se3.datingapp.domain.model.user.User;
 import page.se3.datingapp.domain.exception.DatabaseConflictException;
 
@@ -37,9 +37,9 @@ public class UserJdbcAdapter implements UserRepository {
 
     @Override
     @RequiresTransaction
-    public List<User> findAllWhereReadyForShare(Integer matchingIndex, Integer readyIndex) {
-        return MapUtils.toList(
-                userJdbcRepository.findAllWhereReadyForShare(matchingIndex, readyIndex),
+    public List<User> findAllWhereReady(Integer matchingIndex) {
+        return Streams.toList(
+                userJdbcRepository.findAllWhereReady(matchingIndex),
                 userMapper::toDomain
         );
     }

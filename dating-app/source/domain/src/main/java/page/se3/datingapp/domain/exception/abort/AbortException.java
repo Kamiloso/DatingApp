@@ -2,7 +2,7 @@ package page.se3.datingapp.domain.exception.abort;
 
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
-import page.se3.datingapp.domain.core.util.StringUtils;
+import page.se3.datingapp.domain.core.util.Naming;
 
 @Getter
 public abstract class AbortException extends Exception {
@@ -23,8 +23,13 @@ public abstract class AbortException extends Exception {
     private final String errorType;
 
     public AbortException(HttpResponse httpResponse) {
+        this(httpResponse, "");
+    }
+
+    public AbortException(HttpResponse httpResponse, String message) {
+        super(message);
         this.httpResponse = httpResponse;
-        this.errorType = StringUtils.pascalToSnakeCase(this.getClass().getSimpleName());
+        this.errorType = Naming.pascalToSnakeCase(getClass().getSimpleName());
     }
 
     public int getStatus() {

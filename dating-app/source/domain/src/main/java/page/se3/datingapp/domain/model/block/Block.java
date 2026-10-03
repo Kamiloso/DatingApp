@@ -1,6 +1,6 @@
 package page.se3.datingapp.domain.model.block;
 
-import page.se3.datingapp.domain.annotation.MayBeNull;
+import page.se3.datingapp.domain.core.annotation.MayBeNull;
 
 import java.util.Objects;
 

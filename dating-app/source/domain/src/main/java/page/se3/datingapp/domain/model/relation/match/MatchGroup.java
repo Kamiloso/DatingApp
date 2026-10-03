@@ -1,21 +1,20 @@
 package page.se3.datingapp.domain.model.relation.match;
 
-import page.se3.datingapp.domain.annotation.MayBeNull;
+import page.se3.datingapp.domain.core.annotation.MayBeNull;
 
 import java.time.Instant;
 
 public record MatchGroup(
         @MayBeNull Long id,
         Instant matchTime,
-        Integer matchCountLimit,
-        Integer readyIndex
+        Integer matchCountLimit
 ) {
 
-    public static MatchGroup getInitial(Instant matchTime, Integer matchCountLimit, Integer readyIndex) {
-        return new MatchGroup(null, matchTime, matchCountLimit, readyIndex);
+    public static MatchGroup getInitial(Instant matchTime, Integer matchCountLimit) {
+        return new MatchGroup(null, matchTime, matchCountLimit);
     }
 
-    public static MatchGroup getBeginnerInitial(Instant matchTime, Integer matchCountLimit, Integer readyIndex) {
-        return getInitial(matchTime, matchCountLimit, readyIndex);
+    public static MatchGroup selfDeriveInitial(Instant matchTime, Integer matchCountLimit) {
+        return getInitial(matchTime, matchCountLimit);
     }
 }

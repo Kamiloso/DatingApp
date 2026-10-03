@@ -9,6 +9,5 @@ import java.time.Instant;
 public record MatchGroupEntity(
         @Id Long id,
         Instant matchTime,
-        Integer matchCountLimit,
-        Integer readyIndex
+        Integer matchCountLimit
 ) {}

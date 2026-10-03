@@ -10,7 +10,7 @@ spring:
     oauth2:
       resourceserver:
         jwt:
-          issuer-uri: "http://localhost:8081/realms/dating-app-realm"
+          issuer-uri: "http://todo.replace.example.com"
   data:
     redis:
       host: localhost
@@ -25,6 +25,3 @@ logging:
 
 springdoc:
   default-produces-media-type: "application/json"
-
-app:
-  api-version: "1.0"

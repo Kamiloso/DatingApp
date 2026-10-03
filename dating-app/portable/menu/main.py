@@ -23,9 +23,9 @@ def menu_ask() -> str:
     print(" 1 - Run container")
     print(" 2 - Run container (dev)")
     print(" 3 - Stop container")
-    print(" 4 - Open MySQL console")
-    print(" 5 - Open Redis console")
-    print(" 6 - Nuke container")
+    print(" 4 - Nuke container")
+    print(" 5 - Open MySQL console")
+    print(" 6 - Open Redis console")
     print(" 7 - View logs")
     print(" 8 - Refresh")
     print(" 9 - Exit")
@@ -42,9 +42,9 @@ def menu_ask() -> str:
         1: "run_container",
         2: "run_container_dev",
         3: "stop_container",
-        4: "open_mysql_console",
-        5: "open_redis_console",
-        6: "nuke_container",
+        4: "nuke_container",
+        5: "open_mysql_console",
+        6: "open_redis_console",
         7: "view_logs",
         8: "refresh",
         9: "exit"
@@ -63,22 +63,22 @@ def main():
                 preprint(lambda: print("Invalid option. Please try again."))
 
             elif choice == "run_container":
-                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" up')).returncode
+                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" up --force-recreate')).returncode
 
             elif choice == "run_container_dev":
-                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" -f "{DOCKER_COMPOSE_DEV_FILE}" up')).returncode
+                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" -f "{DOCKER_COMPOSE_DEV_FILE}" up --force-recreate')).returncode
 
             elif choice == "stop_container":
-                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" down')).returncode
+                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" -f "{DOCKER_COMPOSE_DEV_FILE}" down --remove-orphans')).returncode
+
+            elif choice == "nuke_container":
+                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" -f "{DOCKER_COMPOSE_DEV_FILE}" down -v --remove-orphans')).returncode
 
             elif choice == "open_mysql_console":
                 result = preprint(lambda: shell_execute("docker exec -it dating-app-db mysql -u root dating_app")).returncode
 
             elif choice == "open_redis_console":
                 result = preprint(lambda: shell_execute("docker exec -it dating-app-redis redis-cli")).returncode
-
-            elif choice == "nuke_container":
-                result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" down -v')).returncode
 
             elif choice == "view_logs":
                 result = preprint(lambda: shell_execute(f'docker compose -f "{DOCKER_COMPOSE_FILE}" logs -f')).returncode

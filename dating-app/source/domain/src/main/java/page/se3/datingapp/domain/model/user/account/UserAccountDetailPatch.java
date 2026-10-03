@@ -11,7 +11,6 @@ public record UserAccountDetailPatch(
         Relationship targetRelationshipOther,
         String quizAnswers,
         Boolean isReadyForMatching,
-        Integer readyIndex,
         Boolean isActive
 ) {
 
@@ -26,7 +25,6 @@ public record UserAccountDetailPatch(
                 .targetRelationshipOther(targetRelationshipOther)
                 .quizAnswers(quizAnswers)
                 .matchingIndex(matchingIndex)
-                .readyIndex(readyIndex)
                 .isActive(isActive)
                 .build();
     }

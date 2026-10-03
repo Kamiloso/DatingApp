@@ -7,15 +7,16 @@ import net.javacrumbs.shedlock.provider.redis.spring.RedisLockProvider;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.connection.RedisConnectionFactory;
+import page.se3.datingapp.domain.core.util.UniqueKey;
 
 @Configuration
 public class ShedLockConfig {
 
-    private static final String SHEDLOCK_KEY = "shedlock";
+    private static final String UNIQUE_KEY = UniqueKey.of(ShedLockConfig.class);
 
     @Bean
     public LockProvider lockProvider(RedisConnectionFactory connectionFactory) {
-        return new RedisLockProvider(connectionFactory, SHEDLOCK_KEY);
+        return new RedisLockProvider(connectionFactory, UNIQUE_KEY);
     }
 
     @Bean
