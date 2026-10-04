@@ -1,5 +1,6 @@
 package page.se3.datingapp.infrastructure.foundation.event;
 
+import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.SchedulingConfigurer;
 import org.springframework.scheduling.config.ScheduledTaskRegistrar;
@@ -23,13 +24,15 @@ public class MatchingScheduler implements SchedulingConfigurer {
     private final DistributedLocker distributedLocker;
 
     @Override
-    public void configureTasks(ScheduledTaskRegistrar taskRegistrar) {
-        TimeZone timeZone = TimeZone.getTimeZone(matchingScheduleConfig.timezone());
+    public void configureTasks(@NonNull ScheduledTaskRegistrar taskRegistrar) {
+        if (matchingScheduleConfig.enabled()) {
+            TimeZone timeZone = TimeZone.getTimeZone(matchingScheduleConfig.timezone());
 
-        taskRegistrar.addTriggerTask(
-                this::tryExecuteMatching,
-                new CronTrigger(matchingScheduleConfig.cron(), timeZone)
-        );
+            taskRegistrar.addTriggerTask(
+                    this::tryExecuteMatching,
+                    new CronTrigger(matchingScheduleConfig.cron(), timeZone)
+            );
+        }
     }
 
     private void tryExecuteMatching() {

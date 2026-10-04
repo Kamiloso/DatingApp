@@ -1,6 +1,7 @@
 import org.springframework.boot.gradle.plugin.SpringBootPlugin
 
 plugins {
+    id "java-library"
     id 'org.springframework.boot' version '4.1.1' apply false
     id 'io.spring.dependency-management' version '1.1.7'
     id "org.owasp.dependencycheck" version "13.0.0"
@@ -11,7 +12,6 @@ subprojects {
     apply plugin: 'io.spring.dependency-management'
 
     group = 'page.se3'
-    version = '0.0.1-SNAPSHOT'
 
     java {
         toolchain {
@@ -41,7 +41,9 @@ subprojects {
         testRuntimeOnly 'org.junit.platform:junit-platform-launcher'
     }
 
-    tasks.named('test') {
+    layout.buildDirectory = rootProject.layout.buildDirectory.dir(".temp/" + name)
+
+    tasks.named('test', Test) {
         useJUnitPlatform()
     }
 }

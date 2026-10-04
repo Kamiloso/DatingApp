@@ -1,0 +1,9 @@
+app:
+  is_development_mode: true
+  email:
+    credentials:
+      host: "mail"
+      port: 1025
+      username: ""
+      password: ""
+      from-email: "noreply@localhost"

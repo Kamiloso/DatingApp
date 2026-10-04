@@ -1,0 +1,17 @@
+spring:
+  datasource:
+    url: "jdbc:mysql://localhost:3306/dating_app?useSSL=false&allowPublicKeyRetrieval=true"
+  data:
+    redis:
+      host: "localhost"
+      port: 6379
+
+app:
+  is_development_mode: true
+  email:
+    credentials:
+      host: "localhost"
+      port: 1025
+      username: ""
+      password: ""
+      from-email: "noreply@localhost"

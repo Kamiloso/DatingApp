@@ -1,24 +1,17 @@
 app:
-  application-display-name: "Dating App"
+  application-display-name: "Tofola"
   start-message: "Backend has started successfully and is listening for requests..."
-  is-development-mode: true
   auth:
     allowed-email-regex: ".+@student\\.polsl\\.pl"
     jwt:
-      issuer: "dating-app"
+      issuer: "tofola-backend"
       expiration-millis: 900000
     verification-code:
       expiration-millis: 900000
   email:
-    credentials:
-      host: "localhost"
-      port: 1025
-      username: ""
-      password: ""
-      from-email: noreply@localhost
     message:
       topic: "${app.application-display-name} - account verification"
-      contents: "This is an auto-generated message. Please do not reply.\nIf you did not request this, please ignore it.\nVerification code: #CODE"
+      contents: "This is an auto-generated message. Please do not reply.\nVerify your email with this code: #CODE"
   limiting:
     capacity:
       max-batch-size: 512
@@ -31,6 +24,7 @@ app:
     match-count-limit: 3
     max-age-difference: 3
     schedule:
+      enabled: true
       cron: "0 0 20 * * MON,THU"
       timezone: "Europe/Warsaw"
       lock-at-least-for-millis: 1000

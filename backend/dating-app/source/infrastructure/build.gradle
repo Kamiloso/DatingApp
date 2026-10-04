@@ -1,6 +1,9 @@
+import org.springframework.boot.gradle.tasks.run.BootRun
+
 apply plugin: 'org.springframework.boot'
 
 dependencies {
+    implementation project(':source:domain')
     implementation project(':source:application')
 
     implementation 'org.springframework.boot:spring-boot-starter-webmvc'
@@ -28,8 +31,14 @@ dependencies {
     testImplementation 'org.springframework.boot:spring-boot-starter-webmvc-test'
 }
 
+tasks.named('bootRun', BootRun) {
+    systemProperty 'spring.profiles.active', System.getProperty('spring.profiles.active', 'dev')
+}
+
 bootJar {
     enabled = true
+    destinationDirectory = rootProject.layout.buildDirectory.dir('libs')
+    archiveBaseName = rootProject.name
 }
 
 jar {

@@ -3,6 +3,7 @@ package page.se3.datingapp.domain.config.app.matching.schedule;
 import page.se3.datingapp.domain.config.helper.ConfigBean;
 
 public record MatchingScheduleConfig(
+        Boolean enabled,
         String cron,
         String timezone,
         Integer lockAtLeastForMillis,

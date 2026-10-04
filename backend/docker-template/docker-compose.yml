@@ -38,10 +38,11 @@ services:
     ports:
       - "8080:8080"
     environment:
-      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/dating_app?useSSL=false&allowPublicKeyRetrieval=true
-      SPRING_DATA_REDIS_HOST: 'redis'
-      SPRING_DATA_REDIS_PORT: '6379'
-      APP_IS_DEVELOPMENT_MODE: 'false'
+      APP_EMAIL_CREDENTIALS_HOST: ${EMAIL_HOST}
+      APP_EMAIL_CREDENTIALS_PORT: ${EMAIL_PORT}
+      APP_EMAIL_CREDENTIALS_USERNAME: ${EMAIL_USERNAME}
+      APP_EMAIL_CREDENTIALS_PASSWORD: ${EMAIL_PASSWORD}
+      APP_EMAIL_CREDENTIALS_FROM_EMAIL: ${EMAIL_FROM_EMAIL}
     networks:
       - app-network
     volumes:

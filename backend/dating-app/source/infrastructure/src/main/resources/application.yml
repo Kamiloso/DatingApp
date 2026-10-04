@@ -1,22 +1,17 @@
 spring:
   application:
-    name: dating-app
+    name: "dating-app"
   datasource:
-    url: "jdbc:mysql://localhost:3306/dating_app?useSSL=false&allowPublicKeyRetrieval=true"
-    username: dating_app
-    password: dating_app
+    url: "jdbc:mysql://db:3306/dating_app?useSSL=false&allowPublicKeyRetrieval=true"
+    username: "dating_app"
+    password: "dating_app"
     driver-class-name: "com.mysql.cj.jdbc.Driver"
   mvc:
     problem-details:
       enabled: true
-  security:
-    oauth2:
-      resourceserver:
-        jwt:
-          issuer-uri: "http://todo.replace.example.com"
   data:
     redis:
-      host: localhost
+      host: "redis"
       port: 6379
   threads:
     virtual:
@@ -28,3 +23,13 @@ logging:
 
 springdoc:
   default-produces-media-type: "application/json"
+
+app:
+  is-development-mode: false
+  email:
+    credentials:
+      host: ~
+      port: ~
+      username: ~
+      password: ~
+      from-email: ~

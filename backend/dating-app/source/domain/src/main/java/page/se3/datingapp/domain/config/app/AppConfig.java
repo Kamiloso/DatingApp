@@ -8,9 +8,9 @@ import page.se3.datingapp.domain.config.app.quiz.QuizConfig;
 import page.se3.datingapp.domain.config.helper.ConfigBean;
 
 public record AppConfig(
+        Boolean isDevelopmentMode,
         String applicationDisplayName,
         String startMessage,
-        Boolean isDevelopmentMode,
         AuthConfig auth,
         EmailConfig email,
         LimitingConfig limiting,

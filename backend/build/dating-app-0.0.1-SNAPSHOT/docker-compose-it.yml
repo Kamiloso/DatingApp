@@ -1,0 +1,18 @@
+services:
+  db:
+    volumes:
+      - type: tmpfs
+        target: /var/lib/mysql
+
+  backend:
+    environment:
+      SPRING_PROFILES_ACTIVE: it
+    volumes:
+      - ./backend/application-it.yml:/app/config/application-it.yml:ro
+
+  mail:
+    image: python:3.10-alpine
+    container_name: dating-app-mail
+    command: python -u -m smtpd -n -c DebuggingServer 0.0.0.0:1025
+    networks:
+      - app-network

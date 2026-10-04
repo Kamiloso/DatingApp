@@ -1,0 +1,4 @@
+app:
+  matching:
+    schedule:
+      cron: "0 */10 * * * *"

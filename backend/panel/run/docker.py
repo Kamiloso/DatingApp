@@ -13,18 +13,20 @@ def get_docker_state() -> str:
         return "docker not installed"
 
 
-import subprocess
-
-def get_compose_state(compose_file_path: str) -> str:
+def get_compose_state(project_name: str, *compose_files: str) -> str:
     try:
+        compose_args = ["-p", project_name]
+        for file in compose_files:
+            compose_args.extend(["-f", file])
+
         all_containers = subprocess.run(
-            ["docker", "compose", "-f", compose_file_path, "ps", "-q", "-a"],
+            ["docker", "compose", *compose_args, "--profile", "*", "ps", "-q", "-a"],
             capture_output=True,
             text=True
         )
         
         running_containers = subprocess.run(
-            ["docker", "compose", "-f", compose_file_path, "ps", "-q", "--status", "running"],
+            ["docker", "compose", *compose_args, "--profile", "*", "ps", "-q", "--status", "running"],
             capture_output=True,
             text=True
         )

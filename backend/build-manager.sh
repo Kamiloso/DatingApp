@@ -1,0 +1,1 @@
+python ./panel/build_manager.py

@@ -1,1 +1,0 @@
-python ./menu/main.py
