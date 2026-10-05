@@ -1,1 +1,1 @@
-python ./panel/build_manager.py
+python ./panel/main_build.py

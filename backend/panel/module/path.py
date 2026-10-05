@@ -1,5 +1,4 @@
 import os
-import shutil
 
 
 def join_paths(*args) -> str:
@@ -20,13 +19,3 @@ def normpath(path: str) -> str:
 
 def abspath(path: str) -> str:
     return os.path.abspath(path)
-
-
-def makedirs(path: str):
-    if not os.path.exists(path):
-        os.makedirs(path)
-
-
-def rmtree(path: str):
-    if os.path.exists(path):
-            shutil.rmtree(path)

@@ -1,12 +1,10 @@
-import os, sys
+import os
 
-from module.path import join_paths, dirname
-
-
-PANEL_DIR = dirname(os.path.abspath(sys.argv[0]))
+from module.path import join_paths, dirname, abspath
+from module.shell import getargv
 
 
-# --- FOR BUILDING ---
+PANEL_DIR = dirname(abspath(getargv(0)))
 
 ROOT_DIR = join_paths(PANEL_DIR, "..")
 PROJECT_DIR = join_paths(ROOT_DIR, "dating-app")
@@ -22,12 +20,3 @@ CONFIG_SOURCE_PATTERN = join_paths(CONFIG_SOURCE_DIR, "application*.yml")
 
 DOCKER_TEMPLATE_DIR = join_paths(ROOT_DIR, "docker-template")
 BUILD_DIR = join_paths(ROOT_DIR, "build")
-
-
-# --- FOR RUNNING ---
-
-COMPOSE_DIR = join_paths(PANEL_DIR, "..")
-
-COMPOSE_FILE = join_paths(COMPOSE_DIR, "docker-compose.yml")
-COMPOSE_DEV_FILE = join_paths(COMPOSE_DIR, "docker-compose-dev.yml")
-COMPOSE_IT_FILE = join_paths(COMPOSE_DIR, "docker-compose-it.yml")

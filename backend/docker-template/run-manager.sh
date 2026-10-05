@@ -1,1 +1,1 @@
-python ./panel/run_manager.py
+python ./panel/main_run.py
