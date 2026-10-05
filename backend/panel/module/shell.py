@@ -1,5 +1,6 @@
 import os
 import subprocess
+import sys
 
 
 def shell_execute(command: str, silent=False, cwd=None) -> subprocess.CompletedProcess:
@@ -12,3 +13,7 @@ def clear():
 
 def pause():
     input("Press Enter to continue...")
+
+
+def getargv(n: int) -> str:
+    return sys.argv[n] if len(sys.argv) < n else ""

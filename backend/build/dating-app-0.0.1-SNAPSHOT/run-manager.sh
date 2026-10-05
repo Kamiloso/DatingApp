@@ -1,1 +1,0 @@
-python ./panel/run_manager.py

@@ -54,7 +54,7 @@ public record UserAccountDto(
         String quizAnswers,
 
         @NotNull
-        Integer matchingIndex,
+        Boolean isReadyForMatching,
 
         @NotNull
         Boolean isPatched,

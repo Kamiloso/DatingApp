@@ -5,6 +5,8 @@ import page.se3.datingapp.domain.enums.Relationship;
 import page.se3.datingapp.domain.model.user.User;
 import page.se3.datingapp.domain.model.user.AuthKey;
 
+import java.util.Objects;
+
 public record UserAccount(
         Long id,
         String email,
@@ -18,12 +20,14 @@ public record UserAccount(
         Relationship targetRelationshipWoman,
         Relationship targetRelationshipOther,
         String quizAnswers,
-        Integer matchingIndex,
+        Boolean isReadyForMatching,
         Boolean isPatched,
         Boolean isActive
 ) {
 
-    public static UserAccount getFrom(User user) {
+    public static UserAccount getFrom(User user, Integer futureMatchingIndex) {
+        Boolean isReadyForMatching = Objects.equals(user.matchingIndex(), futureMatchingIndex);
+
         return new UserAccount(
                 user.id(),
                 user.email(),
@@ -37,7 +41,7 @@ public record UserAccount(
                 user.targetRelationshipWoman(),
                 user.targetRelationshipOther(),
                 user.quizAnswers(),
-                user.matchingIndex(),
+                isReadyForMatching,
                 user.isPatched(),
                 user.isActive()
         );

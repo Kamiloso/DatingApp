@@ -25,8 +25,10 @@ public class UserAccountService {
     private final MatchingIndexer matchingIndexer;
 
     public UserAccount get(String email) throws AccountNotRegistered {
+        Integer futureMatchingIndex = matchingIndexer.getFuture();
+
         return userRepository.findByEmail(email)
-                .map(UserAccount::getFrom)
+                .map(u -> UserAccount.getFrom(u, futureMatchingIndex))
                 .orElseThrow(AccountNotRegistered::new);
     }
 
@@ -39,7 +41,7 @@ public class UserAccountService {
         User user = userAccountRegister.deriveInitial(email, futureMatchingIndex);
 
         try {
-            return UserAccount.getFrom(userRepository.trySave(user));
+            return UserAccount.getFrom(userRepository.trySave(user), futureMatchingIndex);
         } catch (DatabaseConflictException e) {
             throw new AccountInsertionFailed();
         }
@@ -60,7 +62,7 @@ public class UserAccountService {
         user = userAccountDetailPatch.applyPatch(user, futureMatchingIndex);
 
         try {
-            return UserAccount.getFrom(userRepository.trySave(user));
+            return UserAccount.getFrom(userRepository.trySave(user), futureMatchingIndex);
         } catch (DatabaseConflictException e) {
             throw new UnexpectedRuntimeException(e);
         }
@@ -69,6 +71,8 @@ public class UserAccountService {
     @ReadCommitted
     public UserAccount patchBase(AuthKey authKey, UserAccountBasePatch userAccountBasePatch)
             throws AccountNotRegistered, AccountPatchDenied {
+        int futureMatchingIndex = matchingIndexer.getFuture();
+
         User user = userRepository.findByIdForUpdate(authKey.id())
                 .orElseThrow(AccountNotRegistered::new);
 
@@ -79,7 +83,7 @@ public class UserAccountService {
         user = userAccountBasePatch.applyPatch(user);
 
         try {
-            return UserAccount.getFrom(userRepository.trySave(user));
+            return UserAccount.getFrom(userRepository.trySave(user), futureMatchingIndex);
         } catch (DatabaseConflictException e) {
             throw new UnexpectedRuntimeException(e);
         }

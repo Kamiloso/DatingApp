@@ -2,7 +2,7 @@ from typing import Callable
 
 from run.docker import get_docker_state, get_compose_state
 from module.preaction import preprint
-from module.shell import shell_execute
+from module.shell import shell_execute, getargv
 from module.path import normpath
 from module.menu import Menu
 from project.path import COMPOSE_FILE, COMPOSE_DEV_FILE, COMPOSE_IT_FILE
@@ -18,12 +18,20 @@ USE_DEFAULT_DEV_IT = USE_DEFAULT_DEV + f' -f "{normpath(COMPOSE_IT_FILE)}"'
 
 
 def main():
+    is_dev = getargv(1) == "--dev"
+
     Menu(
         title="BACKEND RUN MANAGER",
         options=[
-            ("Run production", shell_lambda(f'docker compose {USE_DEFAULT} up --force-recreate --build'), True),
+            *(
+                [("Run production", shell_lambda(f'docker compose {USE_DEFAULT} up --force-recreate --build'), True)]
+                if not is_dev else []
+            ),
             ("Run development", shell_lambda(f'docker compose {USE_DEFAULT_DEV} up --force-recreate --build'), True),
-            ("Run integration tests", shell_lambda(f'docker compose {USE_DEFAULT_IT} up --force-recreate --build'), True),
+            *(
+                [("Run integration tests", shell_lambda(f'docker compose {USE_DEFAULT_IT} up --force-recreate --build'), True)]
+                if not is_dev else []
+            ),
             ("Stop container", shell_lambda(f'docker compose {USE_DEFAULT_DEV_IT} --profile "*" down --remove-orphans'), True),
             ("Nuke container", shell_lambda(f'docker compose {USE_DEFAULT_DEV_IT} --profile "*" down -v --remove-orphans'), True),
             ("Open MySQL console", shell_lambda("docker exec -it dating-app-db mysql -u root dating_app"), True),
