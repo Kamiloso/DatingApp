@@ -37,7 +37,7 @@ def main():
     ]
 
     Menu(
-        title="BACKEND DEV RUN MANAGER",
+        title="BACKEND DEV RUN MANAGER" if is_dev_only else "BACKEND RUN MANAGER",
         options=options,
         lines_provider=lambda: [
             f"Docker state: {get_docker_state()}",
