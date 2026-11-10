@@ -1,2 +1,2 @@
 # DatingApp
-A dating app, super secret repo
+A suspended project. It is currently a backend in Java with Redis and MySQL integrated.
